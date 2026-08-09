@@ -1,9 +1,23 @@
-import { questions } from '~/data/questions'
+import { questions as rawQuestions } from '~/data/questions'
 import type { Question } from '~/data/questions'
 import { nenTypes } from '~/data/nenTypes'
 import type { NenTypeId, NenType } from '~/data/nenTypes'
 
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j]!, a[i]!]
+  }
+  return a
+}
+
+function buildShuffledQuestions(): Question[] {
+  return rawQuestions.map(q => ({ ...q, answers: shuffle(q.answers) }))
+}
+
 // Shared state outside the function so all pages see the same instance
+const questions = ref<Question[]>(buildShuffledQuestions())
 const currentQuestionIndex = ref(0)
 const scores = ref<Record<NenTypeId, number>>({
   enhancer: 0,
@@ -18,8 +32,8 @@ const result = ref<NenType | null>(null)
 
 export function useNenQuiz() {
 
-  const currentQuestion = computed((): Question => questions[currentQuestionIndex.value]!)
-  const progress = computed(() => (currentQuestionIndex.value / questions.length) * 100)
+  const currentQuestion = computed((): Question => questions.value[currentQuestionIndex.value]!)
+  const progress = computed(() => (currentQuestionIndex.value / questions.value.length) * 100)
   const dominantType = computed((): NenTypeId => {
     let max = -1
     let dominant: NenTypeId = 'enhancer'
@@ -38,7 +52,7 @@ export function useNenQuiz() {
       scores.value[type as NenTypeId] += points ?? 0
     }
 
-    if (currentQuestionIndex.value < questions.length - 1) {
+    if (currentQuestionIndex.value < questions.value.length - 1) {
       currentQuestionIndex.value++
     } else {
       result.value = nenTypes[dominantType.value]
@@ -47,6 +61,7 @@ export function useNenQuiz() {
   }
 
   function reset() {
+    questions.value = buildShuffledQuestions()
     currentQuestionIndex.value = 0
     scores.value = { enhancer: 0, transmuter: 0, emitter: 0, conjurer: 0, manipulator: 0, specialist: 0 }
     isComplete.value = false
@@ -54,7 +69,7 @@ export function useNenQuiz() {
   }
 
   return {
-    questions,
+    questions: questions.value,
     currentQuestion,
     currentQuestionIndex,
     progress,
