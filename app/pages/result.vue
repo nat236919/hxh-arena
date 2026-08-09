@@ -208,6 +208,7 @@ import type { CharacterProfile } from '~/data/nenTypes'
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
 
 const router = useRouter()
+const route = useRoute()
 const { result, scores, reset } = useNenQuiz()
 
 const revealed = ref(false)
@@ -266,9 +267,19 @@ const chartOptions = computed(() => ({
 
 onMounted(() => {
   nextTick(() => {
+    // Support direct shared links: /result?type=transmuter
     if (!result.value) {
-      router.replace('/')
-      return
+      const typeParam = route.query.type as string | undefined
+      if (typeParam && nenTypes[typeParam as keyof typeof nenTypes]) {
+        result.value = nenTypes[typeParam as keyof typeof nenTypes]
+      } else {
+        router.replace('/')
+        return
+      }
+    }
+    // Keep URL in sync so the page is always shareable
+    if (result.value && !route.query.type) {
+      router.replace(`/result?type=${result.value.id}`)
     }
     setTimeout(() => {
       revealed.value = true

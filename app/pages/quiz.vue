@@ -177,7 +177,7 @@
 
 <script setup lang="ts">
 const router = useRouter()
-const { questions, currentQuestion, currentQuestionIndex, progress, isComplete, answerQuestion } = useNenQuiz()
+const { questions, currentQuestion, currentQuestionIndex, progress, isComplete, result, answerQuestion } = useNenQuiz()
 const { isDark } = useTheme()
 
 const selectedAnswer = ref<number | null>(null)
@@ -213,7 +213,7 @@ function handleAnswer(idx: number) {
     answerQuestion(idx)
     selectedAnswer.value = null
     if (isComplete.value) {
-      router.push('/result')
+      router.push(`/result?type=${result.value?.id}`)
     }
   }, 650)
 }

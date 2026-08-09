@@ -224,13 +224,22 @@
 
 <script setup lang="ts">
 const router = useRouter()
+const route = useRoute()
 const { isDark } = useTheme()
 import { QUESTIONS_PER_RUN } from '~/composables/useNenQuiz'
 const { result } = useNenQuiz()
 
+// If a shared ?type= link lands on the home page, forward to result
+onMounted(() => {
+  const typeParam = route.query.type as string | undefined
+  if (typeParam) {
+    router.replace(`/result?type=${typeParam}`)
+  }
+})
+
 function startQuiz() {
   if (result.value) {
-    router.push('/result')
+    router.push(`/result?type=${result.value.id}`)
   } else {
     router.push('/quiz')
   }
