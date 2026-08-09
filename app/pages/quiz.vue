@@ -81,19 +81,16 @@
               stroke-linejoin="round" />
 
             <!-- Left specular highlight streak -->
-            <path d="M 47,21 Q 44,44 57,62 Q 65,74 73,78" fill="none" stroke="url(#qz-spec)"
-              stroke-width="2.5" stroke-linecap="round" opacity="0.5" />
+            <path d="M 47,21 Q 44,44 57,62 Q 65,74 73,78" fill="none" stroke="url(#qz-spec)" stroke-width="2.5"
+              stroke-linecap="round" opacity="0.5" />
 
             <!-- Stem highlight -->
-            <line x1="78" y1="82" x2="77" y2="100"
-              :stroke="isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'"
+            <line x1="78" y1="82" x2="77" y2="100" :stroke="isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'"
               stroke-width="0.8" stroke-linecap="round" />
 
             <!-- Base ellipse -->
-            <ellipse cx="80" cy="107" rx="17" ry="3.5"
-              :fill="isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'"
-              :stroke="isDark ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.28)'"
-              stroke-width="1" />
+            <ellipse cx="80" cy="107" rx="17" ry="3.5" :fill="isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'"
+              :stroke="isDark ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.28)'" stroke-width="1" />
 
             <!-- Rim ellipse (3D opening) -->
             <ellipse cx="80" cy="18" rx="36" ry="7" fill="url(#qz-water-fill)" stroke="url(#qz-rim-grad)"
@@ -195,17 +192,9 @@ function auraLineStyle(n: number) {
   }
 }
 
-const rippleAudio = import.meta.client
-  ? new Audio('https://assets.mixkit.co/active_storage/sfx/146/146-preview.mp3')
-  : null
-
 function handleAnswer(idx: number) {
   if (selectedAnswer.value !== null) return
   selectedAnswer.value = idx
-  if (rippleAudio) {
-    rippleAudio.currentTime = 0
-    rippleAudio.play().catch(() => { })
-  }
   setTimeout(() => {
     answerQuestion(idx)
     selectedAnswer.value = null
@@ -716,6 +705,4 @@ function handleAnswer(idx: number) {
     padding: 16px 16px 24px;
   }
 }
-
-
 </style>

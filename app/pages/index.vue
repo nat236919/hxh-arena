@@ -200,12 +200,13 @@
       <div class="footer-row">
         <span class="footer-copy">Hunter × Hunter © Yoshihiro Togashi / Shueisha</span>
         <span class="footer-sep">·</span>
-        <span class="footer-by">by <a href="https://github.com/nat236919" target="_blank" rel="noopener" class="footer-link">Nuttaphat Arunoprayoch</a></span>
+        <span class="footer-by">by <a href="https://github.com/nat236919" target="_blank" rel="noopener"
+            class="footer-link">Nuttaphat Arunoprayoch</a></span>
       </div>
       <div class="footer-disclaimer">
         Fan project, not affiliated with or endorsed by the rights holders.
-        Character data via <a href="https://hunterxhunter.fandom.com" target="_blank" rel="noopener" class="footer-link">Hunterpedia</a>.
-        Sound effects via <a href="https://mixkit.co" target="_blank" rel="noopener" class="footer-link">Mixkit</a>.
+        Character data via <a href="https://hunterxhunter.fandom.com" target="_blank" rel="noopener"
+          class="footer-link">Hunterpedia</a>.
       </div>
     </footer>
   </div>

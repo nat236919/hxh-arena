@@ -69,7 +69,6 @@
           <p class="credits-text">
             Character data: <a href="https://hunterxhunter.fandom.com/wiki/Hunterpedia" target="_blank"
               rel="noopener">Hunterpedia</a>.
-            Sound effects: <a href="https://mixkit.co" target="_blank" rel="noopener">Mixkit</a>.
             Hunter x Hunter &copy; Yoshihiro Togashi / Shueisha.
           </p>
         </section>
@@ -265,12 +264,6 @@ const chartOptions = computed(() => ({
   },
 }))
 
-const sounds = {
-  reveal: typeof window !== 'undefined'
-    ? new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3')
-    : null,
-}
-
 onMounted(() => {
   nextTick(() => {
     if (!result.value) {
@@ -279,7 +272,6 @@ onMounted(() => {
     }
     setTimeout(() => {
       revealed.value = true
-      sounds.reveal?.play().catch(() => { })
     }, 100)
   })
 })
