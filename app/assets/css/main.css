@@ -149,6 +149,11 @@ body {
 [data-theme="light"] .info-label          { color: rgba(30, 20, 10, 0.65) !important; }
 [data-theme="light"] .info-value          { color: rgba(184, 36, 75, 0.9) !important; }
 [data-theme="light"] .footer-note         { color: rgba(30, 20, 10, 0.55) !important; }
+[data-theme="light"] .site-footer        { border-top-color: rgba(0, 0, 0, 0.08) !important; }
+[data-theme="light"] .footer-copy,
+[data-theme="light"] .footer-by          { color: rgba(30, 20, 10, 0.45) !important; }
+[data-theme="light"] .footer-sep         { color: rgba(30, 20, 10, 0.2) !important; }
+[data-theme="light"] .footer-disclaimer  { color: rgba(30, 20, 10, 0.3) !important; }
 
 /* ── SVG glass ── */
 [data-theme="light"] .glass-svg,

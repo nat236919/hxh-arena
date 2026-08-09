@@ -195,6 +195,19 @@
         Focus your aura. The water will reveal your true nature.
       </p>
     </main>
+
+    <footer class="site-footer">
+      <div class="footer-row">
+        <span class="footer-copy">Hunter × Hunter © Yoshihiro Togashi / Shueisha</span>
+        <span class="footer-sep">·</span>
+        <span class="footer-by">by <a href="https://github.com/nat236919" target="_blank" rel="noopener" class="footer-link">Nuttaphat Arunoprayoch</a></span>
+      </div>
+      <div class="footer-disclaimer">
+        Fan project, not affiliated with or endorsed by the rights holders.
+        Character data via <a href="https://hunterxhunter.fandom.com" target="_blank" rel="noopener" class="footer-link">Hunterpedia</a>.
+        Sound effects via <a href="https://mixkit.co" target="_blank" rel="noopener" class="footer-link">Mixkit</a>.
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -730,5 +743,55 @@ function particleStyle(n: number) {
   letter-spacing: 0.15em;
   color: rgba(220, 220, 220, 0.5);
   text-transform: uppercase;
+}
+
+/* ---- Site footer ---- */
+.site-footer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+}
+
+.footer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-disclaimer {
+  font-size: 0.62rem;
+  color: rgba(220, 220, 220, 0.3);
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.footer-copy {
+  color: rgba(220, 220, 220, 0.4);
+}
+
+.footer-sep {
+  color: rgba(220, 220, 220, 0.2);
+}
+
+.footer-by {
+  color: rgba(220, 220, 220, 0.4);
+}
+
+.footer-link {
+  color: rgba(184, 36, 75, 0.7);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: rgba(184, 36, 75, 1);
 }
 </style>
