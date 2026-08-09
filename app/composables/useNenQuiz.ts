@@ -1,4 +1,5 @@
 import { questions } from '~/data/questions'
+import type { Question } from '~/data/questions'
 import { nenTypes } from '~/data/nenTypes'
 import type { NenTypeId, NenType } from '~/data/nenTypes'
 
@@ -17,7 +18,7 @@ const result = ref<NenType | null>(null)
 
 export function useNenQuiz() {
 
-  const currentQuestion = computed(() => questions[currentQuestionIndex.value])
+  const currentQuestion = computed((): Question => questions[currentQuestionIndex.value]!)
   const progress = computed(() => (currentQuestionIndex.value / questions.length) * 100)
   const dominantType = computed((): NenTypeId => {
     let max = -1
@@ -32,7 +33,7 @@ export function useNenQuiz() {
   })
 
   function answerQuestion(answerIndex: number) {
-    const answer = currentQuestion.value.answers[answerIndex]
+    const answer = currentQuestion.value.answers[answerIndex]!
     for (const [type, points] of Object.entries(answer.scores)) {
       scores.value[type as NenTypeId] += points ?? 0
     }

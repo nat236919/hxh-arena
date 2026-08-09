@@ -39,7 +39,7 @@
 
     <!-- Question card -->
     <Transition name="slide-up" mode="out-in">
-      <div :key="currentQuestion.id" class="relative z-10 w-full max-w-2xl">
+      <div v-if="currentQuestion" :key="currentQuestion.id" class="relative z-10 w-full max-w-2xl">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 mb-6 shadow-2xl">
           <p class="text-gray-400 text-xs tracking-widest uppercase mb-4">Question {{ currentQuestionIndex + 1 }}</p>
           <h2 class="text-xl md:text-2xl font-medium text-white leading-relaxed">
@@ -79,7 +79,7 @@ const selectedAnswer = ref<number | null>(null)
 
 const dominantColor = computed(() => nenTypes[dominantType.value]?.color ?? '#a78bfa')
 const dominantGlow = computed(() => nenTypes[dominantType.value]?.glowColor ?? 'rgba(167,139,250,0.3)')
-const waterFill = computed(() => `url(#wg-${dominantType.value})`)
+const waterFill = computed(() => nenTypes[dominantType.value]?.color ?? '#60a5fa')
 const auraFill = computed(() => nenTypes[dominantType.value]?.glowColor ?? 'rgba(167,139,250,0.2)')
 
 function handleAnswer(idx: number) {
