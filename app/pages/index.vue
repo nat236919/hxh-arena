@@ -64,6 +64,21 @@
 
       <!-- Central bowl stage -->
       <div class="glass-stage" @click="startQuiz">
+        <!-- Nen seal background -->
+        <svg class="nen-seal-bg" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="rgba(184,36,75,0.08)" stroke-width="0.5" />
+          <polygon points="24,4 41,13.5 41,34.5 24,44 7,34.5 7,13.5"
+            fill="none" stroke="rgba(184,36,75,0.18)" stroke-width="0.8" stroke-linejoin="round" />
+          <circle cx="24" cy="24" r="9" fill="none" stroke="rgba(232,66,10,0.12)" stroke-width="0.6" />
+          <line x1="24" y1="15" x2="24" y2="4"   stroke="rgba(184,36,75,0.1)" stroke-width="0.5" />
+          <line x1="24" y1="33" x2="24" y2="44"  stroke="rgba(184,36,75,0.1)" stroke-width="0.5" />
+          <line x1="15.7" y1="19.5" x2="7" y2="13.5"  stroke="rgba(184,36,75,0.1)" stroke-width="0.5" />
+          <line x1="32.3" y1="28.5" x2="41" y2="34.5" stroke="rgba(184,36,75,0.1)" stroke-width="0.5" />
+          <line x1="32.3" y1="19.5" x2="41" y2="13.5" stroke="rgba(184,36,75,0.1)" stroke-width="0.5" />
+          <line x1="15.7" y1="28.5" x2="7" y2="34.5"  stroke="rgba(184,36,75,0.1)" stroke-width="0.5" />
+          <circle cx="24" cy="24" r="2" fill="rgba(232,66,10,0.18)" />
+        </svg>
+
         <!-- Outer aura rings -->
         <div class="stage-ring stage-ring--outer" />
         <div class="stage-ring stage-ring--mid" />
@@ -485,6 +500,21 @@ function particleStyle(n: number) {
   justify-content: center;
   cursor: pointer;
   margin-bottom: 24px;
+}
+
+.nen-seal-bg {
+  position: absolute;
+  inset: -20%;
+  width: 140%;
+  height: 140%;
+  opacity: 0.1;
+  animation: seal-rotate 24s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes seal-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
 .glass-stage:hover .glass-svg {
