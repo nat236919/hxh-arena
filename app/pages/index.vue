@@ -62,30 +62,30 @@
                 <stop offset="55%" stop-color="rgba(0,111,68,0.22)" />
                 <stop offset="100%" stop-color="rgba(0,111,68,0)" />
               </radialGradient>
-              <!-- Glass body: very faint interior fill for depth -->
+              <!-- Glass body fill -->
               <linearGradient id="idx-glass-fill" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.07)" />
-                <stop offset="45%" stop-color="rgba(255,255,255,0.02)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0.05)" />
+                <stop offset="0%" :stop-color="isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)'" />
+                <stop offset="45%" :stop-color="isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)'" />
+                <stop offset="100%" :stop-color="isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'" />
               </linearGradient>
-              <!-- Bright edge strokes: left/right walls brighter than the fill -->
+              <!-- Glass edge stroke -->
               <linearGradient id="idx-glass-stroke" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.55)" />
-                <stop offset="35%" stop-color="rgba(255,255,255,0.14)" />
-                <stop offset="65%" stop-color="rgba(255,255,255,0.14)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0.45)" />
+                <stop offset="0%" :stop-color="isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.45)'" />
+                <stop offset="35%" :stop-color="isDark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.12)'" />
+                <stop offset="65%" :stop-color="isDark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.12)'" />
+                <stop offset="100%" :stop-color="isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.38)'" />
               </linearGradient>
-              <!-- Left specular highlight streak -->
+              <!-- Specular highlight -->
               <linearGradient id="idx-spec" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.45)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                <stop offset="0%" :stop-color="isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.18)'" />
+                <stop offset="100%" stop-color="rgba(0,0,0,0)" />
               </linearGradient>
-              <!-- Rim ellipse gradient: brighter front, dimmer back -->
+              <!-- Rim gradient -->
               <linearGradient id="idx-rim-grad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.15)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0.55)" />
+                <stop offset="0%" :stop-color="isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'" />
+                <stop offset="100%" :stop-color="isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.4)'" />
               </linearGradient>
-              <!-- Water surface fill (inside rim ellipse) -->
+              <!-- Water surface fill -->
               <radialGradient id="idx-water-fill" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="rgba(184,36,75,0.18)" />
                 <stop offset="100%" stop-color="rgba(0,111,68,0.10)" />
@@ -93,9 +93,9 @@
             </defs>
 
             <!-- Ground shadow -->
-            <ellipse cx="140" cy="214" rx="52" ry="5" fill="rgba(0,0,0,0.3)" />
+            <ellipse cx="140" cy="214" rx="52" ry="5" :fill="isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.12)'" />
 
-            <!-- Glass body with faint fill for depth -->
+            <!-- Glass body -->
             <path d="
               M 78,30
               Q 72,75 98,112
@@ -112,19 +112,22 @@
               Z" fill="url(#idx-glass-fill)" stroke="url(#idx-glass-stroke)" stroke-width="1.6"
               stroke-linejoin="round" />
 
-            <!-- Left specular highlight streak (narrow band near left wall) -->
-            <path d="M 82,34 Q 78,72 100,108 Q 110,126 128,134" fill="none" stroke="url(#idx-spec)" stroke-width="3.5"
-              stroke-linecap="round" opacity="0.5" />
+            <!-- Left specular highlight streak -->
+            <path d="M 82,34 Q 78,72 100,108 Q 110,126 128,134" fill="none" stroke="url(#idx-spec)"
+              stroke-width="3.5" stroke-linecap="round" opacity="0.5" />
 
             <!-- Stem highlight -->
-            <line x1="136" y1="140" x2="134" y2="172" stroke="rgba(255,255,255,0.2)" stroke-width="1"
-              stroke-linecap="round" />
+            <line x1="136" y1="140" x2="134" y2="172"
+              :stroke="isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'"
+              stroke-width="1" stroke-linecap="round" />
 
-            <!-- Base ellipse (3D oval base instead of flat line) -->
-            <ellipse cx="140" cy="181" rx="26" ry="5" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.3)"
+            <!-- Base ellipse -->
+            <ellipse cx="140" cy="181" rx="26" ry="5"
+              :fill="isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'"
+              :stroke="isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.28)'"
               stroke-width="1.2" />
 
-            <!-- Rim ellipse (top opening — key to 3D illusion) -->
+            <!-- Rim ellipse (top opening) -->
             <ellipse cx="140" cy="30" rx="62" ry="10" fill="url(#idx-water-fill)" stroke="url(#idx-rim-grad)"
               stroke-width="1.4" />
 
@@ -183,6 +186,7 @@
 
 <script setup lang="ts">
 const router = useRouter()
+const { isDark } = useTheme()
 
 function startQuiz() {
   router.push('/quiz')
@@ -699,4 +703,6 @@ function particleStyle(n: number) {
   color: rgba(220, 220, 220, 0.5);
   text-transform: uppercase;
 }
+
+
 </style>

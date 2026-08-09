@@ -245,7 +245,9 @@ const chartData = computed(() => {
   }
 })
 
-const chartOptions = {
+const { isDark } = useTheme()
+
+const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: true,
   plugins: { legend: { display: false } },
@@ -253,15 +255,15 @@ const chartOptions = {
     r: {
       min: 0,
       ticks: { display: false },
-      grid: { color: 'rgba(255,255,255,0.07)' },
-      angleLines: { color: 'rgba(255,255,255,0.07)' },
+      grid: { color: isDark.value ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)' },
+      angleLines: { color: isDark.value ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.08)' },
       pointLabels: {
-        color: 'rgba(255,255,255,0.7)',
+        color: isDark.value ? 'rgba(255,255,255,0.7)' : 'rgba(15,8,2,0.7)',
         font: { size: 11, family: 'Rajdhani, Arial Narrow, sans-serif' },
       },
     },
   },
-}
+}))
 
 const sounds = {
   reveal: typeof window !== 'undefined'
@@ -422,7 +424,7 @@ function burstStyle(n: number) {
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(220, 220, 220, 0.65);
+  color: var(--hxh-text-muted);
 }
 
 .exam-badge {
@@ -519,7 +521,7 @@ function burstStyle(n: number) {
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(220, 220, 220, 0.6);
+  color: var(--hxh-text-muted);
   margin-top: 4px;
 }
 
@@ -532,7 +534,7 @@ function burstStyle(n: number) {
 .divider-line {
   flex: 1;
   height: 1px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--hxh-border-subtle);
 }
 
 .divider-glyph {
@@ -544,7 +546,7 @@ function burstStyle(n: number) {
   font-family: var(--font-body);
   font-size: 0.95rem;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--hxh-text-secondary);
   margin: 0;
 }
 
@@ -565,7 +567,7 @@ function burstStyle(n: number) {
 }
 
 .weakness-block {
-  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  border-left: 2px solid var(--hxh-border-subtle);
   padding-left: 14px;
 }
 
@@ -575,14 +577,14 @@ function burstStyle(n: number) {
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(220, 220, 220, 0.6);
+  color: var(--hxh-text-muted);
   margin-bottom: 6px;
 }
 
 .weakness-text {
   font-family: var(--font-body);
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--hxh-text-muted);
   margin: 0;
   line-height: 1.6;
 }
@@ -621,29 +623,29 @@ function burstStyle(n: number) {
 .action-btn--ghost {
   background: transparent;
   border: 1px solid;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--hxh-text-secondary);
 }
 
 .action-btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: rgba(128, 128, 128, 0.08);
+  color: var(--hxh-text-primary);
 }
 
 .credits-text {
   font-family: var(--font-body);
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--hxh-text-muted);
   line-height: 1.7;
   margin: 0;
 }
 
 .credits-text a {
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--hxh-text-secondary);
   text-decoration: underline;
 }
 
 .credits-text a:hover {
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--hxh-text-primary);
 }
 
 /* ---- Detail column ---- */
@@ -658,7 +660,7 @@ function burstStyle(n: number) {
 /* Share card */
 .share-card {
   background: var(--hxh-bg-mid);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--hxh-border-subtle);
   border-radius: 6px;
   overflow: hidden;
   box-shadow: 0 0 40px var(--tg), 0 8px 32px rgba(0, 0, 0, 0.6);
@@ -691,7 +693,7 @@ function burstStyle(n: number) {
   font-size: 0.68rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--hxh-text-muted);
 }
 
 .card-type-name {
@@ -710,7 +712,7 @@ function burstStyle(n: number) {
   font-size: 0.68rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(220, 220, 220, 0.6);
+  color: var(--hxh-text-muted);
   margin-bottom: 8px;
 }
 
@@ -733,22 +735,22 @@ function burstStyle(n: number) {
   justify-content: center;
   gap: 7px;
   padding: 11px 14px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--hxh-bg-surface);
+  border: 1px solid var(--hxh-border-mid);
   border-radius: 4px;
   font-family: var(--font-heading);
   font-size: 0.72rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--hxh-text-secondary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .share-btn:not(:disabled):hover {
-  border-color: rgba(255, 255, 255, 0.25);
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--hxh-border-mid);
+  color: var(--hxh-text-primary);
+  background: var(--hxh-bg-mid);
 }
 
 .share-btn:disabled {
@@ -763,8 +765,8 @@ function burstStyle(n: number) {
 
 /* Characters block */
 .characters-block {
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--hxh-bg-surface);
+  border: 1px solid var(--hxh-border-subtle);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -774,7 +776,7 @@ function burstStyle(n: number) {
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--hxh-border-subtle);
 }
 
 .chars-label {
@@ -782,7 +784,7 @@ function burstStyle(n: number) {
   font-size: 0.72rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(220, 220, 220, 0.65);
+  color: var(--hxh-text-muted);
 }
 
 .chars-accent {
@@ -806,7 +808,7 @@ function burstStyle(n: number) {
   background: transparent;
   cursor: pointer;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid var(--hxh-border-subtle);
   transition: background 0.2s;
   width: 100%;
 }
@@ -816,7 +818,7 @@ function burstStyle(n: number) {
 }
 
 .char-row:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--hxh-bg-card);
 }
 
 .char-indicator {
@@ -843,11 +845,11 @@ function burstStyle(n: number) {
 .char-title {
   font-family: var(--font-body);
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--hxh-text-muted);
 }
 
 .char-arrow {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--hxh-text-muted);
   font-size: 1.1rem;
   line-height: 1;
 }
@@ -905,7 +907,7 @@ function burstStyle(n: number) {
 .modal-box {
   position: relative;
   background: var(--hxh-bg-mid);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--hxh-border-subtle);
   border-radius: 6px;
   max-width: 420px;
   width: 100%;
@@ -937,7 +939,7 @@ function burstStyle(n: number) {
   right: 16px;
   background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--hxh-text-muted);
   font-size: 1.2rem;
   cursor: pointer;
   line-height: 1;
@@ -946,7 +948,7 @@ function burstStyle(n: number) {
 }
 
 .modal-close:hover {
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--hxh-text-primary);
 }
 
 .modal-header {
@@ -1011,7 +1013,7 @@ function burstStyle(n: number) {
   font-family: var(--font-display);
   font-size: 1.5rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--hxh-text-primary);
   margin: 0;
   letter-spacing: 0.05em;
   line-height: 1.1;
@@ -1046,7 +1048,7 @@ function burstStyle(n: number) {
 .ability-desc {
   font-family: var(--font-body);
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--hxh-text-secondary);
   margin: 0;
   line-height: 1.55;
 }

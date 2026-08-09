@@ -36,23 +36,23 @@
           <svg viewBox="0 0 160 130" class="mini-glass-svg" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="qz-glass-fill" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.07)" />
-                <stop offset="45%" stop-color="rgba(255,255,255,0.02)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0.05)" />
+                <stop offset="0%" :stop-color="isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)'" />
+                <stop offset="45%" :stop-color="isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)'" />
+                <stop offset="100%" :stop-color="isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)'" />
               </linearGradient>
               <linearGradient id="qz-glass-stroke" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.55)" />
-                <stop offset="35%" stop-color="rgba(255,255,255,0.14)" />
-                <stop offset="65%" stop-color="rgba(255,255,255,0.14)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0.45)" />
+                <stop offset="0%" :stop-color="isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.45)'" />
+                <stop offset="35%" :stop-color="isDark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.12)'" />
+                <stop offset="65%" :stop-color="isDark ? 'rgba(255,255,255,0.14)' : 'rgba(0,0,0,0.12)'" />
+                <stop offset="100%" :stop-color="isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.38)'" />
               </linearGradient>
               <linearGradient id="qz-spec" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.45)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+                <stop offset="0%" :stop-color="isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.18)'" />
+                <stop offset="100%" stop-color="rgba(0,0,0,0)" />
               </linearGradient>
               <linearGradient id="qz-rim-grad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="rgba(255,255,255,0.15)" />
-                <stop offset="100%" stop-color="rgba(255,255,255,0.55)" />
+                <stop offset="0%" :stop-color="isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'" />
+                <stop offset="100%" :stop-color="isDark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.4)'" />
               </linearGradient>
               <radialGradient id="qz-water-fill" cx="50%" cy="50%" r="50%">
                 <stop offset="0%" stop-color="rgba(184,36,75,0.18)" />
@@ -61,9 +61,9 @@
             </defs>
 
             <!-- Ground shadow -->
-            <ellipse cx="80" cy="126" rx="30" ry="3" fill="rgba(0,0,0,0.3)" />
+            <ellipse cx="80" cy="126" rx="30" ry="3" :fill="isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.12)'" />
 
-            <!-- Glass body with faint fill for depth -->
+            <!-- Glass body -->
             <path d="
               M 44,18
               Q 40,46 56,66
@@ -81,15 +81,18 @@
               stroke-linejoin="round" />
 
             <!-- Left specular highlight streak -->
-            <path d="M 47,21 Q 44,44 57,62 Q 65,74 73,78" fill="none" stroke="url(#qz-spec)" stroke-width="2.5"
-              stroke-linecap="round" opacity="0.5" />
+            <path d="M 47,21 Q 44,44 57,62 Q 65,74 73,78" fill="none" stroke="url(#qz-spec)"
+              stroke-width="2.5" stroke-linecap="round" opacity="0.5" />
 
             <!-- Stem highlight -->
-            <line x1="78" y1="82" x2="77" y2="100" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"
-              stroke-linecap="round" />
+            <line x1="78" y1="82" x2="77" y2="100"
+              :stroke="isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'"
+              stroke-width="0.8" stroke-linecap="round" />
 
             <!-- Base ellipse -->
-            <ellipse cx="80" cy="107" rx="17" ry="3.5" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.28)"
+            <ellipse cx="80" cy="107" rx="17" ry="3.5"
+              :fill="isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'"
+              :stroke="isDark ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.28)'"
               stroke-width="1" />
 
             <!-- Rim ellipse (3D opening) -->
@@ -164,30 +167,31 @@
 <script setup lang="ts">
 const router = useRouter()
 const { questions, currentQuestion, currentQuestionIndex, progress, isComplete, answerQuestion } = useNenQuiz()
+const { isDark } = useTheme()
 
 const selectedAnswer = ref<number | null>(null)
 
-const NEUTRAL_COLOR = 'rgba(255,255,255,0.35)'
-const NEUTRAL_GLOW = 'rgba(255,255,255,0.08)'
-
-const dominantColor = NEUTRAL_COLOR
-const dominantGlow = NEUTRAL_GLOW
-const auraFill = NEUTRAL_GLOW
-
-const rootVars = {
-  '--dominant': NEUTRAL_COLOR,
-  '--dominant-glow': NEUTRAL_GLOW,
-}
+const dominantColor = computed(() =>
+  isDark.value ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.25)'
+)
+const auraFill = computed(() =>
+  isDark.value ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'
+)
+const rootVars = computed(() => ({
+  '--dominant': dominantColor.value,
+  '--dominant-glow': isDark.value ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)',
+}))
 
 function auraLineStyle(n: number) {
   const delay = n * 0.4
   const duration = 3 + n * 0.5
   const width = 60 + n * 10
+  const lineColor = isDark.value ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.12)'
   return {
     width: `${width}px`,
     animationDelay: `${delay}s`,
     animationDuration: `${duration}s`,
-    background: `linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)`,
+    background: `linear-gradient(90deg, transparent, ${lineColor}, transparent)`,
   }
 }
 
@@ -712,4 +716,6 @@ function handleAnswer(idx: number) {
     padding: 16px 16px 24px;
   }
 }
+
+
 </style>
