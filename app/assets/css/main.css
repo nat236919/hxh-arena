@@ -1,5 +1,111 @@
-html, body {
+:root {
+  /* ── HxH 2011 Official Brand Colors (from logo) ── */
+  --hxh-red: #B8244B;
+  /* crimson — logo outline / pink brand color  */
+  --hxh-orange: #E8420A;
+  /* top "HUNTER" gradient center                */
+  --hxh-orange-deep: #C03000;
+  /* bottom "HUNTER" dark                        */
+  --hxh-orange-light: #FF6A1A;
+  /* highlight                                   */
+  --hxh-green: #006F44;
+  /* × symbol dark green                         */
+  --hxh-green-logo: #1A8A50;
+  /* × symbol lighter face                       */
+  --hxh-tan: #AD945D;
+  /* logo outline / text trim tan                */
+  --hxh-peach: #FDAB4D;
+  /* logo peach accent                           */
+
+  /* ── UI Background scale (dark, moody) ── */
+  --hxh-bg-deep: #0D0D0D;
+  /* near-black — main background                */
+  --hxh-bg-mid: #141414;
+  /* card surfaces                               */
+  --hxh-bg-surface: #1C1C1C;
+  /* elevated surfaces                           */
+  --hxh-bg-card: #111111;
+  /* inset card bg                               */
+
+  /* ── Nen type aura colors (anime-canon) ── */
+  --nen-enhancer: #E8A000;
+  /* golden-yellow aura — Gon                    */
+  --nen-transmuter: #6B3FD4;
+  /* electric blue-purple — Killua               */
+  --nen-emitter: #E05010;
+  /* fiery orange — Leorio / Franklin            */
+  --nen-conjurer: #1E7A40;
+  /* deep green — Kurapika                       */
+  --nen-manipulator: #CC1A1A;
+  /* blood red — Illumi                          */
+  --nen-specialist: #8030A8;
+  /* deep violet — Chrollo                       */
+
+  /* ── Typography ── */
+  --font-display: 'Bebas Neue', 'Impact', sans-serif;
+  --font-heading: 'Rajdhani', 'Arial Narrow', sans-serif;
+  --font-jp: 'Noto Serif JP', serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+html,
+body {
   margin: 0;
   padding: 0;
-  background: #030712;
+  background: var(--hxh-bg-deep);
+  font-family: var(--font-body);
+  color: #fff;
+}
+
+/* HxH × glyph */
+.hxh-cross::before {
+  content: '×';
+}
+
+/* Aura shimmer */
+@keyframes aura-shimmer {
+
+  0%,
+  100% {
+    opacity: 0.7;
+    filter: brightness(1);
+  }
+
+  50% {
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+}
+
+/* HxH brand gradient — red-orange like the logo lettering */
+.hxh-gradient-text {
+  background: linear-gradient(160deg, #FF6A1A 0%, #E8420A 40%, #C03000 70%, #B8244B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hunter badge — white paper with black ink */
+.hunter-badge {
+  background: #F0EDE8;
+  border: 2px solid #1A1A1A;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  color: #1A1A1A;
+  letter-spacing: 0.08em;
+}
+
+/* Scan line overlay */
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px,
+      rgba(0, 0, 0, 0.04) 2px, rgba(0, 0, 0, 0.04) 4px);
+  pointer-events: none;
+}
+
+/* Aura glow utility */
+.aura-glow {
+  animation: aura-shimmer 2.5s ease-in-out infinite;
 }

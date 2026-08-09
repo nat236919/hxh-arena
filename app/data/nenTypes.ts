@@ -3,6 +3,7 @@ export type NenTypeId = 'enhancer' | 'transmuter' | 'emitter' | 'conjurer' | 'ma
 export interface CharacterProfile {
   name: string
   title: string
+  portrait?: string
   abilities: { name: string; description: string }[]
 }
 
@@ -25,9 +26,9 @@ export const nenTypes: Record<NenTypeId, NenType> = {
     id: 'enhancer',
     name: 'Enhancer',
     japaneseName: '強化系',
-    color: '#ef4444',
-    glowColor: 'rgba(239, 68, 68, 0.6)',
-    auraColor: '#fca5a5',
+    color: '#E8A000',
+    glowColor: 'rgba(232, 160, 0, 0.6)',
+    auraColor: '#FFD060',
     description:
       'Enhancers are straightforward and determined. You amplify the natural properties of things — your body, your will, your resolve. The most physically powerful of all Nen types, Enhancers charge forward without hesitation. Simple goals, iron conviction.',
     traits: ['Determined', 'Straightforward', 'Strong-willed', 'Stubborn', 'Reliable'],
@@ -36,6 +37,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Gon Freecss',
         title: 'Rookie Hunter',
+        portrait: '/characters/gon.webp',
         abilities: [
           { name: 'Jajanken: Rock', description: 'Concentrates all aura into the fist for a devastating punch.' },
           { name: 'Jajanken: Scissors', description: 'Fires a blade of aura from two extended fingers.' },
@@ -46,6 +48,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Uvogin',
         title: 'Phantom Troupe Member #11',
+        portrait: '/characters/uvogin.webp',
         abilities: [
           { name: 'Big Bang Impact', description: 'A single punch loaded with concentrated aura — the most powerful Enhancer strike shown.' },
           { name: 'Scream', description: 'Releases aura as sound, creating a shockwave powerful enough to destroy the ground.' },
@@ -58,9 +61,9 @@ export const nenTypes: Record<NenTypeId, NenType> = {
     id: 'transmuter',
     name: 'Transmuter',
     japaneseName: '変化系',
-    color: '#a855f7',
-    glowColor: 'rgba(168, 85, 247, 0.6)',
-    auraColor: '#d8b4fe',
+    color: '#6B3FD4',
+    glowColor: 'rgba(107, 63, 212, 0.6)',
+    auraColor: '#A888FF',
     description:
       'Transmuters are whimsical and unpredictable. You change the properties of your aura into something entirely different — lightning, rubber, poison. Clever and adaptable, you thrive on creativity and surprise. No one can predict your next move.',
     traits: ['Whimsical', 'Deceptive', 'Creative', 'Adaptable', 'Unpredictable'],
@@ -69,6 +72,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Killua Zoldyck',
         title: 'Assassin & Hunter',
+        portrait: '/characters/killua.webp',
         abilities: [
           { name: 'Godspeed (Kanmuru)', description: 'Electricity flows through his body, moving at the speed of lightning reflexes.' },
           { name: 'Thunderbolt', description: 'Discharges a bolt of electricity powerful enough to stun or kill.' },
@@ -78,6 +82,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Hisoka Morow',
         title: 'Magician & Hunter Exam Examiner',
+        portrait: '/characters/hisoka.webp',
         abilities: [
           { name: 'Bungee Gum', description: 'Aura with the properties of both rubber and gum — stretches, sticks, and snaps back.' },
           { name: 'Texture Surprise', description: 'Prints any texture or pattern onto a flat surface, used for deception.' },
@@ -90,9 +95,9 @@ export const nenTypes: Record<NenTypeId, NenType> = {
     id: 'emitter',
     name: 'Emitter',
     japaneseName: '放出系',
-    color: '#f97316',
-    glowColor: 'rgba(249, 115, 22, 0.6)',
-    auraColor: '#fdba74',
+    color: '#E05010',
+    glowColor: 'rgba(224, 80, 16, 0.6)',
+    auraColor: '#FF8844',
     description:
       'Emitters are impatient and hot-blooded. You project your aura far beyond your body, striking at a distance with raw force. Quick to act and quick to anger, you do not like to wait. Distance means nothing to your power.',
     traits: ['Impatient', 'Hot-tempered', 'Action-oriented', 'Persistent', 'Bold'],
@@ -101,6 +106,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Leorio Paradinight',
         title: 'Hunter & Medical Student',
+        portrait: '/characters/leorio.webp',
         abilities: [
           { name: 'Remote Punch', description: 'Opens a rift in space to deliver a long-range punch anywhere within sight.' },
         ],
@@ -127,9 +133,9 @@ export const nenTypes: Record<NenTypeId, NenType> = {
     id: 'conjurer',
     name: 'Conjurer',
     japaneseName: '具現化系',
-    color: '#3b82f6',
-    glowColor: 'rgba(59, 130, 246, 0.6)',
-    auraColor: '#93c5fd',
+    color: '#1E7A40',
+    glowColor: 'rgba(30, 122, 64, 0.6)',
+    auraColor: '#50C878',
     description:
       'Conjurers are neurotic and detail-obsessed. You materialize physical objects from your aura with painstaking precision. Your abilities require strict rules and conditions — but within those rules, you create something no one else can. Discipline is your power.',
     traits: ['Meticulous', 'Disciplined', 'Anxious', 'Rule-bound', 'Precise'],
@@ -138,6 +144,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Kurapika',
         title: 'Kurta Survivor & Hunter',
+        portrait: '/characters/kurapika.webp',
         abilities: [
           { name: 'Dowsing Chain', description: 'A chain that swings toward truth — used to detect lies.' },
           { name: 'Chain Jail', description: 'Imprisons a target in an unbreakable chain; activated by a Nen contract.' },
@@ -160,9 +167,9 @@ export const nenTypes: Record<NenTypeId, NenType> = {
     id: 'manipulator',
     name: 'Manipulator',
     japaneseName: '操作系',
-    color: '#22c55e',
-    glowColor: 'rgba(34, 197, 94, 0.6)',
-    auraColor: '#86efac',
+    color: '#CC1A1A',
+    glowColor: 'rgba(204, 26, 26, 0.6)',
+    auraColor: '#FF5555',
     description:
       'Manipulators are logical and self-interested. You impose your will on others — people, animals, objects — bending them to your purpose. Cold, calculating, and strategic, you always think several moves ahead. You prefer to control the situation rather than fight directly.',
     traits: ['Logical', 'Calculated', 'Self-interested', 'Patient', 'Controlling'],
@@ -199,9 +206,9 @@ export const nenTypes: Record<NenTypeId, NenType> = {
     id: 'specialist',
     name: 'Specialist',
     japaneseName: '特質系',
-    color: '#eab308',
-    glowColor: 'rgba(234, 179, 8, 0.6)',
-    auraColor: '#fde047',
+    color: '#8030A8',
+    glowColor: 'rgba(128, 48, 168, 0.6)',
+    auraColor: '#C060E0',
     description:
       'Specialists are rare and enigmatic. Your Nen does not fit neatly into any category — it is uniquely your own. Often misunderstood, you walk a path others cannot follow. Your power is singular, strange, and beyond classification. You were simply born different.',
     traits: ['Unique', 'Mysterious', 'Unpredictable', 'Independent', 'Rare'],
@@ -210,6 +217,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Chrollo Lucilfer',
         title: 'Phantom Troupe Leader',
+        portrait: '/characters/chrollo.webp',
         abilities: [
           { name: 'Skill Hunter (Bandit\'s Secret)', description: 'Steals the Nen abilities of others and stores them in his Conjured book.' },
           { name: 'Indoor Fish', description: 'A stolen ability that conjures a fish that devours anyone trapped in a closed space.' },
