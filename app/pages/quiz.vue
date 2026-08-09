@@ -166,8 +166,10 @@
 
 <script setup lang="ts">
 const router = useRouter()
-const { questions, currentQuestion, currentQuestionIndex, progress, isComplete, answerQuestion } = useNenQuiz()
+const { questions, currentQuestion, currentQuestionIndex, progress, isComplete, answerQuestion, reset } = useNenQuiz()
 const { isDark } = useTheme()
+
+reset()
 
 const selectedAnswer = ref<number | null>(null)
 

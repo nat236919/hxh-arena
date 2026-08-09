@@ -187,8 +187,10 @@
 <script setup lang="ts">
 const router = useRouter()
 const { isDark } = useTheme()
+const { reset } = useNenQuiz()
 
 function startQuiz() {
+  reset()
   router.push('/quiz')
 }
 
