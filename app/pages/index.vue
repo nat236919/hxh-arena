@@ -46,89 +46,107 @@
       </div>
 
       <!-- Central bowl stage -->
-      <div class="bowl-stage" @click="startQuiz">
+      <div class="glass-stage" @click="startQuiz">
         <!-- Outer aura rings -->
         <div class="stage-ring stage-ring--outer" />
         <div class="stage-ring stage-ring--mid" />
         <div class="stage-ring stage-ring--inner" />
 
         <!-- Bowl SVG -->
-        <div class="bowl-container">
-          <svg viewBox="0 0 280 200" class="bowl-svg" xmlns="http://www.w3.org/2000/svg">
+        <div class="glass-container">
+          <svg viewBox="0 0 280 220" class="glass-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Aura glow on water -->
+              <radialGradient id="idx-aura" cx="50%" cy="45%" r="50%">
+                <stop offset="0%" stop-color="rgba(184,36,75,0.55)" />
+                <stop offset="55%" stop-color="rgba(0,111,68,0.22)" />
+                <stop offset="100%" stop-color="rgba(0,111,68,0)" />
+              </radialGradient>
+              <!-- Glass body: very faint interior fill for depth -->
+              <linearGradient id="idx-glass-fill" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.07)" />
+                <stop offset="45%" stop-color="rgba(255,255,255,0.02)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0.05)" />
+              </linearGradient>
+              <!-- Bright edge strokes: left/right walls brighter than the fill -->
+              <linearGradient id="idx-glass-stroke" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.55)" />
+                <stop offset="35%" stop-color="rgba(255,255,255,0.14)" />
+                <stop offset="65%" stop-color="rgba(255,255,255,0.14)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0.45)" />
+              </linearGradient>
+              <!-- Left specular highlight streak -->
+              <linearGradient id="idx-spec" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.45)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0)" />
+              </linearGradient>
+              <!-- Rim ellipse gradient: brighter front, dimmer back -->
+              <linearGradient id="idx-rim-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.15)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0.55)" />
+              </linearGradient>
+              <!-- Water surface fill (inside rim ellipse) -->
+              <radialGradient id="idx-water-fill" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(184,36,75,0.18)" />
+                <stop offset="100%" stop-color="rgba(0,111,68,0.10)" />
+              </radialGradient>
+            </defs>
+
             <!-- Ground shadow -->
-            <ellipse cx="140" cy="188" rx="90" ry="8" fill="rgba(0,0,0,0.5)" />
+            <ellipse cx="140" cy="214" rx="52" ry="5" fill="rgba(0,0,0,0.3)" />
 
-            <!-- Bowl body -->
-            <path d="M 42 84 Q 40 178 140 184 Q 240 178 238 84 Z" fill="url(#idx-bowl-fill)"
-              stroke="url(#idx-bowl-edge)" stroke-width="1.5" />
+            <!-- Glass body with faint fill for depth -->
+            <path d="
+              M 78,30
+              Q 72,75 98,112
+              Q 114,132 132,138
+              L 130,168
+              Q 127,172 114,174
+              L 114,180
+              L 166,180
+              L 166,174
+              Q 153,172 150,168
+              L 148,138
+              Q 166,132 182,112
+              Q 208,75 202,30
+              Z" fill="url(#idx-glass-fill)" stroke="url(#idx-glass-stroke)" stroke-width="1.6"
+              stroke-linejoin="round" />
 
-            <!-- Bowl rim -->
-            <ellipse cx="140" cy="84" rx="98" ry="16" fill="url(#idx-bowl-rim)" stroke="#9B8060" stroke-width="1.2" />
+            <!-- Left specular highlight streak (narrow band near left wall) -->
+            <path d="M 82,34 Q 78,72 100,108 Q 110,126 128,134" fill="none" stroke="url(#idx-spec)" stroke-width="3.5"
+              stroke-linecap="round" opacity="0.5" />
 
-            <!-- Inner shadow -->
-            <ellipse cx="140" cy="87" rx="88" ry="11" fill="rgba(0,0,0,0.25)" />
+            <!-- Stem highlight -->
+            <line x1="136" y1="140" x2="134" y2="172" stroke="rgba(255,255,255,0.2)" stroke-width="1"
+              stroke-linecap="round" />
 
-            <!-- Water surface -->
-            <ellipse cx="140" cy="90" rx="84" ry="13" fill="url(#idx-water)" class="water-shimmer" />
+            <!-- Base ellipse (3D oval base instead of flat line) -->
+            <ellipse cx="140" cy="181" rx="26" ry="5" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.3)"
+              stroke-width="1.2" />
 
-            <!-- Aura glow -->
-            <ellipse cx="140" cy="90" rx="76" ry="11" fill="url(#idx-aura)" class="aura-shimmer" />
+            <!-- Rim ellipse (top opening — key to 3D illusion) -->
+            <ellipse cx="140" cy="30" rx="62" ry="10" fill="url(#idx-water-fill)" stroke="url(#idx-rim-grad)"
+              stroke-width="1.4" />
 
-            <!-- Water depth -->
-            <ellipse cx="140" cy="92" rx="68" ry="9" fill="url(#idx-depth)" opacity="0.6" />
+            <!-- Aura glow sitting on water surface -->
+            <ellipse cx="140" cy="30" rx="54" ry="8" fill="url(#idx-aura)" class="aura-shimmer" />
 
-            <!-- Ripple rings -->
-            <ellipse cx="140" cy="90" rx="24" ry="4" fill="none" stroke="rgba(0,111,68,0.8)" stroke-width="1.2"
+            <!-- Ripple rings on water surface -->
+            <ellipse cx="140" cy="30" rx="18" ry="3" fill="none" stroke="rgba(0,111,68,0.7)" stroke-width="1.2"
               class="ripple rp1" />
-            <ellipse cx="140" cy="90" rx="48" ry="8" fill="none" stroke="rgba(0,111,68,0.5)" stroke-width="0.9"
+            <ellipse cx="140" cy="30" rx="36" ry="5.5" fill="none" stroke="rgba(0,111,68,0.4)" stroke-width="0.9"
               class="ripple rp2" />
-            <ellipse cx="140" cy="90" rx="70" ry="11" fill="none" stroke="rgba(0,111,68,0.25)" stroke-width="0.7"
+            <ellipse cx="140" cy="30" rx="52" ry="7.5" fill="none" stroke="rgba(0,111,68,0.2)" stroke-width="0.7"
               class="ripple rp3" />
 
-            <!-- Floating leaf -->
+            <!-- Floating leaf at water surface -->
             <g class="leaf-float">
-              <ellipse cx="140" cy="89" rx="11" ry="4" fill="#3A7A3A" />
-              <line x1="131" y1="89" x2="149" y2="89" stroke="#2A5A2A" stroke-width="0.9" />
+              <ellipse cx="140" cy="29" rx="10" ry="3" fill="#3A7A3A" opacity="0.9" />
+              <line x1="132" y1="29" x2="148" y2="29" stroke="#2A5A2A" stroke-width="0.9" />
             </g>
-
-            <!-- Bowl engravings -->
-            <path d="M 70 140 Q 140 175 210 140" fill="none" stroke="rgba(155,128,96,0.25)" stroke-width="1" />
-            <path d="M 58 116 Q 140 154 222 116" fill="none" stroke="rgba(155,128,96,0.18)" stroke-width="0.8" />
-
-            <!-- HxH × symbol on bowl -->
-            <text x="140" y="166" text-anchor="middle" fill="rgba(155,128,96,0.2)" font-size="14" font-family="serif"
-              font-weight="bold">×</text>
-
-            <defs>
-              <linearGradient id="idx-bowl-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#3E2E1E" />
-                <stop offset="50%" stop-color="#231809" />
-                <stop offset="100%" stop-color="#120C04" />
-              </linearGradient>
-              <linearGradient id="idx-bowl-edge" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#C0905A" />
-                <stop offset="100%" stop-color="#3E2410" />
-              </linearGradient>
-              <linearGradient id="idx-bowl-rim" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#B09070" />
-                <stop offset="100%" stop-color="#5A3E26" />
-              </linearGradient>
-              <linearGradient id="idx-water" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#C9A840" stop-opacity="0.9" />
-                <stop offset="100%" stop-color="#7A6028" stop-opacity="0.8" />
-              </linearGradient>
-              <radialGradient id="idx-aura" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stop-color="#E8420A" stop-opacity="0.55" />
-                <stop offset="100%" stop-color="#006F44" stop-opacity="0" />
-              </radialGradient>
-              <linearGradient id="idx-depth" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#006F44" stop-opacity="0.5" />
-                <stop offset="100%" stop-color="#3A2000" stop-opacity="0.7" />
-              </linearGradient>
-            </defs>
           </svg>
 
-          <p class="bowl-touch-hint">— Touch the bowl to begin —</p>
+          <p class="glass-touch-hint">· Touch the glass to begin ·</p>
         </div>
       </div>
 
@@ -412,9 +430,9 @@ function particleStyle(n: number) {
 }
 
 /* ---- Bowl stage ---- */
-.bowl-stage {
+.glass-stage {
   position: relative;
-  width: clamp(240px, 70vw, 340px);
+  width: clamp(140px, 38vw, 200px);
   aspect-ratio: 1;
   display: flex;
   align-items: center;
@@ -423,11 +441,11 @@ function particleStyle(n: number) {
   margin-bottom: 24px;
 }
 
-.bowl-stage:hover .bowl-svg {
+.glass-stage:hover .glass-svg {
   filter: drop-shadow(0 0 24px rgba(184, 36, 75, 0.55));
 }
 
-.bowl-stage:hover .stage-ring {
+.glass-stage:hover .stage-ring {
   opacity: 0.9;
 }
 
@@ -470,7 +488,7 @@ function particleStyle(n: number) {
   }
 }
 
-.bowl-container {
+.glass-container {
   position: relative;
   z-index: 2;
   width: 90%;
@@ -479,13 +497,13 @@ function particleStyle(n: number) {
   align-items: center;
 }
 
-.bowl-svg {
+.glass-svg {
   width: 100%;
   filter: drop-shadow(0 0 16px rgba(184, 36, 75, 0.3));
   transition: filter 0.4s ease;
 }
 
-.bowl-touch-hint {
+.glass-touch-hint {
   margin-top: 10px;
   font-family: var(--font-heading);
   font-size: 0.72rem;
@@ -495,7 +513,7 @@ function particleStyle(n: number) {
   transition: color 0.3s;
 }
 
-.bowl-stage:hover .bowl-touch-hint {
+.glass-stage:hover .glass-touch-hint {
   color: rgba(184, 36, 75, 0.95);
 }
 

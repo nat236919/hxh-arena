@@ -34,46 +34,92 @@
     <!-- Main area -->
     <main class="quiz-main">
 
-      <!-- Left: animated bowl -->
-      <aside class="bowl-side">
-        <div class="mini-bowl-wrap" :style="{ '--glow': dominantColor }">
-          <svg viewBox="0 0 160 120" class="mini-bowl-svg" xmlns="http://www.w3.org/2000/svg">
-            <ellipse cx="80" cy="112" rx="52" ry="5" fill="rgba(0,0,0,0.4)" />
-            <path d="M 22 50 Q 22 106 80 110 Q 138 106 138 50 Z" fill="url(#qz-bowl)" stroke="url(#qz-edge)"
-              stroke-width="1.2" />
-            <ellipse cx="80" cy="50" rx="58" ry="10" fill="url(#qz-rim)" stroke="#8B7050" stroke-width="1" />
-            <ellipse cx="80" cy="53" rx="52" ry="7" fill="rgba(0,0,0,0.2)" />
-            <ellipse cx="80" cy="55" rx="49" ry="8" :fill="waterFill" class="water-anim" />
-            <ellipse cx="80" cy="55" rx="42" ry="7" :fill="auraFill" class="aura-anim" />
-            <ellipse cx="80" cy="55" rx="16" ry="3" fill="none" :stroke="dominantColor" stroke-width="1"
-              class="ripple rp1" />
-            <ellipse cx="80" cy="55" rx="30" ry="5.5" fill="none" :stroke="dominantColor" stroke-width="0.7"
-              class="ripple rp2" />
-            <ellipse cx="80" cy="55" rx="44" ry="7" fill="none" :stroke="dominantColor" stroke-width="0.5"
-              class="ripple rp3" />
-            <g class="leaf-anim">
-              <ellipse cx="80" cy="54" rx="7" ry="2.5" fill="#3A7A3A" />
-              <line x1="74" y1="54" x2="86" y2="54" stroke="#2A5A2A" stroke-width="0.6" />
-            </g>
-            <path d="M 40 84 Q 80 104 120 84" fill="none" stroke="rgba(139,112,80,0.2)" stroke-width="0.8" />
+      <!-- Left: animated glass -->
+      <aside class="glass-side">
+        <div class="mini-glass-wrap" :style="{ '--glow': dominantColor }">
+          <svg viewBox="0 0 160 130" class="mini-glass-svg" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <linearGradient id="qz-bowl" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#3E2E1E" />
-                <stop offset="100%" stop-color="#120C04" />
+              <linearGradient id="qz-glass-fill" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.07)" />
+                <stop offset="45%" stop-color="rgba(255,255,255,0.02)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0.05)" />
               </linearGradient>
-              <linearGradient id="qz-edge" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#C0905A" />
-                <stop offset="100%" stop-color="#3E2410" />
+              <linearGradient id="qz-glass-stroke" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.55)" />
+                <stop offset="35%" stop-color="rgba(255,255,255,0.14)" />
+                <stop offset="65%" stop-color="rgba(255,255,255,0.14)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0.45)" />
               </linearGradient>
-              <linearGradient id="qz-rim" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#A08060" />
-                <stop offset="100%" stop-color="#5A3E26" />
+              <linearGradient id="qz-spec" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.45)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0)" />
               </linearGradient>
+              <linearGradient id="qz-rim-grad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="rgba(255,255,255,0.15)" />
+                <stop offset="100%" stop-color="rgba(255,255,255,0.55)" />
+              </linearGradient>
+              <radialGradient id="qz-water-fill" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(184,36,75,0.18)" />
+                <stop offset="100%" stop-color="rgba(0,111,68,0.10)" />
+              </radialGradient>
             </defs>
+
+            <!-- Ground shadow -->
+            <ellipse cx="80" cy="126" rx="30" ry="3" fill="rgba(0,0,0,0.3)" />
+
+            <!-- Glass body with faint fill for depth -->
+            <path d="
+              M 44,18
+              Q 40,46 56,66
+              Q 66,78 75,81
+              L 74,98
+              Q 71,101 63,102
+              L 63,106
+              L 97,106
+              L 97,102
+              Q 89,101 86,98
+              L 85,81
+              Q 94,78 104,66
+              Q 120,46 116,18
+              Z" fill="url(#qz-glass-fill)" stroke="url(#qz-glass-stroke)" stroke-width="1.2"
+              stroke-linejoin="round" />
+
+            <!-- Left specular highlight streak -->
+            <path d="M 47,21 Q 44,44 57,62 Q 65,74 73,78" fill="none" stroke="url(#qz-spec)" stroke-width="2.5"
+              stroke-linecap="round" opacity="0.5" />
+
+            <!-- Stem highlight -->
+            <line x1="78" y1="82" x2="77" y2="100" stroke="rgba(255,255,255,0.2)" stroke-width="0.8"
+              stroke-linecap="round" />
+
+            <!-- Base ellipse -->
+            <ellipse cx="80" cy="107" rx="17" ry="3.5" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.28)"
+              stroke-width="1" />
+
+            <!-- Rim ellipse (3D opening) -->
+            <ellipse cx="80" cy="18" rx="36" ry="7" fill="url(#qz-water-fill)" stroke="url(#qz-rim-grad)"
+              stroke-width="1.2" />
+
+            <!-- Aura glow on water surface -->
+            <ellipse cx="80" cy="18" rx="30" ry="5.5" :fill="auraFill" class="aura-anim" />
+
+            <!-- Ripples in dominant Nen color -->
+            <ellipse cx="80" cy="18" rx="10" ry="2" fill="none" :stroke="dominantColor" stroke-width="1"
+              class="ripple rp1" />
+            <ellipse cx="80" cy="18" rx="20" ry="3.5" fill="none" :stroke="dominantColor" stroke-width="0.7"
+              class="ripple rp2" />
+            <ellipse cx="80" cy="18" rx="28" ry="5" fill="none" :stroke="dominantColor" stroke-width="0.5"
+              class="ripple rp3" />
+
+            <!-- Floating leaf at water surface -->
+            <g class="leaf-anim">
+              <ellipse cx="80" cy="17" rx="7" ry="2" fill="#3A7A3A" opacity="0.9" />
+              <line x1="74" y1="17" x2="86" y2="17" stroke="#2A5A2A" stroke-width="0.6" />
+            </g>
           </svg>
 
-          <!-- Aura type name below bowl -->
-          <div class="bowl-type-tag" :style="{ color: dominantColor, borderColor: dominantColor + '55' }">
+          <!-- Aura type name below glass -->
+          <div class="glass-type-tag" :style="{ color: dominantColor, borderColor: dominantColor + '55' }">
             {{ dominantLabel }}
           </div>
         </div>
@@ -349,8 +395,8 @@ function handleAnswer(idx: number) {
   box-sizing: border-box;
 }
 
-/* ---- Bowl side ---- */
-.bowl-side {
+/* ---- Glass side ---- */
+.glass-side {
   flex-shrink: 0;
   width: 160px;
   display: flex;
@@ -360,7 +406,7 @@ function handleAnswer(idx: number) {
   padding-right: 24px;
 }
 
-.mini-bowl-wrap {
+.mini-glass-wrap {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -369,11 +415,11 @@ function handleAnswer(idx: number) {
   transition: filter 0.5s;
 }
 
-.mini-bowl-svg {
-  width: 140px;
+.mini-glass-svg {
+  width: 80px;
 }
 
-.bowl-type-tag {
+.glass-type-tag {
   margin-top: 10px;
   font-family: var(--font-heading);
   font-size: 0.72rem;
@@ -424,7 +470,7 @@ function handleAnswer(idx: number) {
   }
 }
 
-/* Bowl water/aura animations */
+/* Glass water/aura animations */
 .water-anim {
   animation: water-flicker 2s ease-in-out infinite;
 }
@@ -667,7 +713,7 @@ function handleAnswer(idx: number) {
 
 /* ---- Responsive ---- */
 @media (max-width: 600px) {
-  .bowl-side {
+  .glass-side {
     display: none;
   }
 
