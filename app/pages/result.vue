@@ -126,7 +126,7 @@
             <div class="characters-header">
               <span class="chars-label">Hunters with this type</span>
               <span class="chars-accent" :style="{ background: `${nenType?.color}50`, color: nenType?.color }">
-                {{ nenType?.characters.length }}
+                {{ nenType?.characterProfiles.length }}
               </span>
             </div>
             <div class="characters-list">
