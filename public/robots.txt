@@ -1,2 +1,5 @@
-User-Agent: *
-Disallow:
+User-agent: *
+Allow: /
+
+# TODO: update with actual deployed URL
+Sitemap: https://hxh-arena.vercel.app/sitemap.xml
