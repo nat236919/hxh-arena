@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <rect width="48" height="48" rx="8" fill="#0D0D0D"/>
+  <!-- Outer aura ring -->
+  <circle cx="24" cy="24" r="22" fill="none" stroke="rgba(184,36,75,0.35)" stroke-width="0.8"/>
+  <!-- Hexagon seal -->
+  <polygon points="24,4 41,13.5 41,34.5 24,44 7,34.5 7,13.5"
+    fill="none" stroke="rgba(184,36,75,0.9)" stroke-width="1.4" stroke-linejoin="round"/>
+  <!-- Inner circle -->
+  <circle cx="24" cy="24" r="9" fill="none" stroke="rgba(232,66,10,0.8)" stroke-width="1.2"/>
+  <!-- Aura spokes -->
+  <line x1="24" y1="15" x2="24" y2="4"   stroke="rgba(184,36,75,0.55)" stroke-width="0.8"/>
+  <line x1="24" y1="33" x2="24" y2="44"  stroke="rgba(184,36,75,0.55)" stroke-width="0.8"/>
+  <line x1="15.7" y1="19.5" x2="7" y2="13.5"  stroke="rgba(184,36,75,0.55)" stroke-width="0.8"/>
+  <line x1="32.3" y1="28.5" x2="41" y2="34.5" stroke="rgba(184,36,75,0.55)" stroke-width="0.8"/>
+  <line x1="32.3" y1="19.5" x2="41" y2="13.5" stroke="rgba(184,36,75,0.55)" stroke-width="0.8"/>
+  <line x1="15.7" y1="28.5" x2="7" y2="34.5"  stroke="rgba(184,36,75,0.55)" stroke-width="0.8"/>
+  <!-- Center dot -->
+  <circle cx="24" cy="24" r="3" fill="rgba(232,66,10,0.95)"/>
+</svg>
