@@ -66,7 +66,6 @@
       <div class="glass-stage" @click="startQuiz">
         <!-- Nen seal background -->
         <svg class="nen-seal-bg" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="24" cy="24" r="22" fill="none" stroke="rgba(184,36,75,0.08)" stroke-width="0.5" />
           <polygon points="24,4 41,13.5 41,34.5 24,44 7,34.5 7,13.5"
             fill="none" stroke="rgba(184,36,75,0.18)" stroke-width="0.8" stroke-linejoin="round" />
           <circle cx="24" cy="24" r="9" fill="none" stroke="rgba(232,66,10,0.12)" stroke-width="0.6" />
@@ -79,10 +78,6 @@
           <circle cx="24" cy="24" r="2" fill="rgba(232,66,10,0.18)" />
         </svg>
 
-        <!-- Outer aura rings -->
-        <div class="stage-ring stage-ring--outer" />
-        <div class="stage-ring stage-ring--mid" />
-        <div class="stage-ring stage-ring--inner" />
 
         <!-- Bowl SVG -->
         <div class="glass-container">
