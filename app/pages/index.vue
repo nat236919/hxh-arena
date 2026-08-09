@@ -187,11 +187,14 @@
 <script setup lang="ts">
 const router = useRouter()
 const { isDark } = useTheme()
-const { reset } = useNenQuiz()
+const { result } = useNenQuiz()
 
 function startQuiz() {
-  reset()
-  router.push('/quiz')
+  if (result.value) {
+    router.push('/result')
+  } else {
+    router.push('/quiz')
+  }
 }
 
 function particleStyle(n: number) {
