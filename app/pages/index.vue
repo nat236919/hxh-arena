@@ -23,7 +23,24 @@
         <span class="header-label">Nen Classification</span>
       </div>
       <div class="header-right">
-        <span class="exam-badge">287th Hunter Exam</span>
+        <svg class="nen-seal" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer aura ring -->
+          <circle cx="24" cy="24" r="22" fill="none" stroke="rgba(184,36,75,0.25)" stroke-width="0.8" />
+          <!-- Hexagon seal -->
+          <polygon points="24,4 41,13.5 41,34.5 24,44 7,34.5 7,13.5" fill="none" stroke="rgba(184,36,75,0.7)"
+            stroke-width="1.2" stroke-linejoin="round" />
+          <!-- Inner circle -->
+          <circle cx="24" cy="24" r="9" fill="none" stroke="rgba(232,66,10,0.6)" stroke-width="1" />
+          <!-- Aura spokes -->
+          <line x1="24" y1="15" x2="24" y2="4" stroke="rgba(184,36,75,0.4)" stroke-width="0.7" />
+          <line x1="24" y1="33" x2="24" y2="44" stroke="rgba(184,36,75,0.4)" stroke-width="0.7" />
+          <line x1="15.7" y1="19.5" x2="7" y2="13.5" stroke="rgba(184,36,75,0.4)" stroke-width="0.7" />
+          <line x1="32.3" y1="28.5" x2="41" y2="34.5" stroke="rgba(184,36,75,0.4)" stroke-width="0.7" />
+          <line x1="32.3" y1="19.5" x2="41" y2="13.5" stroke="rgba(184,36,75,0.4)" stroke-width="0.7" />
+          <line x1="15.7" y1="28.5" x2="7" y2="34.5" stroke="rgba(184,36,75,0.4)" stroke-width="0.7" />
+          <!-- Center dot -->
+          <circle cx="24" cy="24" r="2.5" fill="rgba(232,66,10,0.8)" />
+        </svg>
       </div>
     </header>
 
@@ -113,19 +130,16 @@
               stroke-linejoin="round" />
 
             <!-- Left specular highlight streak -->
-            <path d="M 82,34 Q 78,72 100,108 Q 110,126 128,134" fill="none" stroke="url(#idx-spec)"
-              stroke-width="3.5" stroke-linecap="round" opacity="0.5" />
+            <path d="M 82,34 Q 78,72 100,108 Q 110,126 128,134" fill="none" stroke="url(#idx-spec)" stroke-width="3.5"
+              stroke-linecap="round" opacity="0.5" />
 
             <!-- Stem highlight -->
-            <line x1="136" y1="140" x2="134" y2="172"
-              :stroke="isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'"
+            <line x1="136" y1="140" x2="134" y2="172" :stroke="isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)'"
               stroke-width="1" stroke-linecap="round" />
 
             <!-- Base ellipse -->
-            <ellipse cx="140" cy="181" rx="26" ry="5"
-              :fill="isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'"
-              :stroke="isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.28)'"
-              stroke-width="1.2" />
+            <ellipse cx="140" cy="181" rx="26" ry="5" :fill="isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'"
+              :stroke="isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.28)'" stroke-width="1.2" />
 
             <!-- Rim ellipse (top opening) -->
             <ellipse cx="140" cy="30" rx="62" ry="10" fill="url(#idx-water-fill)" stroke="url(#idx-rim-grad)"
@@ -341,16 +355,25 @@ function particleStyle(n: number) {
   opacity: 0.4;
 }
 
-.exam-badge {
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #1A1A1A;
-  background: #E8E0D0;
-  border: 1.5px solid #4A4A4A;
-  padding: 4px 12px;
-  border-radius: 2px;
+.nen-seal {
+  width: 36px;
+  height: 36px;
+  animation: seal-breathe 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px rgba(184, 36, 75, 0.35));
+}
+
+@keyframes seal-breathe {
+
+  0%,
+  100% {
+    opacity: 0.75;
+    filter: drop-shadow(0 0 4px rgba(184, 36, 75, 0.25));
+  }
+
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(184, 36, 75, 0.6));
+  }
 }
 
 /* ---- Main ---- */
@@ -708,6 +731,4 @@ function particleStyle(n: number) {
   color: rgba(220, 220, 220, 0.5);
   text-transform: uppercase;
 }
-
-
 </style>
