@@ -134,6 +134,16 @@
         <div class="aura-lines" aria-hidden="true">
           <div v-for="n in 5" :key="n" class="aura-line" :style="auraLineStyle(n)" />
         </div>
+
+        <!-- Mobile-only: question count + inline progress -->
+        <div class="mobile-strip-info" aria-hidden="true">
+          <span class="mobile-strip-label">
+            Question {{ currentQuestionIndex + 1 }} / {{ questions.length }}
+          </span>
+          <div class="mobile-strip-progress">
+            <div class="mobile-strip-fill" :style="{ width: `${progress}%`, background: dominantColor }" />
+          </div>
+        </div>
       </aside>
 
       <!-- Right: question + answers -->
@@ -731,14 +741,78 @@ function handleAnswer(idx: number) {
   font-weight: 700;
 }
 
+.mobile-strip-info {
+  display: none;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 600px) {
+  .quiz-main {
+    flex-direction: column;
+    gap: 16px;
+    padding: 12px 16px 24px;
+  }
+
+  /* Horizontal top strip */
   .glass-side {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 12px;
+  }
+
+  .mini-glass-wrap {
+    flex-shrink: 0;
+  }
+
+  .mini-glass-svg {
+    width: 36px;
+  }
+
+  .nen-seal-bg {
     display: none;
   }
 
-  .quiz-main {
-    padding: 16px 16px 24px;
+  /* Strip info: question count + mini progress bar */
+  .mobile-strip-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .mobile-strip-label {
+    font-family: var(--font-heading);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(220, 220, 220, 0.55);
+  }
+
+  .mobile-strip-progress {
+    position: relative;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .mobile-strip-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.6s ease;
+  }
+
+  .aura-lines {
+    display: none;
+  }
+
+  .progress-track {
+    display: none;
   }
 }
 </style>
