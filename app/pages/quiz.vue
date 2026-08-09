@@ -424,7 +424,7 @@ function handleAnswer(idx: number) {
   inset: -30%;
   width: 160%;
   height: 160%;
-  opacity: 0.8;
+  opacity: 0.3;
   animation: seal-rotate 24s linear infinite;
   pointer-events: none;
 }
