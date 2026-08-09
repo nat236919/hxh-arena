@@ -18,11 +18,7 @@
           questions.length }}</span></span>
       </div>
 
-      <!-- Nen type indicator -->
-      <div class="nen-indicator">
-        <div class="nen-dot" :style="{ background: dominantColor, boxShadow: `0 0 8px ${dominantColor}` }" />
-        <span class="nen-type-name">{{ dominantLabel }}</span>
-      </div>
+      <!-- Nen type hidden until result -->
     </header>
 
     <!-- Progress track -->
@@ -118,10 +114,6 @@
             </g>
           </svg>
 
-          <!-- Aura type name below glass -->
-          <div class="glass-type-tag" :style="{ color: dominantColor, borderColor: dominantColor + '55' }">
-            {{ dominantLabel }}
-          </div>
         </div>
 
         <!-- Aura flow lines -->
@@ -170,23 +162,22 @@
 </template>
 
 <script setup lang="ts">
-import { nenTypes } from '~/data/nenTypes'
-
 const router = useRouter()
-const { questions, currentQuestion, currentQuestionIndex, progress, dominantType, isComplete, answerQuestion } = useNenQuiz()
+const { questions, currentQuestion, currentQuestionIndex, progress, isComplete, answerQuestion } = useNenQuiz()
 
 const selectedAnswer = ref<number | null>(null)
 
-const dominantColor = computed(() => nenTypes[dominantType.value]?.color ?? '#E8A000')
-const dominantGlow = computed(() => nenTypes[dominantType.value]?.glowColor ?? 'rgba(201,162,39,0.4)')
-const dominantLabel = computed(() => nenTypes[dominantType.value]?.name ?? 'Unknown')
-const waterFill = computed(() => `${nenTypes[dominantType.value]?.color ?? '#E8A000'}99`)
-const auraFill = computed(() => nenTypes[dominantType.value]?.glowColor ?? 'rgba(201,162,39,0.3)')
+const NEUTRAL_COLOR = 'rgba(255,255,255,0.35)'
+const NEUTRAL_GLOW = 'rgba(255,255,255,0.08)'
 
-const rootVars = computed(() => ({
-  '--dominant': dominantColor.value,
-  '--dominant-glow': dominantGlow.value,
-}))
+const dominantColor = NEUTRAL_COLOR
+const dominantGlow = NEUTRAL_GLOW
+const auraFill = NEUTRAL_GLOW
+
+const rootVars = {
+  '--dominant': NEUTRAL_COLOR,
+  '--dominant-glow': NEUTRAL_GLOW,
+}
 
 function auraLineStyle(n: number) {
   const delay = n * 0.4
@@ -196,7 +187,7 @@ function auraLineStyle(n: number) {
     width: `${width}px`,
     animationDelay: `${delay}s`,
     animationDuration: `${duration}s`,
-    background: `linear-gradient(90deg, transparent, ${dominantColor.value}60, transparent)`,
+    background: `linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent)`,
   }
 }
 
