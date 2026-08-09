@@ -25,5 +25,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --ignore-scripts
 
+      - name: Generate Nuxt types
+        run: pnpm nuxt prepare
+
       - name: Run tests
         run: pnpm test
