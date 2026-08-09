@@ -512,7 +512,7 @@ function particleStyle(n: number) {
   inset: -20%;
   width: 140%;
   height: 140%;
-  opacity: 0.1;
+  opacity: 0.4;
   animation: seal-rotate 24s linear infinite;
   pointer-events: none;
 }
