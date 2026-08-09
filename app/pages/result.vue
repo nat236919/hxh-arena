@@ -15,141 +15,157 @@
       <span class="exam-badge">Water Divination Complete</span>
     </header>
 
-    <Transition name="reveal-in" appear>
-      <main v-if="revealed" class="result-main">
+    <main v-if="revealed" class="result-main">
 
-        <!-- Left column: type reveal -->
-        <section class="type-column">
+      <!-- Left column: type reveal -->
+      <section class="type-column">
 
-          <!-- Type identity -->
-          <div class="type-identity">
-            <div class="type-jp" :style="{ color: nenType?.color }">{{ nenType?.japaneseName }}</div>
-            <div class="type-cross" :style="{ color: nenType?.color }">×</div>
-            <h1 class="type-name" :style="{ '--tc': nenType?.color, '--tg': nenType?.glowColor }">
-              {{ nenType?.name }}
-            </h1>
-            <div class="type-label">Your Nen Type</div>
-          </div>
+        <!-- Stage 1: type name -->
+        <div class="type-identity stage-1">
+          <div class="type-jp" :style="{ color: nenType?.color }">{{ nenType?.japaneseName }}</div>
+          <div class="type-cross" :style="{ color: nenType?.color }">×</div>
+          <h1 class="type-name" :style="{ '--tc': nenType?.color, '--tg': nenType?.glowColor }">
+            {{ nenType?.name }}
+          </h1>
+          <div class="type-label">Your Nen Type</div>
+        </div>
 
-          <!-- Divider -->
-          <div class="nen-divider">
-            <span class="divider-line" />
-            <span class="divider-glyph" :style="{ color: nenType?.color }">◈</span>
-            <span class="divider-line" />
-          </div>
+        <!-- Stage 2: description + traits -->
+        <div class="nen-divider stage-2">
+          <span class="divider-line" />
+          <span class="divider-glyph" :style="{ color: nenType?.color }">◈</span>
+          <span class="divider-line" />
+        </div>
 
-          <!-- Description -->
-          <p class="type-description">{{ nenType?.description }}</p>
+        <p class="type-description stage-2">{{ nenType?.description }}</p>
 
-          <!-- Traits -->
-          <div class="traits-row">
-            <span v-for="trait in nenType?.traits" :key="trait" class="trait-tag"
-              :style="{ color: nenType?.color, borderColor: `${nenType?.color}55` }">
-              {{ trait }}
-            </span>
-          </div>
+        <div class="traits-row stage-2">
+          <span v-for="trait in nenType?.traits" :key="trait" class="trait-tag"
+            :style="{ color: nenType?.color, borderColor: `${nenType?.color}55` }">
+            {{ trait }}
+          </span>
+        </div>
 
-          <!-- Shadow side -->
-          <div class="weakness-block">
-            <span class="weakness-label">Shadow side</span>
-            <p class="weakness-text">{{ nenType?.weakness }}</p>
-          </div>
+        <!-- Stage 3: weakness + compat + actions -->
+        <div class="weakness-block stage-3">
+          <span class="weakness-label">Shadow side</span>
+          <p class="weakness-text">{{ nenType?.weakness }}</p>
+        </div>
 
-          <!-- Actions -->
-          <div class="action-row">
-            <button class="action-btn action-btn--primary" :style="{ background: nenType?.color }" @click="retake">
-              Retake the Test
-            </button>
-            <NuxtLink to="/" class="action-btn action-btn--ghost" :style="{ borderColor: `${nenType?.color}88` }">
-              Return to Arena
-            </NuxtLink>
-          </div>
-
-          <!-- Credits -->
-          <p class="credits-text">
-            Character data: <a href="https://hunterxhunter.fandom.com/wiki/Hunterpedia" target="_blank"
-              rel="noopener">Hunterpedia</a>.
-            Hunter x Hunter &copy; Yoshihiro Togashi / Shueisha.
-          </p>
-        </section>
-
-        <!-- Right column: radar + characters + share -->
-        <section class="detail-column">
-
-          <!-- Shareable card region -->
-          <div ref="cardRef" class="share-card" :style="{ '--tc': nenType?.color, '--tg': nenType?.glowColor }">
-            <!-- Card top accent -->
-            <div class="card-accent" :style="{ background: nenType?.color }" />
-
-            <div class="card-inner">
-              <!-- Card header -->
-              <div class="card-header-row">
-                <span class="card-jp-small" :style="{ color: nenType?.color }">{{ nenType?.japaneseName }}</span>
-                <span class="card-brand">HxH Arena</span>
-              </div>
-
-              <!-- Type name in card -->
-              <div class="card-type-name" :style="{ color: nenType?.color }">{{ nenType?.name }}</div>
-
-              <!-- Radar chart -->
-              <div class="radar-wrap">
-                <p class="radar-label">Nen Aptitude</p>
-                <div class="radar-chart">
-                  <Radar v-if="chartData" :data="chartData" :options="chartOptions" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Share buttons -->
-          <div class="share-row">
-            <button class="share-btn" :class="{ 'share-btn--loading': sharing === 'download' }" :disabled="!!sharing"
-              @click="shareCard('download')">
-              <svg class="share-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              {{ sharing === 'download' ? 'Saving...' : 'Save Image' }}
-            </button>
-            <button class="share-btn" :class="{ 'share-btn--loading': sharing === 'copy' }" :disabled="!!sharing"
-              @click="shareCard('copy')">
-              <svg class="share-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-              {{ sharing === 'copy' ? 'Copied!' : 'Copy Image' }}
-            </button>
-          </div>
-
-          <!-- Character profiles -->
-          <div class="characters-block">
-            <div class="characters-header">
-              <span class="chars-label">Hunters with this type</span>
-              <span class="chars-accent" :style="{ background: `${nenType?.color}50`, color: nenType?.color }">
-                {{ nenType?.characterProfiles.length }}
+        <div v-if="compatibility" class="compat-block stage-3">
+          <span class="compat-heading">Nen Affinity</span>
+          <div class="compat-row">
+            <span class="compat-label compat-label--compatible">Compatible</span>
+            <div class="compat-tags">
+              <span v-for="t in compatibility.compatible" :key="t.id" class="compat-tag compat-tag--compatible"
+                :style="{ color: t.color, borderColor: `${t.color}55`, background: `${t.color}12` }">
+                {{ t.name }}
               </span>
             </div>
-            <div class="characters-list">
-              <button v-for="profile in nenType?.characterProfiles" :key="profile.name" class="char-row"
-                @click="openProfile(profile)">
-                <div class="char-portrait-wrap" :style="{ borderColor: `${nenType?.color}60` }">
-                  <img v-if="profile.portrait" :src="profile.portrait" :alt="profile.name" class="char-portrait"
-                    loading="lazy" />
-                  <div v-else class="char-portrait-placeholder" :style="{ background: `${nenType?.color}20` }">
-                    <span :style="{ color: nenType?.color }">{{ profile.name[0] }}</span>
-                  </div>
-                </div>
-                <div class="char-info">
-                  <span class="char-name" :style="{ color: nenType?.color }">{{ profile.name }}</span>
-                  <span class="char-title">{{ profile.title }}</span>
-                </div>
-                <span class="char-arrow">›</span>
-              </button>
+          </div>
+          <div class="compat-row">
+            <span class="compat-label compat-label--opposed">Opposed</span>
+            <div class="compat-tags">
+              <span class="compat-tag compat-tag--opposed"
+                :style="{ color: compatibility.opposed.color, borderColor: `${compatibility.opposed.color}55`, background: `${compatibility.opposed.color}12` }">
+                {{ compatibility.opposed.name }}
+              </span>
             </div>
           </div>
-        </section>
-      </main>
-    </Transition>
+        </div>
+
+        <div class="action-row stage-3">
+          <button class="action-btn action-btn--primary" :style="{ background: nenType?.color }" @click="retake">
+            Retake the Test
+          </button>
+          <NuxtLink to="/" class="action-btn action-btn--ghost" :style="{ borderColor: `${nenType?.color}88` }">
+            Return to Arena
+          </NuxtLink>
+        </div>
+
+        <p class="credits-text stage-3">
+          Character data: <a href="https://hunterxhunter.fandom.com/wiki/Hunterpedia" target="_blank"
+            rel="noopener">Hunterpedia</a>.
+          Hunter x Hunter &copy; Yoshihiro Togashi / Shueisha.
+        </p>
+      </section>
+
+      <!-- Right column: radar + characters + share (stage 4) -->
+      <section class="detail-column stage-4">
+
+        <!-- Shareable card region -->
+        <div ref="cardRef" class="share-card" :style="{ '--tc': nenType?.color, '--tg': nenType?.glowColor }">
+          <!-- Card top accent -->
+          <div class="card-accent" :style="{ background: nenType?.color }" />
+
+          <div class="card-inner">
+            <!-- Card header -->
+            <div class="card-header-row">
+              <span class="card-jp-small" :style="{ color: nenType?.color }">{{ nenType?.japaneseName }}</span>
+              <span class="card-brand">HxH Arena</span>
+            </div>
+
+            <!-- Type name in card -->
+            <div class="card-type-name" :style="{ color: nenType?.color }">{{ nenType?.name }}</div>
+
+            <!-- Radar chart -->
+            <div class="radar-wrap">
+              <p class="radar-label">Nen Aptitude</p>
+              <div class="radar-chart">
+                <Radar v-if="chartData" :data="chartData" :options="chartOptions" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Share buttons -->
+        <div class="share-row">
+          <button class="share-btn" :class="{ 'share-btn--loading': sharing === 'download' }" :disabled="!!sharing"
+            @click="shareCard('download')">
+            <svg class="share-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            {{ sharing === 'download' ? 'Saving...' : 'Save Image' }}
+          </button>
+          <button class="share-btn" :class="{ 'share-btn--loading': sharing === 'copy' }" :disabled="!!sharing"
+            @click="shareCard('copy')">
+            <svg class="share-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            {{ sharing === 'copy' ? 'Copied!' : 'Copy Image' }}
+          </button>
+        </div>
+
+        <!-- Character profiles -->
+        <div class="characters-block">
+          <div class="characters-header">
+            <span class="chars-label">Hunters with this type</span>
+            <span class="chars-accent" :style="{ background: `${nenType?.color}50`, color: nenType?.color }">
+              {{ nenType?.characterProfiles.length }}
+            </span>
+          </div>
+          <div class="characters-list">
+            <button v-for="profile in nenType?.characterProfiles" :key="profile.name" class="char-row"
+              @click="openProfile(profile)">
+              <div class="char-portrait-wrap" :style="{ borderColor: `${nenType?.color}60` }">
+                <img v-if="profile.portrait" :src="profile.portrait" :alt="profile.name" class="char-portrait"
+                  loading="lazy" />
+                <div v-else class="char-portrait-placeholder" :style="{ background: `${nenType?.color}20` }">
+                  <span :style="{ color: nenType?.color }">{{ profile.name[0] }}</span>
+                </div>
+              </div>
+              <div class="char-info">
+                <span class="char-name" :style="{ color: nenType?.color }">{{ profile.name }}</span>
+                <span class="char-title">{{ profile.title }}</span>
+              </div>
+              <span class="char-arrow">›</span>
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <!-- Character profile modal -->
     <Transition name="modal-fade">
@@ -202,7 +218,7 @@ import {
   Tooltip,
 } from 'chart.js'
 import html2canvas from 'html2canvas'
-import { nenTypes } from '~/data/nenTypes'
+import { nenTypes, nenCompatibility } from '~/data/nenTypes'
 import type { CharacterProfile } from '~/data/nenTypes'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
@@ -217,6 +233,15 @@ const sharing = ref<'download' | 'copy' | false>(false)
 const activeProfile = ref<CharacterProfile | null>(null)
 
 const nenType = computed(() => result.value ?? null)
+
+const compatibility = computed(() => {
+  if (!nenType.value) return null
+  const compat = nenCompatibility[nenType.value.id]
+  return {
+    compatible: compat.compatible.map(id => nenTypes[id]),
+    opposed: nenTypes[compat.opposed],
+  }
+})
 
 const rootVars = computed(() => ({
   '--dominant': nenType.value?.color ?? '#E8A000',
@@ -443,13 +468,32 @@ function burstStyle(n: number) {
 }
 
 /* ---- Main layout ---- */
-.reveal-in-enter-active {
-  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.reveal-in-enter-from {
-  opacity: 0;
-  transform: translateY(24px);
+.stage-1 {
+  animation: stage-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.stage-2 {
+  animation: stage-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+.stage-3 {
+  animation: stage-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+.stage-4 {
+  animation: stage-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.7s both;
 }
 
 .result-main {
@@ -590,6 +634,61 @@ function burstStyle(n: number) {
   color: var(--hxh-text-muted);
   margin: 0;
   line-height: 1.6;
+}
+
+.compat-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.compat-heading {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--hxh-text-muted);
+  margin-bottom: 2px;
+}
+
+.compat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.compat-label {
+  font-family: var(--font-heading);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.compat-label--compatible {
+  color: rgba(100, 220, 130, 0.7);
+}
+
+.compat-label--opposed {
+  color: rgba(220, 80, 80, 0.7);
+}
+
+.compat-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.compat-tag {
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid;
+  padding: 3px 10px;
+  border-radius: 2px;
 }
 
 .action-row {

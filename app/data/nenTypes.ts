@@ -21,6 +21,17 @@ export interface NenType {
   weakness: string
 }
 
+// Nen wheel order (HxH canon): Enhancer - Transmuter - Conjurer - Specialist - Manipulator - Emitter
+// Adjacent = compatible (easiest to learn), opposite = most opposed
+export const nenCompatibility: Record<NenTypeId, { compatible: NenTypeId[]; opposed: NenTypeId }> = {
+  enhancer: { compatible: ['transmuter', 'emitter'], opposed: 'specialist' },
+  transmuter: { compatible: ['enhancer', 'conjurer'], opposed: 'manipulator' },
+  conjurer: { compatible: ['transmuter', 'specialist'], opposed: 'emitter' },
+  specialist: { compatible: ['conjurer', 'manipulator'], opposed: 'enhancer' },
+  manipulator: { compatible: ['specialist', 'emitter'], opposed: 'transmuter' },
+  emitter: { compatible: ['manipulator', 'enhancer'], opposed: 'conjurer' },
+}
+
 export const nenTypes: Record<NenTypeId, NenType> = {
   enhancer: {
     id: 'enhancer',
