@@ -181,7 +181,7 @@
       <div class="info-strip">
         <div class="info-item">
           <span class="info-label">Questions</span>
-          <span class="info-value">20</span>
+          <span class="info-value">{{ QUESTIONS_PER_RUN }}</span>
         </div>
         <div class="info-sep">·</div>
         <div class="info-item">
@@ -225,6 +225,7 @@
 <script setup lang="ts">
 const router = useRouter()
 const { isDark } = useTheme()
+import { QUESTIONS_PER_RUN } from '~/composables/useNenQuiz'
 const { result } = useNenQuiz()
 
 function startQuiz() {

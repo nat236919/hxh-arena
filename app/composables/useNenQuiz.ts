@@ -12,8 +12,12 @@ function shuffle<T>(arr: T[]): T[] {
   return a
 }
 
+export const QUESTIONS_PER_RUN = 15
+
 function buildShuffledQuestions(): Question[] {
-  return rawQuestions.map(q => ({ ...q, answers: shuffle(q.answers) }))
+  return shuffle(rawQuestions)
+    .slice(0, QUESTIONS_PER_RUN)
+    .map(q => ({ ...q, answers: shuffle(q.answers) }))
 }
 
 // Shared state outside the function so all pages see the same instance

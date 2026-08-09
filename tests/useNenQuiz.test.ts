@@ -5,6 +5,8 @@ import { nenTypes } from '../app/data/nenTypes'
 import type { NenTypeId, NenType } from '../app/data/nenTypes'
 import type { Question } from '../app/data/questions'
 
+const QUESTIONS_PER_RUN = 15
+
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]
   for (let i = a.length - 1; i > 0; i--) {
@@ -15,7 +17,9 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 function buildShuffledQuestions(): Question[] {
-  return rawQuestions.map(q => ({ ...q, answers: shuffle(q.answers) }))
+  return shuffle(rawQuestions)
+    .slice(0, QUESTIONS_PER_RUN)
+    .map(q => ({ ...q, answers: shuffle(q.answers) }))
 }
 
 // Inline composable logic — mirrors useNenQuiz.ts without Nuxt auto-imports
@@ -77,6 +81,22 @@ describe('useNenQuiz', () => {
     }
   })
 
+  it(`selects exactly ${QUESTIONS_PER_RUN} questions per run`, () => {
+    expect(quiz.questions.value.length).toBe(QUESTIONS_PER_RUN)
+  })
+
+  it('selected questions are a subset of all raw questions', () => {
+    const rawIds = new Set(rawQuestions.map(q => q.id))
+    for (const q of quiz.questions.value) {
+      expect(rawIds).toContain(q.id)
+    }
+  })
+
+  it('selected questions have no duplicates', () => {
+    const ids = quiz.questions.value.map(q => q.id)
+    expect(new Set(ids).size).toBe(QUESTIONS_PER_RUN)
+  })
+
   it('currentQuestion returns the first question initially', () => {
     expect(quiz.currentQuestion.value.id).toBe(quiz.questions.value[0]!.id)
   })
@@ -113,8 +133,8 @@ describe('useNenQuiz', () => {
     expect(quiz.isComplete.value).toBe(false)
   })
 
-  it('completes after answering all questions and sets result', () => {
-    for (let i = 0; i < rawQuestions.length; i++) {
+  it('completes after answering all selected questions and sets result', () => {
+    for (let i = 0; i < QUESTIONS_PER_RUN; i++) {
       expect(quiz.isComplete.value).toBe(false)
       quiz.answerQuestion(0)
     }
@@ -124,17 +144,16 @@ describe('useNenQuiz', () => {
   })
 
   it('result matches the dominant Nen type after completion', () => {
-    for (let i = 0; i < rawQuestions.length; i++) {
+    for (let i = 0; i < QUESTIONS_PER_RUN; i++) {
       quiz.answerQuestion(0)
     }
     expect(quiz.result.value?.id).toBe(quiz.dominantType.value)
     expect(nenTypes).toHaveProperty(quiz.result.value!.id)
   })
 
-  it('reset restores initial state and reshuffles answers', () => {
-    const orderBefore = quiz.questions.value[0]!.answers.map(a => a.text)
+  it('reset restores initial state and picks a new set of questions', () => {
+    const idsBefore = quiz.questions.value.map(q => q.id)
     quiz.answerQuestion(0)
-    quiz.answerQuestion(1)
     quiz.reset()
     expect(quiz.currentQuestionIndex.value).toBe(0)
     expect(quiz.isComplete.value).toBe(false)
@@ -142,15 +161,22 @@ describe('useNenQuiz', () => {
     for (const v of Object.values(quiz.scores.value)) {
       expect(v).toBe(0)
     }
-    // Answer texts should still all be present after reshuffle (order may differ)
-    const orderAfter = quiz.questions.value[0]!.answers.map(a => a.text)
-    expect(orderAfter.sort()).toEqual(orderBefore.sort())
+    expect(quiz.questions.value.length).toBe(QUESTIONS_PER_RUN)
+    // Questions after reset are still a valid subset
+    const rawIds = new Set(rawQuestions.map(q => q.id))
+    for (const q of quiz.questions.value) {
+      expect(rawIds).toContain(q.id)
+    }
+    // IDs before and after may differ (different random selection)
+    const idsAfter = quiz.questions.value.map(q => q.id)
+    // Both sets must be valid subsets — just verify length unchanged
+    expect(idsAfter.length).toBe(idsBefore.length)
   })
 
-  it('shuffled questions contain the same answers as the originals', () => {
-    for (let i = 0; i < rawQuestions.length; i++) {
-      const original = rawQuestions[i]!.answers.map(a => a.text).sort()
-      const shuffled = quiz.questions.value[i]!.answers.map(a => a.text).sort()
+  it('shuffled answers contain the same texts as the originals', () => {
+    for (const q of quiz.questions.value) {
+      const original = rawQuestions.find(r => r.id === q.id)!.answers.map(a => a.text).sort()
+      const shuffled = q.answers.map(a => a.text).sort()
       expect(shuffled).toEqual(original)
     }
   })
