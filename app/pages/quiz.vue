@@ -82,9 +82,17 @@ const dominantGlow = computed(() => nenTypes[dominantType.value]?.glowColor ?? '
 const waterFill = computed(() => nenTypes[dominantType.value]?.color ?? '#60a5fa')
 const auraFill = computed(() => nenTypes[dominantType.value]?.glowColor ?? 'rgba(167,139,250,0.2)')
 
+const rippleSound = import.meta.client
+  ? new Audio('https://assets.mixkit.co/active_storage/sfx/146/146-preview.mp3')
+  : null
+
 function handleAnswer(idx: number) {
   if (selectedAnswer.value !== null) return
   selectedAnswer.value = idx
+  if (rippleSound) {
+    rippleSound.currentTime = 0
+    rippleSound.play().catch(() => {})
+  }
 
   setTimeout(() => {
     answerQuestion(idx)

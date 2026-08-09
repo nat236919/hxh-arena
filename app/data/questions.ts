@@ -116,4 +116,104 @@ export const questions: Question[] = [
       { text: 'Indifferent. The goal was the means — what matters is what I gained.', scores: { manipulator: 3, specialist: 1 } },
     ],
   },
+  {
+    id: 11,
+    text: 'You are betrayed by someone you trusted. How do you respond?',
+    answers: [
+      { text: 'Confront them head-on. Betrayal deserves a direct answer.', scores: { enhancer: 3, emitter: 1 } },
+      { text: 'Cut them off coldly. Emotion is a liability.', scores: { manipulator: 3, conjurer: 1 } },
+      { text: 'Smile and wait. Revenge is best served when they least expect it.', scores: { transmuter: 2, specialist: 2 } },
+      { text: 'Document everything. When the time comes, the evidence will do the work.', scores: { conjurer: 3, manipulator: 1 } },
+    ],
+  },
+  {
+    id: 12,
+    text: 'What is your relationship with pain?',
+    answers: [
+      { text: 'Pain sharpens me. I push through it.', scores: { enhancer: 3, emitter: 1 } },
+      { text: 'Pain is information. I analyze what caused it.', scores: { conjurer: 2, manipulator: 2 } },
+      { text: 'Pain does not reach me the way it does others.', scores: { specialist: 3, transmuter: 1 } },
+      { text: 'I redirect pain into fuel for what comes next.', scores: { transmuter: 2, enhancer: 2 } },
+    ],
+  },
+  {
+    id: 13,
+    text: 'You have one shot to end a fight. What do you do?',
+    answers: [
+      { text: 'A single overwhelming strike at full power.', scores: { enhancer: 3 } },
+      { text: 'Fire from a position they cannot see or reach.', scores: { emitter: 3, manipulator: 1 } },
+      { text: 'Spring the trap I set the moment the fight began.', scores: { manipulator: 3, conjurer: 1 } },
+      { text: 'Do something completely unexpected — they cannot block what they cannot predict.', scores: { transmuter: 2, specialist: 2 } },
+    ],
+  },
+  {
+    id: 14,
+    text: 'How do you feel about forming alliances?',
+    answers: [
+      { text: 'Loyalty is everything. I fight hardest for those I trust.', scores: { enhancer: 3, emitter: 1 } },
+      { text: 'Alliances are tools. I maintain them as long as they are useful.', scores: { manipulator: 3, specialist: 1 } },
+      { text: 'I prefer to work alone. Others complicate things.', scores: { conjurer: 2, specialist: 2 } },
+      { text: 'I join when it suits me and leave without explanation.', scores: { transmuter: 2, specialist: 2 } },
+    ],
+  },
+  {
+    id: 15,
+    text: 'What does power mean to you?',
+    answers: [
+      { text: 'The ability to protect what I care about.', scores: { enhancer: 3, conjurer: 1 } },
+      { text: 'The freedom to do whatever I want, whenever I want.', scores: { specialist: 2, transmuter: 2 } },
+      { text: 'Control — over situations, over people, over outcomes.', scores: { manipulator: 3, emitter: 1 } },
+      { text: 'Mastery of a craft no one else can match.', scores: { conjurer: 3, emitter: 1 } },
+    ],
+  },
+  {
+    id: 16,
+    text: 'When learning something new, you...',
+    answers: [
+      { text: 'Drill it until it is muscle memory. Repetition builds mastery.', scores: { enhancer: 3, conjurer: 1 } },
+      { text: 'Experiment freely. The best discoveries happen by breaking the rules.', scores: { transmuter: 3, specialist: 1 } },
+      { text: 'Study the system deeply before acting. Understanding precedes action.', scores: { conjurer: 2, manipulator: 2 } },
+      { text: 'Learn just enough to apply it immediately, then refine later.', scores: { emitter: 2, enhancer: 2 } },
+    ],
+  },
+  {
+    id: 17,
+    text: 'How do others usually perceive your emotions?',
+    answers: [
+      { text: 'Transparent. What I feel, I show.', scores: { enhancer: 3, emitter: 1 } },
+      { text: 'Unreadable. People rarely know what I am thinking.', scores: { manipulator: 2, specialist: 2 } },
+      { text: 'Dramatic. My emotions run hot and shift quickly.', scores: { transmuter: 3, emitter: 1 } },
+      { text: 'Controlled. I choose carefully when and how to show emotion.', scores: { conjurer: 3, manipulator: 1 } },
+    ],
+  },
+  {
+    id: 18,
+    text: 'What kind of Nen training would suit you most?',
+    answers: [
+      { text: 'Pushing my limits until I break through them physically.', scores: { enhancer: 3 } },
+      { text: 'Inventing new uses for my aura that no one has tried before.', scores: { transmuter: 2, specialist: 2 } },
+      { text: 'Crafting an ability with precise conditions that maximizes power.', scores: { conjurer: 3, manipulator: 1 } },
+      { text: 'Extending my aura as far from my body as possible.', scores: { emitter: 3 } },
+    ],
+  },
+  {
+    id: 19,
+    text: 'You discover a secret that could change everything. You...',
+    answers: [
+      { text: 'Act on it immediately — sitting on information wastes opportunity.', scores: { enhancer: 2, emitter: 2 } },
+      { text: 'Hold it close. Knowledge is leverage.', scores: { manipulator: 3, conjurer: 1 } },
+      { text: 'Use it in the most dramatic, unexpected way possible.', scores: { transmuter: 2, specialist: 2 } },
+      { text: 'Verify it thoroughly before doing anything.', scores: { conjurer: 3, manipulator: 1 } },
+    ],
+  },
+  {
+    id: 20,
+    text: 'If your aura had a sound, what would it be?',
+    answers: [
+      { text: 'A roar — raw, overwhelming, impossible to ignore.', scores: { enhancer: 3, emitter: 1 } },
+      { text: 'A hum that shifts unpredictably in tone and pitch.', scores: { transmuter: 3, specialist: 1 } },
+      { text: 'A sharp crack — sudden, distant, already gone.', scores: { emitter: 3 } },
+      { text: 'A precise, resonant tone like a blade being drawn.', scores: { conjurer: 2, manipulator: 2 } },
+    ],
+  },
 ]
