@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# TODO: update with actual deployed URL
-Sitemap: https://hxh-arena.vercel.app/sitemap.xml
+Sitemap: https://hxh-arena.nuttaphat.com/sitemap.xml

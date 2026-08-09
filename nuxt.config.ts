@@ -1,5 +1,4 @@
-// TODO: replace SITE_URL with the actual deployed URL before going live
-const SITE_URL = 'https://hxh-arena.vercel.app'
+const SITE_URL = 'https://hxh-arena.nuttaphat.com'
 const SITE_TITLE = 'HxH Arena — Discover Your Nen Type'
 const SITE_DESCRIPTION = 'Take the Water Divination test and find out which of the six Nen types — Enhancer, Transmuter, Emitter, Conjurer, Manipulator, or Specialist — matches your aura. A Hunter × Hunter fan experience.'
 const OG_IMAGE = `${SITE_URL}/characters/hxh-logo.webp`
