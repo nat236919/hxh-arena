@@ -16,8 +16,7 @@ export function useTheme() {
   function init() {
     if (!import.meta.client) return
     const saved = localStorage.getItem('hxh-theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    isDark.value = saved ? saved === 'dark' : prefersDark
+    isDark.value = saved ? saved === 'dark' : true
     applyTheme(isDark.value)
   }
 
