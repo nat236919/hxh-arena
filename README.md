@@ -38,6 +38,19 @@ nvm install 22
 nvm use 22
 ```
 
+If `nvm` is not found in your terminal, load it first:
+
+```bash
+source ~/.nvm/nvm.sh && nvm use 22
+```
+
+To make nvm available automatically in every new terminal, add this to your `~/.zshrc`:
+
+```bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+```
+
 ## Setup
 
 ```bash
