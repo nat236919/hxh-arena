@@ -119,12 +119,13 @@ export const nenTypes: Record<NenTypeId, NenType> = {
         title: 'Hunter & Medical Student',
         portrait: '/characters/leorio.webp',
         abilities: [
-          { name: 'Remote Punch', description: 'Opens a rift in space to deliver a long-range punch anywhere within sight.' },
+          { name: 'Remote Punch', description: 'Projects a punch over a long distance, allowing him to strike targets far from his location.' },
         ],
       },
       {
         name: 'Franklin Bordeau',
         title: 'Phantom Troupe Member #7',
+        portrait: '/characters/franklin.webp',
         abilities: [
           { name: 'Double Machine Gun', description: 'Fires dozens of aura bullets per second from his severed fingertips.' },
         ],
@@ -132,9 +133,10 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Razor',
         title: 'Game Master of Greed Island',
+        portrait: '/characters/razor.webp',
         abilities: [
-          { name: 'Nen Constructs', description: 'Creates powerful aura constructs including a massive barrier and sport-like attacks.' },
-          { name: 'Devil\'s Volleyball', description: 'Fires an explosive ball of pure aura with enough force to shatter anything.' },
+          { name: 'Aura Barrier', description: 'Constructs an enormous dome of pure aura that seals off a large area — shown enclosing all of Greed Island\'s coastline.' },
+          { name: 'Aura Ball', description: 'Fires a condensed ball of emitted aura with devastating striking force, used in a volleyball-style exchange during the Greed Island arc.' },
         ],
       },
     ],
@@ -167,6 +169,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Shizuku Murasaki',
         title: 'Phantom Troupe Member #8',
+        portrait: '/characters/shizuku.webp',
         abilities: [
           { name: 'Blinky (Deme-chan)', description: 'A conjured vacuum cleaner that sucks up non-living matter infinitely.' },
         ],
@@ -189,6 +192,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Illumi Zoldyck',
         title: 'Assassin & Phantom Troupe Member',
+        portrait: '/characters/illumi.webp',
         abilities: [
           { name: 'Needle People', description: 'Inserts needles into people\'s brains to control their actions completely.' },
           { name: 'Hypnotic Spell', description: 'Alters a person\'s face, personality, and behavior through needle insertion.' },
@@ -197,6 +201,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Shalnark',
         title: 'Phantom Troupe Member & Hunter',
+        portrait: '/characters/shalnark.webp',
         abilities: [
           { name: 'Black Voice', description: 'Attaches an antenna to a target, granting full remote control over their body.' },
           { name: 'Autopilot Mode', description: 'Inserts an antenna into himself, unlocking extreme physical performance at the cost of consciousness.' },
@@ -205,6 +210,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Morel Mackernasey',
         title: 'Single-Star Hunter',
+        portrait: '/characters/morel.webp',
         abilities: [
           { name: 'Deep Purple', description: 'Exhales smoke from his pipe to create controllable Nen puppets.' },
           { name: 'Smoky Jail', description: 'Erects a massive cylindrical smoke barrier to trap opponents.' },
@@ -238,6 +244,7 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Neon Nostrade',
         title: 'Nostrade Family Daughter',
+        portrait: '/characters/neon.webp',
         abilities: [
           { name: 'Lovely Ghostwriter', description: 'Enters a trance to write poems that predict the future with frightening accuracy.' },
         ],
@@ -245,8 +252,9 @@ export const nenTypes: Record<NenTypeId, NenType> = {
       {
         name: 'Ging Freecss',
         title: 'Double-Star Ruins Hunter',
+        portrait: '/characters/ging.webp',
         abilities: [
-          { name: 'Replication', description: 'Can copy any ability he has seen, heard, or been hit by — and return it amplified.' },
+          { name: 'Unknown Specialist Ability', description: 'Ging\'s Nen is confirmed as Specialist type and described as extraordinary, but his specific abilities have not been fully revealed in the manga.' },
         ],
       },
     ],

@@ -84,8 +84,8 @@
         </div>
 
         <p class="credits-text stage-3">
-          Character data: <a href="https://hunterxhunter.fandom.com/wiki/Hunterpedia" target="_blank"
-            rel="noopener">Hunterpedia</a>.
+          Character data &amp; images: <a href="https://hunterxhunter.fandom.com/wiki/Hunterpedia" target="_blank"
+            rel="noopener">Hunterpedia</a> (CC BY-SA).
           Hunter x Hunter &copy; Yoshihiro Togashi / Shueisha.
         </p>
       </section>
