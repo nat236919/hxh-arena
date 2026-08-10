@@ -42,10 +42,17 @@
     <!-- ===================== SECTION 1: WATER DIVINATION ===================== -->
     <section id="divination" class="page-section section-divination">
       <div class="section-inner section-inner--centered">
-        <div class="hero-block">
-          <img src="/characters/hxh-logo.webp" alt="Hunter x Hunter" class="hero-logo" />
-          <h1 class="hero-title">What is your<br><span class="hero-title-accent">Nen type?</span></h1>
-          <p class="hero-desc">水見式 · Focus your aura. The water will reveal what you truly are.</p>
+        <div class="title-block">
+          <div class="hxh-logo-wrap">
+            <img src="/characters/hxh-logo.webp" alt="Hunter x Hunter" class="hxh-logo-img" />
+            <div class="hxh-logo-glow" />
+          </div>
+          <div class="title-arena-row">
+            <span class="title-arena-line" />
+            <span class="title-arena-word">ARENA</span>
+            <span class="title-arena-line" />
+          </div>
+          <div class="title-subtitle">水見式 · Water Divination · Nen Type Classification</div>
         </div>
 
         <!-- Glass -->
@@ -120,6 +127,25 @@
                 <line x1="132" y1="29" x2="148" y2="29" stroke="#2A5A2A" stroke-width="0.9" />
               </g>
             </svg>
+            <p class="glass-touch-hint">· Touch the glass to begin ·</p>
+          </div>
+        </div>
+
+        <!-- Info strip -->
+        <div class="info-strip">
+          <div class="info-item">
+            <span class="info-label">Questions</span>
+            <span class="info-value">{{ QUESTIONS_PER_RUN }}</span>
+          </div>
+          <div class="info-sep">·</div>
+          <div class="info-item">
+            <span class="info-label">Nen Types</span>
+            <span class="info-value">6</span>
+          </div>
+          <div class="info-sep">·</div>
+          <div class="info-item">
+            <span class="info-label">Method</span>
+            <span class="info-value">Divination</span>
           </div>
         </div>
 
@@ -127,6 +153,8 @@
           <span class="begin-btn-glow" />
           <span class="begin-btn-text">Begin Water Divination</span>
         </button>
+
+        <p class="footer-note">Focus your aura. The water will reveal your true nature.</p>
 
         <button class="scroll-hint" @click="scrollTo('story')" aria-label="Scroll to Story Arcs">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
@@ -640,67 +668,84 @@ function particleStyle(n: number) {
   margin: 0;
 }
 
-/* ---- Hero block ---- */
-.hero-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+/* ---- Divination title block ---- */
+.title-block {
   margin-bottom: 40px;
+  text-align: center;
 }
 
-.hero-logo {
-  height: clamp(48px, 10vw, 80px);
-  width: auto;
-  filter: drop-shadow(0 0 16px rgba(184, 36, 75, 0.35));
-  opacity: 0.95;
+.hxh-logo-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 12px;
 }
 
-.hero-eyebrow {
+.hxh-logo-img {
+  width: clamp(220px, 55vw, 400px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 20px rgba(184, 36, 75, 0.4)) drop-shadow(0 0 40px rgba(232, 66, 10, 0.25));
+  animation: logo-breathe 4s ease-in-out infinite;
+}
+
+@keyframes logo-breathe {
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 20px rgba(184, 36, 75, 0.4)) drop-shadow(0 0 40px rgba(232, 66, 10, 0.25));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 32px rgba(184, 36, 75, 0.7)) drop-shadow(0 0 60px rgba(232, 66, 10, 0.4));
+  }
+}
+
+.hxh-logo-glow {
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(ellipse, rgba(232, 66, 10, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  animation: logo-breathe 4s ease-in-out infinite;
+}
+
+.title-arena-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.title-arena-line {
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: rgba(220, 220, 220, 0.25);
+}
+
+.title-arena-word {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.6);
+}
+
+.title-subtitle {
   font-family: var(--font-heading);
   font-size: 0.72rem;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(184, 36, 75, 0.7);
+  color: rgba(220, 220, 220, 0.55);
+}
+
+.footer-note {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: rgba(220, 220, 220, 0.5);
+  text-transform: uppercase;
   margin: 0;
-}
-
-.hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 900;
-  color: var(--hxh-text-primary);
-  letter-spacing: 0.04em;
-  line-height: 1.1;
-  margin: 0;
-  text-align: center;
-}
-
-.hero-title-accent {
-  color: #B8244B;
-  text-shadow: 0 0 32px rgba(184, 36, 75, 0.4);
-}
-
-.hero-desc {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  line-height: 1.7;
-  color: var(--hxh-text-secondary);
-  max-width: 420px;
-  margin: 0;
-  text-align: center;
-}
-
-.hero-about {
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  line-height: 1.65;
-  color: var(--hxh-text-muted);
-  max-width: 380px;
-  margin: 4px 0 0;
-  text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 12px;
 }
 
 /* ---- Divination section (reuses existing glass styles) ---- */
