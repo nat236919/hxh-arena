@@ -207,43 +207,62 @@
           </div>
         </div>
 
-        <!-- Locked state -->
-        <div class="arena-locked">
-          <svg class="arena-seal" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="60" cy="60" r="56" fill="none" stroke="rgba(184,36,75,0.15)" stroke-width="1" />
-            <polygon points="60,8 102,32 102,88 60,112 18,88 18,32" fill="none" stroke="rgba(184,36,75,0.25)"
-              stroke-width="1.2" stroke-linejoin="round" />
-            <circle cx="60" cy="60" r="22" fill="none" stroke="rgba(232,66,10,0.18)" stroke-width="1" />
-            <line x1="60" y1="38" x2="60" y2="8" stroke="rgba(184,36,75,0.18)" stroke-width="0.8" />
-            <line x1="60" y1="82" x2="60" y2="112" stroke="rgba(184,36,75,0.18)" stroke-width="0.8" />
-            <line x1="38.6" y1="50" x2="18" y2="32" stroke="rgba(184,36,75,0.18)" stroke-width="0.8" />
-            <line x1="81.4" y1="70" x2="102" y2="88" stroke="rgba(184,36,75,0.18)" stroke-width="0.8" />
-            <line x1="81.4" y1="50" x2="102" y2="32" stroke="rgba(184,36,75,0.18)" stroke-width="0.8" />
-            <line x1="38.6" y1="70" x2="18" y2="88" stroke="rgba(184,36,75,0.18)" stroke-width="0.8" />
-            <circle cx="60" cy="60" r="5" fill="rgba(232,66,10,0.25)" />
-          </svg>
+        <div class="arena-status-badge">
+          <span class="arena-status-dot" />
+          Coming Soon
+        </div>
 
-          <div class="arena-status-badge">
-            <span class="arena-status-dot" />
-            Hunter Exam in Progress
+        <div class="arena-preview-grid">
+          <!-- Leaderboard preview -->
+          <div class="arena-card">
+            <div class="arena-card-header">
+              <span class="arena-card-icon">&#9733;</span>
+              <span class="arena-card-title">Leaderboard</span>
+            </div>
+            <div class="arena-card-body arena-card-body--blurred">
+              <div v-for="(entry, i) in leaderboard" :key="i" class="lb-row">
+                <span class="lb-rank"
+                  :class="{ 'lb-rank--gold': i === 0, 'lb-rank--silver': i === 1, 'lb-rank--bronze': i === 2 }">#{{ i +
+                    1 }}</span>
+                <span class="lb-name">{{ entry.name }}</span>
+                <span class="lb-type" :style="{ color: entry.color }">{{ entry.type }}</span>
+                <span class="lb-score">{{ entry.score }}</span>
+              </div>
+            </div>
+            <div class="arena-card-lock">Hunter License Required</div>
           </div>
-          <h3 class="arena-locked-title">Arena Access Restricted</h3>
-          <p class="arena-locked-body">
-            The Hunter Association is currently administering the 288th Hunter Exam.
-            Arena combat rankings and challenger matching will be available once the examination concludes.
-          </p>
-          <div class="arena-locked-meta">
-            <div class="arena-meta-item">
-              <span class="arena-meta-label">Status</span>
-              <span class="arena-meta-value">Under Construction</span>
+
+          <!-- 1v1 matchup teaser -->
+          <div class="arena-card">
+            <div class="arena-card-header">
+              <span class="arena-card-icon">&#9876;</span>
+              <span class="arena-card-title">1v1 Challenge</span>
             </div>
-            <div class="arena-meta-sep">·</div>
-            <div class="arena-meta-item">
-              <span class="arena-meta-label">Clearance</span>
-              <span class="arena-meta-value">Hunter License Required</span>
+            <div class="arena-card-body arena-card-body--blurred">
+              <div class="matchup-row">
+                <div class="matchup-side">
+                  <div class="matchup-badge"
+                    style="background: rgba(232,160,0,0.15); border-color: rgba(232,160,0,0.4); color: #E8A000;">ENH
+                  </div>
+                  <span class="matchup-name">Gon F.</span>
+                </div>
+                <div class="matchup-vs">VS</div>
+                <div class="matchup-side">
+                  <div class="matchup-badge"
+                    style="background: rgba(184,36,75,0.15); border-color: rgba(184,36,75,0.4); color: #B8244B;">TRN
+                  </div>
+                  <span class="matchup-name">Hisoka M.</span>
+                </div>
+              </div>
+              <div class="matchup-compat">
+                <span class="matchup-compat-label">Compatibility</span>
+                <span class="matchup-compat-value matchup-compat--neutral">Neutral</span>
+              </div>
             </div>
+            <div class="arena-card-lock">Hunter License Required</div>
           </div>
         </div>
+
       </div>
     </section>
 
@@ -272,6 +291,15 @@ const router = useRouter()
 const route = useRoute()
 const { isDark } = useTheme()
 const { result } = useNenQuiz()
+
+const leaderboard = [
+  { name: 'Killua Z.', type: 'Transmuter', color: '#6B3FD4', score: 9840 },
+  { name: 'Gon F.', type: 'Enhancer', color: '#E8A000', score: 9210 },
+  { name: 'Kurapika', type: 'Specialist', color: '#CC1A1A', score: 8750 },
+  { name: 'Hisoka M.', type: 'Transmuter', color: '#6B3FD4', score: 8430 },
+  { name: 'Leorio P.', type: 'Emitter', color: '#1E7A40', score: 7980 },
+]
+
 
 const sections = [
   { id: 'divination', label: 'Water Divination' },
@@ -1012,22 +1040,6 @@ function particleStyle(n: number) {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.arena-locked {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  max-width: 480px;
-  margin: 0 auto;
-}
-
-.arena-seal {
-  width: 90px;
-  height: 90px;
-  opacity: 0.4;
-  animation: seal-rotate 30s linear infinite;
-}
-
 .arena-status-badge {
   display: flex;
   align-items: center;
@@ -1041,6 +1053,7 @@ function particleStyle(n: number) {
   background: rgba(232, 160, 0, 0.07);
   padding: 6px 16px;
   border-radius: 2px;
+  margin-bottom: 32px;
 }
 
 .arena-status-dot {
@@ -1063,53 +1076,178 @@ function particleStyle(n: number) {
   }
 }
 
-.arena-locked-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 3vw, 2rem);
-  font-weight: 900;
-  color: var(--hxh-text-primary);
-  letter-spacing: 0.06em;
-  margin: 0;
+/* ---- Arena preview grid ---- */
+.arena-preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  width: 100%;
+  max-width: 720px;
+  margin-bottom: 32px;
 }
 
-.arena-locked-body {
-  font-family: var(--font-body);
-  font-size: 0.95rem;
-  line-height: 1.8;
-  color: var(--hxh-text-secondary);
-  margin: 0;
-}
-
-.arena-locked-meta {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-family: var(--font-heading);
-}
-
-.arena-meta-item {
+.arena-card {
+  position: relative;
+  background: var(--hxh-bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2px;
 }
 
-.arena-meta-label {
-  font-size: 0.62rem;
+.arena-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--hxh-text-muted);
 }
 
-.arena-meta-value {
-  font-size: 0.75rem;
+.arena-card-icon {
+  font-size: 0.85rem;
   color: rgba(184, 36, 75, 0.7);
+}
+
+.arena-card-body {
+  padding: 14px 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arena-card-body--blurred {
+  filter: blur(3px);
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.arena-card-lock {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(184, 36, 75, 0.6);
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(1px);
+  top: 44px;
+}
+
+/* Leaderboard */
+.lb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+}
+
+.lb-rank {
+  width: 24px;
+  font-size: 0.65rem;
+  color: var(--hxh-text-muted);
   letter-spacing: 0.05em;
 }
 
-.arena-meta-sep {
-  color: rgba(220, 220, 220, 0.2);
+.lb-rank--gold {
+  color: #E8A000;
 }
+
+.lb-rank--silver {
+  color: #aaa;
+}
+
+.lb-rank--bronze {
+  color: #cd7f32;
+}
+
+.lb-name {
+  flex: 1;
+  color: var(--hxh-text-secondary);
+}
+
+.lb-type {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+}
+
+.lb-score {
+  font-size: 0.72rem;
+  color: var(--hxh-text-muted);
+}
+
+/* 1v1 matchup */
+.matchup-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.matchup-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.matchup-badge {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 6px 10px;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+.matchup-name {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  color: var(--hxh-text-secondary);
+  letter-spacing: 0.08em;
+}
+
+.matchup-vs {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 900;
+  color: rgba(184, 36, 75, 0.5);
+  letter-spacing: 0.1em;
+}
+
+.matchup-compat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.matchup-compat-label {
+  color: var(--hxh-text-muted);
+}
+
+.matchup-compat--neutral {
+  color: rgba(232, 160, 0, 0.8);
+}
+
 
 /* ---- Site footer ---- */
 .site-footer {
@@ -1192,5 +1330,10 @@ function particleStyle(n: number) {
   .arcs-grid {
     grid-template-columns: 1fr;
   }
+
+  .arena-preview-grid {
+    grid-template-columns: 1fr;
+  }
+
 }
 </style>
