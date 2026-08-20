@@ -28,6 +28,8 @@
         Fan project, not affiliated with or endorsed by the rights holders.
         Character data via <a href="https://hunterxhunter.fandom.com" target="_blank" rel="noopener"
           class="footer-link">Hunterpedia</a>.
+        <span class="footer-sep">·</span>
+        <NuxtLink to="/methodology" class="footer-link">Quiz methodology</NuxtLink>
       </div>
     </footer>
   </div>

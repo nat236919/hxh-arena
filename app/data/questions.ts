@@ -40,6 +40,7 @@ export const questions: Question[] = [
       { text: 'Rules are what make power real. The stricter, the better.', scores: { conjurer: 3, manipulator: 1 } },
       { text: 'Rules are just where creativity starts, not where it ends.', scores: { transmuter: 3, specialist: 1 } },
       { text: 'I set the rules. Other people follow them.', scores: { manipulator: 3, conjurer: 1 } },
+      { text: 'Rules? By the time you\'ve finished reading them I\'ve already moved.', scores: { emitter: 3 } },
     ],
   },
   {
@@ -49,7 +50,7 @@ export const questions: Question[] = [
       { text: 'One goal. That\'s it. I don\'t need it to be complicated.', scores: { enhancer: 3, emitter: 1 } },
       { text: 'There\'s something I have to make right. I haven\'t forgotten.', scores: { conjurer: 3, manipulator: 1 } },
       { text: 'Honestly? I just want things to be interesting.', scores: { transmuter: 3, specialist: 1 } },
-      { text: 'Freedom. To do what I want, when I want, on my own terms.', scores: { specialist: 2, manipulator: 2 } },
+      { text: 'Freedom. To do what I want, when I want, on my own terms.', scores: { specialist: 3, transmuter: 1 } },
     ],
   },
   {
@@ -59,7 +60,8 @@ export const questions: Question[] = [
       { text: 'Training. My body needs to be ready, not my notes.', scores: { enhancer: 3 } },
       { text: 'Learning everything about who I\'m facing. I want zero surprises.', scores: { conjurer: 2, manipulator: 2 } },
       { text: 'Setting things up so the fight is basically already over when it starts.', scores: { manipulator: 3, conjurer: 1 } },
-      { text: 'Drilling the specific moves I\'ll need until I can do them without thinking.', scores: { emitter: 2, conjurer: 2 } },
+      { text: 'Getting my ability dialed in. When it clicks just right, the fight is already mine.', scores: { transmuter: 3, emitter: 1 } },
+      { text: 'I don\'t really have a method. I\'ll know what I need when I\'m actually in it.', scores: { specialist: 3 } },
     ],
   },
   {
@@ -114,6 +116,7 @@ export const questions: Question[] = [
       { text: 'That\'s it. It\'s done. I can breathe now.', scores: { conjurer: 3, manipulator: 1 } },
       { text: 'Honestly a little restless. Winning is great but now there\'s nothing to chase.', scores: { transmuter: 2, specialist: 2 } },
       { text: 'The goal was never the point. The point was what I got along the way.', scores: { manipulator: 3, specialist: 1 } },
+      { text: 'Celebrate. Loudly. Then immediately start looking for the next fight.', scores: { emitter: 3, enhancer: 1 } },
     ],
   },
   {
@@ -132,7 +135,7 @@ export const questions: Question[] = [
     answers: [
       { text: 'It makes me sharper. I just push harder.', scores: { enhancer: 3, emitter: 1 } },
       { text: 'I want to understand what caused it before I react.', scores: { conjurer: 2, manipulator: 2 } },
-      { text: 'It doesn\'t hit me the way it seems to hit other people.', scores: { specialist: 3, transmuter: 1 } },
+      { text: 'It doesn\'t hit me the way it seems to hit other people.', scores: { specialist: 3, emitter: 1 } },
       { text: 'I take it and turn it into something useful.', scores: { transmuter: 2, enhancer: 2 } },
     ],
   },
@@ -152,7 +155,7 @@ export const questions: Question[] = [
     answers: [
       { text: 'There\'s nobody I fight harder for than the people I actually trust.', scores: { enhancer: 3, emitter: 1 } },
       { text: 'Alliances make sense when they\'re useful. I don\'t pretend otherwise.', scores: { manipulator: 3, specialist: 1 } },
-      { text: 'Honestly, I prefer to work alone. Fewer variables.', scores: { conjurer: 2, specialist: 2 } },
+      { text: 'Honestly, I prefer to work alone. Fewer variables.', scores: { specialist: 3, conjurer: 1 } },
       { text: 'I\'ll join if it seems interesting and leave when it stops being so.', scores: { transmuter: 2, specialist: 2 } },
     ],
   },
@@ -161,7 +164,7 @@ export const questions: Question[] = [
     text: 'What does power actually mean to you?',
     answers: [
       { text: 'Being strong enough that the people I care about don\'t have to be afraid.', scores: { enhancer: 3, conjurer: 1 } },
-      { text: 'Being able to do whatever I want without asking anyone for permission.', scores: { specialist: 2, transmuter: 2 } },
+      { text: 'Being able to do whatever I want without asking anyone for permission.', scores: { transmuter: 3, specialist: 1 } },
       { text: 'Control. Over situations, over people, over what happens next.', scores: { manipulator: 3, emitter: 1 } },
       { text: 'Getting so good at something that nobody in the world can touch you at it.', scores: { conjurer: 3, emitter: 1 } },
     ],
@@ -173,7 +176,7 @@ export const questions: Question[] = [
       { text: 'Repetition. I do it until my body knows it without me thinking.', scores: { enhancer: 3, conjurer: 1 } },
       { text: 'I break the rules early. That\'s usually where the good stuff hides.', scores: { transmuter: 3, specialist: 1 } },
       { text: 'I want to understand the whole system before I try anything.', scores: { conjurer: 2, manipulator: 2 } },
-      { text: 'I learn the minimum needed to start, then fix it as I go.', scores: { emitter: 2, enhancer: 2 } },
+      { text: 'Jump in. Fix the problems while you\'re doing it. That\'s just faster.', scores: { emitter: 3, enhancer: 1 } },
     ],
   },
   {
