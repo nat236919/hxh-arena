@@ -92,15 +92,9 @@ const opponentColor = computed(() =>
   nenTypes[props.result.opponent.nen_type as NenTypeId]?.color ?? '#E8A000'
 )
 
-const updatedWins = computed(() =>
-  props.result.winner === 'challenger' ? props.challenger.wins + 1 : props.challenger.wins
-)
-const updatedLosses = computed(() =>
-  props.result.winner === 'opponent' ? props.challenger.losses + 1 : props.challenger.losses
-)
-const updatedDraws = computed(() =>
-  props.result.winner === 'draw' ? props.challenger.draws + 1 : props.challenger.draws
-)
+const updatedWins = computed(() => props.challenger.wins)
+const updatedLosses = computed(() => props.challenger.losses)
+const updatedDraws = computed(() => props.challenger.draws)
 </script>
 
 <style scoped>
