@@ -122,9 +122,11 @@ function decrement(key: keyof typeof values) {
 
 async function confirm() {
   if (!character.value || remaining.value !== 0) return
+  const token = sessionStorage.getItem('hunter_token')
+  if (!token) { router.replace('/arena'); return }
   saving.value = true
   try {
-    await lockStats(character.value.id, {
+    await lockStats(character.value.id, token, {
       strength_speed: values.strength_speed,
       aura: values.aura,
       defense: values.defense,

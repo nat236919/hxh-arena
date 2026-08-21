@@ -21,7 +21,7 @@ A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz 
 - **1v1 Combat** - 2d6 dice rolls modified by Nen type bonus and stats determine the winner
 - **Opponent Pools** - Fight all challengers (registered Hunters + NPCs), NPCs only, or registered Hunters only
 - **NPC Roster** - 10 HxH characters (Gon, Killua, Hisoka, Chrollo, and more) with canon-approximate stats and portraits
-- **W/L/D Leaderboard** - Live ranking by win rate with total fights shown; updates after every fight
+- **W/L/D Leaderboard** - Live ranking by win rate; requires 10 fights to appear, updates after every fight
 - **Latest Fight Card** - Homepage shows the most recent fight with Nen badges, dice rolls, and outcome
 - **Name Validation** - Hunter names are checked for length, allowed characters, and l33t-substituted profanity
 
@@ -99,7 +99,8 @@ CREATE TABLE public.characters (
   stats_locked BOOLEAN DEFAULT false,
   wins INTEGER DEFAULT 0,
   losses INTEGER DEFAULT 0,
-  draws INTEGER DEFAULT 0
+  draws INTEGER DEFAULT 0,
+  secret_token UUID DEFAULT gen_random_uuid()
 );
 
 -- Fight log table
@@ -122,12 +123,88 @@ GRANT SELECT, INSERT ON public.fight_log TO anon;
 ALTER TABLE public.characters ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.fight_log ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "anon read characters" ON public.characters FOR SELECT TO anon USING (true);
-CREATE POLICY "anon insert characters" ON public.characters FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "anon update characters" ON public.characters FOR UPDATE TO anon USING (true);
+CREATE POLICY "Allow anon select" ON public.characters FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow anon insert" ON public.characters FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Allow anon update own" ON public.characters FOR UPDATE TO anon
+  USING (true) WITH CHECK (secret_token IS NOT NULL);
 
 CREATE POLICY "anon read fight_log" ON public.fight_log FOR SELECT TO anon USING (true);
 CREATE POLICY "anon insert fight_log" ON public.fight_log FOR INSERT TO anon WITH CHECK (true);
+```
+
+If you are adding `secret_token` to an existing table rather than creating fresh:
+
+```sql
+ALTER TABLE public.characters ADD COLUMN secret_token UUID DEFAULT gen_random_uuid();
+
+-- Backfill any rows that have NULL
+UPDATE public.characters SET secret_token = gen_random_uuid() WHERE secret_token IS NULL;
+
+-- Tighten the existing UPDATE policy
+ALTER POLICY "Allow anon update own" ON public.characters
+  USING (true) WITH CHECK (secret_token IS NOT NULL);
+```
+
+## Database Schema
+
+### `public.characters`
+
+| Column | Type | Default | Description |
+| --- | --- | --- | --- |
+| `id` | `UUID` | `gen_random_uuid()` | Primary key; used as the Hunter Licence number |
+| `created_at` | `TIMESTAMPTZ` | `now()` | Registration timestamp |
+| `nen_type` | `TEXT` | - | One of the 6 Nen type ids |
+| `name` | `TEXT` | `NULL` | Hunter name chosen at registration |
+| `strength_speed` | `INTEGER` | `0` | Stat allocated during setup |
+| `aura` | `INTEGER` | `0` | Stat allocated during setup |
+| `defense` | `INTEGER` | `0` | Stat allocated during setup |
+| `intelligence` | `INTEGER` | `0` | Stat allocated during setup |
+| `stats_locked` | `BOOLEAN` | `false` | Set to `true` once setup is confirmed; prevents re-allocation |
+| `wins` | `INTEGER` | `0` | Fight record |
+| `losses` | `INTEGER` | `0` | Fight record |
+| `draws` | `INTEGER` | `0` | Fight record |
+| `secret_token` | `UUID` | `gen_random_uuid()` | Ownership token; required to match on every UPDATE |
+
+### `public.fight_log`
+
+| Column | Type | Default | Description |
+| --- | --- | --- | --- |
+| `id` | `UUID` | `gen_random_uuid()` | Primary key |
+| `created_at` | `TIMESTAMPTZ` | `now()` | Fight timestamp |
+| `challenger_id` | `UUID` | - | FK to `characters.id` |
+| `opponent_id` | `UUID` | `NULL` | FK to `characters.id`, or NPC id string; `NULL` if NPC id not stored |
+| `opponent_is_npc` | `BOOLEAN` | `false` | Distinguishes NPC fights from registered Hunter fights |
+| `challenger_roll` | `INTEGER` | - | 2d6 total for the challenger |
+| `opponent_roll` | `INTEGER` | - | 2d6 total for the opponent |
+| `winner` | `TEXT` | - | `'challenger'`, `'opponent'`, or `'draw'` |
+
+### Useful queries
+
+```sql
+-- Full leaderboard (win rate, min 10 fights)
+SELECT name, nen_type, wins, losses, draws,
+  ROUND(wins::numeric / NULLIF(wins + losses + draws, 0) * 100, 1) AS win_rate_pct
+FROM public.characters
+WHERE stats_locked = true
+  AND (wins + losses + draws) >= 10
+ORDER BY win_rate_pct DESC, wins DESC;
+
+-- Latest fight with names resolved
+SELECT
+  c.name AS challenger,
+  fl.challenger_roll,
+  fl.opponent_roll,
+  fl.winner,
+  fl.created_at
+FROM public.fight_log fl
+JOIN public.characters c ON c.id = fl.challenger_id
+ORDER BY fl.created_at DESC
+LIMIT 10;
+
+-- Backfill secret_token for rows created before the column was added
+UPDATE public.characters
+SET secret_token = gen_random_uuid()
+WHERE secret_token IS NULL;
 ```
 
 ## Setup

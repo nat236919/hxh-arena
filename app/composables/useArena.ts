@@ -52,14 +52,15 @@ function calcPower(char: Pick<Character | NPC, 'nen_type' | 'strength_speed' | '
 export function useArena() {
   const supabase = useSupabase()
 
-  async function registerCharacter(nenType: NenTypeId, name: string): Promise<string> {
+  async function registerCharacter(nenType: NenTypeId, name: string): Promise<{ id: string; token: string }> {
+    const token = crypto.randomUUID()
     const { data, error } = await supabase
       .from('characters')
-      .insert({ nen_type: nenType, name: name.trim() })
+      .insert({ nen_type: nenType, name: name.trim(), secret_token: token })
       .select('id')
       .single()
     if (error) throw error
-    return data.id
+    return { id: data.id, token }
   }
 
   async function loadCharacter(id: string): Promise<Character | null> {
@@ -69,14 +70,19 @@ export function useArena() {
       .eq('id', id)
       .single()
     if (error) return null
+    // restore token to sessionStorage so returning users can still update their record
+    if (data.secret_token) {
+      sessionStorage.setItem('hunter_token', data.secret_token)
+    }
     return data as Character
   }
 
-  async function lockStats(id: string, stats: { strength_speed: number; aura: number; defense: number; intelligence: number }): Promise<void> {
+  async function lockStats(id: string, token: string, stats: { strength_speed: number; aura: number; defense: number; intelligence: number }): Promise<void> {
     const { error } = await supabase
       .from('characters')
       .update({ ...stats, stats_locked: true })
       .eq('id', id)
+      .eq('secret_token', token)
     if (error) throw error
   }
 
@@ -113,7 +119,7 @@ export function useArena() {
     return pool[Math.floor(Math.random() * pool.length)]
   }
 
-  async function conductFight(challenger: Character, opponent: FightOpponent): Promise<FightResult> {
+  async function conductFight(challenger: Character, opponent: FightOpponent, challengerToken: string): Promise<FightResult> {
     const challengerRoll = roll2d6()
     const opponentRoll = roll2d6()
     const challengerPower = calcPower(challenger, challengerRoll)
@@ -136,7 +142,7 @@ export function useArena() {
         ? { losses: challenger.losses + 1 }
         : { draws: challenger.draws + 1 }
 
-    await supabase.from('characters').update(challengerUpdate).eq('id', challenger.id)
+    await supabase.from('characters').update(challengerUpdate).eq('id', challenger.id).eq('secret_token', challengerToken)
 
     // update W/L/D for registered opponent
     if (!opponent.is_npc) {

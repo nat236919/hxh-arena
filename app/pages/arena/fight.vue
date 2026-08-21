@@ -141,13 +141,17 @@ function stopScramble() {
 const registeredPool = computed(() => pool.value.filter(o => !o.is_npc))
 const npcPool = computed(() => pool.value.filter(o => o.is_npc))
 
+const challengerToken = ref('')
+
 onMounted(async () => {
   const id = sessionStorage.getItem('hunter_licence')
-  if (!id) { router.replace('/arena'); return }
+  const token = sessionStorage.getItem('hunter_token')
+  if (!id || !token) { router.replace('/arena'); return }
   const c = await loadCharacter(id)
   if (!c) { router.replace('/arena'); return }
   if (!c.stats_locked) { router.replace('/arena/setup'); return }
   character.value = c
+  challengerToken.value = token
   pool.value = await loadOpponentPool(id)
   loading.value = false
 })
@@ -163,7 +167,7 @@ async function selectPool(type: 'all' | 'npc' | 'registered') {
   await new Promise(r => setTimeout(r, 1800))
 
   stopScramble()
-  const result = await conductFight(character.value, opponent)
+  const result = await conductFight(character.value, opponent, challengerToken.value)
   fightResult.value = result
 
   // sync local character record so subsequent fights and "Fight Again" show correct W/L/D

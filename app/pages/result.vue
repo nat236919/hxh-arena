@@ -251,9 +251,10 @@ async function getHunterLicence() {
   }
   registering.value = true
   try {
-    const id = await registerCharacter(nenType.value.id, hunterName.value)
+    const { id, token } = await registerCharacter(nenType.value.id, hunterName.value)
     licence.value = id
     sessionStorage.setItem('hunter_licence', id)
+    sessionStorage.setItem('hunter_token', token)
     sessionStorage.setItem('licence_issued', '1')
   } finally {
     registering.value = false
