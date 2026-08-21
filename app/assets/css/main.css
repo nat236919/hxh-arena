@@ -122,13 +122,21 @@ body {
 /* Backgrounds */
 [data-theme="light"] .page-root,
 [data-theme="light"] .quiz-root,
-[data-theme="light"] .result-root { background: var(--hxh-bg-deep) !important; }
+[data-theme="light"] .result-root {
+  background: var(--hxh-bg-deep) !important;
+}
 
 /* Dim atmospheric elements */
 [data-theme="light"] .aura-orb,
 [data-theme="light"] .aura-bloom,
-[data-theme="light"] .result-aura-bg { opacity: 0.06 !important; }
-[data-theme="light"] .aura-particle  { opacity: 0.2 !important; }
+[data-theme="light"] .result-aura-bg {
+  opacity: 0.06 !important;
+}
+
+[data-theme="light"] .aura-particle {
+  opacity: 0.2 !important;
+}
+
 [data-theme="light"] .scanline-overlay {
   background: repeating-linear-gradient(0deg, transparent, transparent 3px,
       rgba(0, 0, 0, 0.02) 3px, rgba(0, 0, 0, 0.02) 4px) !important;
@@ -137,88 +145,630 @@ body {
 /* ── Landing page ── */
 [data-theme="light"] .header-label,
 [data-theme="light"] .header-left,
-[data-theme="light"] .result-header-label { color: rgba(30, 20, 10, 0.7) !important; }
+[data-theme="light"] .result-header-label {
+  color: rgba(30, 20, 10, 0.7) !important;
+}
+
 [data-theme="light"] .header-dot,
-[data-theme="light"] .info-sep            { color: rgba(30, 20, 10, 0.35) !important; }
-[data-theme="light"] .back-link           { color: rgba(30, 20, 10, 0.6) !important; }
-[data-theme="light"] .back-link:hover     { color: rgba(30, 20, 10, 0.95) !important; }
-[data-theme="light"] .title-arena-word    { color: rgba(30, 20, 10, 0.55) !important; }
-[data-theme="light"] .title-arena-line    { background: rgba(30, 20, 10, 0.2) !important; }
-[data-theme="light"] .title-subtitle      { color: rgba(30, 20, 10, 0.6) !important; }
-[data-theme="light"] .glass-touch-hint    { color: rgba(184, 36, 75, 0.75) !important; }
-[data-theme="light"] .info-label          { color: rgba(30, 20, 10, 0.65) !important; }
-[data-theme="light"] .info-value          { color: rgba(184, 36, 75, 0.9) !important; }
-[data-theme="light"] .footer-note         { color: rgba(30, 20, 10, 0.55) !important; }
-[data-theme="light"] .site-footer        { border-top-color: rgba(0, 0, 0, 0.08) !important; }
+[data-theme="light"] .info-sep {
+  color: rgba(30, 20, 10, 0.35) !important;
+}
+
+[data-theme="light"] .back-link {
+  color: rgba(30, 20, 10, 0.6) !important;
+}
+
+[data-theme="light"] .back-link:hover {
+  color: rgba(30, 20, 10, 0.95) !important;
+}
+
+[data-theme="light"] .title-arena-word {
+  color: rgba(30, 20, 10, 0.55) !important;
+}
+
+[data-theme="light"] .title-arena-line {
+  background: rgba(30, 20, 10, 0.2) !important;
+}
+
+[data-theme="light"] .title-subtitle {
+  color: rgba(30, 20, 10, 0.6) !important;
+}
+
+[data-theme="light"] .glass-touch-hint {
+  color: rgba(184, 36, 75, 0.75) !important;
+}
+
+[data-theme="light"] .info-label {
+  color: rgba(30, 20, 10, 0.65) !important;
+}
+
+[data-theme="light"] .info-value {
+  color: rgba(184, 36, 75, 0.9) !important;
+}
+
+[data-theme="light"] .footer-note {
+  color: rgba(30, 20, 10, 0.55) !important;
+}
+
+[data-theme="light"] .site-footer {
+  border-top-color: rgba(0, 0, 0, 0.08) !important;
+}
+
 [data-theme="light"] .footer-copy,
-[data-theme="light"] .footer-by          { color: rgba(30, 20, 10, 0.45) !important; }
-[data-theme="light"] .footer-sep         { color: rgba(30, 20, 10, 0.2) !important; }
-[data-theme="light"] .footer-disclaimer  { color: rgba(30, 20, 10, 0.3) !important; }
+[data-theme="light"] .footer-by {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+[data-theme="light"] .footer-sep {
+  color: rgba(30, 20, 10, 0.2) !important;
+}
+
+[data-theme="light"] .footer-disclaimer {
+  color: rgba(30, 20, 10, 0.3) !important;
+}
 
 /* ── SVG glass ── */
 [data-theme="light"] .glass-svg,
-[data-theme="light"] .mini-glass-svg  { filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.15)) !important; }
-[data-theme="light"] .mini-glass-wrap { filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.2)) !important; }
-[data-theme="light"] .aura-line       { background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent) !important; }
+[data-theme="light"] .mini-glass-svg {
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.15)) !important;
+}
+
+[data-theme="light"] .mini-glass-wrap {
+  filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.2)) !important;
+}
+
+[data-theme="light"] .aura-line {
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.12), transparent) !important;
+}
 
 /* ── Quiz header ── */
 [data-theme="light"] .exam-number-label,
-[data-theme="light"] .exam-number-total { color: rgba(30, 20, 10, 0.6) !important; }
-[data-theme="light"] .exam-number-value { color: rgba(20, 12, 5, 0.95) !important; }
-[data-theme="light"] .progress-track    { background: rgba(0, 0, 0, 0.08) !important; }
+[data-theme="light"] .exam-number-total {
+  color: rgba(30, 20, 10, 0.6) !important;
+}
+
+[data-theme="light"] .exam-number-value {
+  color: rgba(20, 12, 5, 0.95) !important;
+}
+
+[data-theme="light"] .progress-track {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
 
 /* ── Quiz question area ── */
 [data-theme="light"] .question-tag,
-[data-theme="light"] .question-label-text { color: rgba(30, 20, 10, 0.65) !important; }
-[data-theme="light"] .question-x          { color: rgba(30, 20, 10, 0.5) !important; }
+[data-theme="light"] .question-label-text {
+  color: rgba(30, 20, 10, 0.65) !important;
+}
+
+[data-theme="light"] .question-x {
+  color: rgba(30, 20, 10, 0.5) !important;
+}
+
 [data-theme="light"] .question-card {
   background: rgba(0, 0, 0, 0.04) !important;
   border-top-color: rgba(0, 0, 0, 0.07) !important;
   border-right-color: rgba(0, 0, 0, 0.04) !important;
   border-bottom-color: rgba(0, 0, 0, 0.04) !important;
 }
-[data-theme="light"] .question-text { color: rgba(15, 8, 2, 0.92) !important; }
+
+[data-theme="light"] .question-text {
+  color: rgba(15, 8, 2, 0.92) !important;
+}
+
 [data-theme="light"] .answer-btn {
   background: rgba(0, 0, 0, 0.03) !important;
   border-color: rgba(0, 0, 0, 0.12) !important;
 }
+
 [data-theme="light"] .answer-btn:not(:disabled):hover {
   background: rgba(0, 0, 0, 0.07) !important;
   border-color: rgba(0, 0, 0, 0.22) !important;
 }
-[data-theme="light"] .answer-key  { border-color: rgba(30, 20, 10, 0.3) !important; color: rgba(30, 20, 10, 0.75) !important; }
-[data-theme="light"] .answer-text { color: rgba(15, 8, 2, 0.9) !important; }
-[data-theme="light"] .answer-check { color: rgba(15, 8, 2, 0.75) !important; }
-[data-theme="light"] .answer-btn--disabled { opacity: 0.25 !important; }
+
+[data-theme="light"] .answer-key {
+  border-color: rgba(30, 20, 10, 0.3) !important;
+  color: rgba(30, 20, 10, 0.75) !important;
+}
+
+[data-theme="light"] .answer-text {
+  color: rgba(15, 8, 2, 0.9) !important;
+}
+
+[data-theme="light"] .answer-check {
+  color: rgba(15, 8, 2, 0.75) !important;
+}
+
+[data-theme="light"] .answer-btn--disabled {
+  opacity: 0.25 !important;
+}
 
 /* ── Result page ── */
-[data-theme="light"] .type-label       { color: rgba(30, 20, 10, 0.65) !important; }
-[data-theme="light"] .type-description { color: rgba(15, 8, 2, 0.88) !important; }
-[data-theme="light"] .divider-line     { background: rgba(0, 0, 0, 0.1) !important; }
-[data-theme="light"] .weakness-block   { border-left-color: rgba(0, 0, 0, 0.14) !important; }
-[data-theme="light"] .weakness-label   { color: rgba(30, 20, 10, 0.65) !important; }
-[data-theme="light"] .weakness-text    { color: rgba(15, 8, 2, 0.78) !important; }
-[data-theme="light"] .credits-text     { color: rgba(30, 20, 10, 0.55) !important; }
-[data-theme="light"] .credits-text a   { color: rgba(30, 20, 10, 0.72) !important; }
-[data-theme="light"] .credits-text a:hover { color: rgba(15, 8, 2, 0.95) !important; }
-[data-theme="light"] .action-btn--ghost       { color: rgba(15, 8, 2, 0.75) !important; }
-[data-theme="light"] .action-btn--ghost:hover { background: rgba(0, 0, 0, 0.05) !important; color: rgba(15, 8, 2, 0.95) !important; }
-[data-theme="light"] .share-card  { background: var(--hxh-bg-mid) !important; border-color: rgba(0, 0, 0, 0.1) !important; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1) !important; }
-[data-theme="light"] .card-brand  { color: rgba(30, 20, 10, 0.5) !important; }
-[data-theme="light"] .radar-label { color: rgba(30, 20, 10, 0.65) !important; }
-[data-theme="light"] .share-btn   { background: rgba(0, 0, 0, 0.04) !important; border-color: rgba(0, 0, 0, 0.12) !important; color: rgba(30, 20, 10, 0.7) !important; }
-[data-theme="light"] .share-btn:not(:disabled):hover { background: rgba(0, 0, 0, 0.08) !important; color: rgba(15, 8, 2, 0.95) !important; }
-[data-theme="light"] .characters-block   { background: rgba(0, 0, 0, 0.03) !important; border-color: rgba(0, 0, 0, 0.08) !important; }
-[data-theme="light"] .characters-header  { border-bottom-color: rgba(0, 0, 0, 0.07) !important; }
-[data-theme="light"] .chars-label        { color: rgba(30, 20, 10, 0.7) !important; }
-[data-theme="light"] .char-row           { border-bottom-color: rgba(0, 0, 0, 0.06) !important; }
-[data-theme="light"] .char-row:hover     { background: rgba(0, 0, 0, 0.04) !important; }
-[data-theme="light"] .char-title         { color: rgba(30, 20, 10, 0.65) !important; }
-[data-theme="light"] .char-arrow         { color: rgba(30, 20, 10, 0.45) !important; }
-[data-theme="light"] .modal-backdrop     { background: rgba(200, 190, 180, 0.8) !important; }
-[data-theme="light"] .modal-box          { background: var(--hxh-bg-mid) !important; border-color: rgba(0, 0, 0, 0.12) !important; box-shadow: 0 0 30px rgba(0, 0, 0, 0.12), 0 16px 48px rgba(0, 0, 0, 0.15) !important; }
-[data-theme="light"] .modal-close        { color: rgba(30, 20, 10, 0.45) !important; }
-[data-theme="light"] .modal-close:hover  { color: rgba(15, 8, 2, 0.88) !important; }
-[data-theme="light"] .modal-char-name    { color: rgba(15, 8, 2, 0.95) !important; }
-[data-theme="light"] .ability-desc       { color: rgba(15, 8, 2, 0.78) !important; }
-[data-theme="light"] .modal-divider      { border-top-color: rgba(0, 0, 0, 0.1) !important; }
+[data-theme="light"] .type-label {
+  color: rgba(30, 20, 10, 0.65) !important;
+}
+
+[data-theme="light"] .type-description {
+  color: rgba(15, 8, 2, 0.88) !important;
+}
+
+[data-theme="light"] .divider-line {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .weakness-block {
+  border-left-color: rgba(0, 0, 0, 0.14) !important;
+}
+
+[data-theme="light"] .weakness-label {
+  color: rgba(30, 20, 10, 0.65) !important;
+}
+
+[data-theme="light"] .weakness-text {
+  color: rgba(15, 8, 2, 0.78) !important;
+}
+
+[data-theme="light"] .credits-text {
+  color: rgba(30, 20, 10, 0.55) !important;
+}
+
+[data-theme="light"] .credits-text a {
+  color: rgba(30, 20, 10, 0.72) !important;
+}
+
+[data-theme="light"] .credits-text a:hover {
+  color: rgba(15, 8, 2, 0.95) !important;
+}
+
+[data-theme="light"] .action-btn--ghost {
+  color: rgba(15, 8, 2, 0.75) !important;
+}
+
+[data-theme="light"] .action-btn--ghost:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: rgba(15, 8, 2, 0.95) !important;
+}
+
+[data-theme="light"] .share-card {
+  background: var(--hxh-bg-mid) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .card-brand {
+  color: rgba(30, 20, 10, 0.5) !important;
+}
+
+[data-theme="light"] .radar-label {
+  color: rgba(30, 20, 10, 0.65) !important;
+}
+
+[data-theme="light"] .share-btn {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: rgba(30, 20, 10, 0.7) !important;
+}
+
+[data-theme="light"] .share-btn:not(:disabled):hover {
+  background: rgba(0, 0, 0, 0.08) !important;
+  color: rgba(15, 8, 2, 0.95) !important;
+}
+
+[data-theme="light"] .characters-block {
+  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .characters-header {
+  border-bottom-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+[data-theme="light"] .chars-label {
+  color: rgba(30, 20, 10, 0.7) !important;
+}
+
+[data-theme="light"] .char-row {
+  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] .char-row:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .char-title {
+  color: rgba(30, 20, 10, 0.65) !important;
+}
+
+[data-theme="light"] .char-arrow {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+[data-theme="light"] .modal-backdrop {
+  background: rgba(200, 190, 180, 0.8) !important;
+}
+
+[data-theme="light"] .modal-box {
+  background: var(--hxh-bg-mid) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.12), 0 16px 48px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .modal-close {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+[data-theme="light"] .modal-close:hover {
+  color: rgba(15, 8, 2, 0.88) !important;
+}
+
+[data-theme="light"] .modal-char-name {
+  color: rgba(15, 8, 2, 0.95) !important;
+}
+
+[data-theme="light"] .ability-desc {
+  color: rgba(15, 8, 2, 0.78) !important;
+}
+
+[data-theme="light"] .modal-divider {
+  border-top-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ── Arena pages (index, setup, fight) ── */
+
+/* Page backgrounds */
+[data-theme="light"] .arena-main,
+[data-theme="light"] .setup-main,
+[data-theme="light"] .fight-main {
+  color: var(--hxh-text-primary) !important;
+}
+
+/* Tags / labels */
+[data-theme="light"] .arena-tag,
+[data-theme="light"] .setup-tag,
+[data-theme="light"] .phase-tag {
+  color: rgba(184, 36, 75, 0.85) !important;
+}
+
+/* Titles */
+[data-theme="light"] .arena-title,
+[data-theme="light"] .setup-title,
+[data-theme="light"] .phase-title {
+  color: var(--hxh-text-primary) !important;
+}
+
+/* Lead / body text */
+[data-theme="light"] .arena-lead,
+[data-theme="light"] .setup-lead,
+[data-theme="light"] .phase-lead {
+  color: rgba(30, 20, 10, 0.65) !important;
+}
+
+[data-theme="light"] .setup-lead strong {
+  color: rgba(15, 8, 2, 0.9) !important;
+}
+
+/* Input */
+[data-theme="light"] .licence-input,
+[data-theme="light"] .name-input {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  color: var(--hxh-text-primary) !important;
+}
+
+[data-theme="light"] .licence-input:focus,
+[data-theme="light"] .name-input:focus {
+  border-color: rgba(184, 36, 75, 0.5) !important;
+}
+
+[data-theme="light"] .licence-input::placeholder,
+[data-theme="light"] .name-input::placeholder {
+  color: rgba(30, 20, 10, 0.3) !important;
+}
+
+[data-theme="light"] .input-label,
+[data-theme="light"] .name-label {
+  color: rgba(30, 20, 10, 0.55) !important;
+}
+
+/* CTA / divination link */
+[data-theme="light"] .cta-text {
+  color: rgba(30, 20, 10, 0.5) !important;
+}
+
+/* Warning text */
+[data-theme="light"] .warning-text {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+/* Nen badge (setup page) */
+[data-theme="light"] .nen-badge {
+  opacity: 0.9;
+}
+
+/* Stat rows (setup) */
+[data-theme="light"] .stat-row {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.09) !important;
+}
+
+[data-theme="light"] .stat-name {
+  color: rgba(15, 8, 2, 0.85) !important;
+}
+
+[data-theme="light"] .stat-desc {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+[data-theme="light"] .stat-value {
+  color: rgba(15, 8, 2, 0.9) !important;
+}
+
+[data-theme="light"] .ctrl-btn {
+  border-color: rgba(0, 0, 0, 0.18) !important;
+  color: rgba(15, 8, 2, 0.75) !important;
+}
+
+[data-theme="light"] .ctrl-btn:hover:not(:disabled) {
+  border-color: rgba(184, 36, 75, 0.5) !important;
+  background: rgba(184, 36, 75, 0.08) !important;
+}
+
+/* Points bar */
+[data-theme="light"] .points-track {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .points-label {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+/* Error text */
+[data-theme="light"] .error-text {
+  color: rgba(30, 20, 10, 0.6) !important;
+}
+
+[data-theme="light"] .inline-link {
+  color: rgba(184, 36, 75, 0.9) !important;
+}
+
+/* Pool cards */
+[data-theme="light"] .pool-card {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .pool-card:hover:not(:disabled) {
+  border-color: rgba(184, 36, 75, 0.45) !important;
+  background: rgba(184, 36, 75, 0.05) !important;
+}
+
+[data-theme="light"] .pool-name {
+  color: rgba(15, 8, 2, 0.88) !important;
+}
+
+[data-theme="light"] .pool-desc {
+  color: rgba(30, 20, 10, 0.5) !important;
+}
+
+[data-theme="light"] .pool-icon {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+/* Stat card (ArenaStatChips) */
+[data-theme="light"] .stat-card {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.09) !important;
+}
+
+[data-theme="light"] .stat-card-label {
+  color: rgba(30, 20, 10, 0.4) !important;
+}
+
+[data-theme="light"] .stat-track {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .stat-name {
+  color: rgba(30, 20, 10, 0.55) !important;
+}
+
+[data-theme="light"] .stat-value {
+  color: rgba(15, 8, 2, 0.88) !important;
+}
+
+[data-theme="light"] .record-sep {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .record-cell--draw .record-num {
+  color: rgba(30, 20, 10, 0.55) !important;
+}
+
+[data-theme="light"] .record-cell--draw .record-letter {
+  color: rgba(30, 20, 10, 0.35) !important;
+}
+
+/* Fight phase */
+[data-theme="light"] .fighting-text {
+  color: rgba(184, 36, 75, 0.85) !important;
+}
+
+[data-theme="light"] .rolling-label {
+  color: rgba(30, 20, 10, 0.4) !important;
+}
+
+[data-theme="light"] .die {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.14) !important;
+  color: rgba(15, 8, 2, 0.88) !important;
+}
+
+[data-theme="light"] .die--rolling {
+  border-color: rgba(184, 36, 75, 0.5) !important;
+  background: rgba(184, 36, 75, 0.07) !important;
+  color: rgba(15, 8, 2, 0.9) !important;
+}
+
+[data-theme="light"] .rolling-vs {
+  color: rgba(30, 20, 10, 0.18) !important;
+}
+
+/* Fight result (ArenaFightResult) */
+[data-theme="light"] .combatant-type {
+  opacity: 0.9;
+}
+
+[data-theme="light"] .roll-total {
+  color: rgba(30, 20, 10, 0.5) !important;
+}
+
+[data-theme="light"] .power-label {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+[data-theme="light"] .vs-glyph {
+  color: rgba(30, 20, 10, 0.18) !important;
+}
+
+[data-theme="light"] .portrait--opponent {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .portrait-label {
+  background: rgba(255, 255, 255, 0.65) !important;
+  color: rgba(15, 8, 2, 0.7) !important;
+}
+
+[data-theme="light"] .record-box {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.09) !important;
+}
+
+[data-theme="light"] .record-label {
+  color: rgba(30, 20, 10, 0.4) !important;
+}
+
+[data-theme="light"] .record-value {
+  color: var(--hxh-text-primary) !important;
+}
+
+/* Header seal SVG */
+[data-theme="light"] .header-seal svg {
+  opacity: 0.5 !important;
+}
+
+/* Arena section on homepage */
+[data-theme="light"] .arena-lead {
+  color: rgba(30, 20, 10, 0.6) !important;
+}
+
+[data-theme="light"] .step-desc {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+[data-theme="light"] .step-label {
+  color: rgba(15, 8, 2, 0.82) !important;
+}
+
+[data-theme="light"] .step-num {
+  color: rgba(184, 36, 75, 0.4) !important;
+}
+
+[data-theme="light"] .step-arrow {
+  color: rgba(184, 36, 75, 0.3) !important;
+}
+
+[data-theme="light"] .arena-card {
+  background: var(--hxh-bg-surface) !important;
+  border-color: rgba(0, 0, 0, 0.09) !important;
+}
+
+[data-theme="light"] .arena-card-header {
+  border-bottom-color: rgba(0, 0, 0, 0.07) !important;
+  color: rgba(30, 20, 10, 0.55) !important;
+}
+
+[data-theme="light"] .arena-card-lock {
+  color: rgba(30, 20, 10, 0.35) !important;
+}
+
+[data-theme="light"] .lb-name {
+  color: rgba(30, 20, 10, 0.7) !important;
+}
+
+[data-theme="light"] .lb-score {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+[data-theme="light"] .matchup-name {
+  color: rgba(30, 20, 10, 0.65) !important;
+}
+
+[data-theme="light"] .dice-label {
+  color: rgba(30, 20, 10, 0.35) !important;
+}
+
+[data-theme="light"] .dice-sep {
+  color: rgba(30, 20, 10, 0.2) !important;
+}
+
+[data-theme="light"] .card-cta {
+  color: rgba(184, 36, 75, 0.85) !important;
+}
+
+[data-theme="light"] .section-subtitle {
+  color: rgba(30, 20, 10, 0.5) !important;
+}
+
+/* Arena CTA ghost button (SectionArena) */
+[data-theme="light"] .cta-btn--ghost {
+  color: rgba(30, 20, 10, 0.7) !important;
+  border-color: rgba(184, 36, 75, 0.35) !important;
+}
+
+[data-theme="light"] .cta-btn--ghost:hover {
+  background: rgba(184, 36, 75, 0.07) !important;
+  color: rgba(15, 8, 2, 0.9) !important;
+}
+
+/* ── Navbar (TheNav) ── */
+[data-theme="light"] .site-nav {
+  border-bottom-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="light"] .nav-link {
+  color: rgba(30, 20, 10, 0.55) !important;
+}
+
+[data-theme="light"] .nav-link:hover {
+  color: rgba(15, 8, 2, 0.9) !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="light"] .nav-link--active {
+  color: rgba(184, 36, 75, 0.9) !important;
+  border-color: rgba(184, 36, 75, 0.3) !important;
+  background: rgba(184, 36, 75, 0.07) !important;
+}
+
+[data-theme="light"] .nav-logo {
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.15)) !important;
+}
+
+[data-theme="light"] .lb-record {
+  color: rgba(30, 20, 10, 0.45) !important;
+}
+
+[data-theme="light"] .lb-empty {
+  color: rgba(30, 20, 10, 0.4) !important;
+}
+
+[data-theme="light"] .lb-spinner {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  border-top-color: rgba(184, 36, 75, 0.7) !important;
+}
+
+[data-theme="light"] .lb-header-row {
+  border-bottom-color: rgba(0, 0, 0, 0.07) !important;
+}

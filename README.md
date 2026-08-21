@@ -1,26 +1,43 @@
 # HxH Arena
 
-A Hunter x Hunter fan web app built with Nuxt 4. Features a Water Divination Nen type quiz that determines your Nen category through 20 scenario-based questions.
+A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz to discover your Nen type, claim a Hunter Licence, then step into Heavens Arena to fight registered Hunters and iconic HxH characters.
 
 ## Features
 
-- **Water Divination Quiz** - 15 of 20 scenario questions selected randomly per run, with shuffled answer order
+### Water Divination
+
+- **Nen Type Quiz** - 15 of 20 scenario questions selected randomly per run, with shuffled answer order
 - **6 Nen Types** - Enhancer, Transmuter, Emitter, Conjurer, Manipulator, Specialist
 - **Nen Aptitude Radar Chart** - Visual score breakdown across all 6 types on the result page
 - **Nen Affinity Chart** - Shows which types are compatible and which are opposed based on the canon Nen wheel
-- **Staged Result Reveal** - Type name, description, and detail column animate in sequence for dramatic impact
+- **Staged Result Reveal** - Type name, description, and detail column animate in sequence
 - **Character Profiles** - Click any character on the result page to view their abilities
-- **Share Result Card** - Download or copy your result as a PNG image; result URL is shareable directly (`?type=transmuter`)
-- **Dark / Light Theme** - Toggle between dark and light modes, persisted via localStorage
+- **Share Result Card** - Download or copy your result as a PNG; result URL is shareable directly (`?type=transmuter`)
+
+### Heavens Arena
+
+- **Hunter Licence** - Register a named character after completing Water Divination; UUID persisted in sessionStorage
+- **Attribute Allocation** - Distribute 40 points across Strength/Speed, Aura, Defense, and Intelligence
+- **1v1 Combat** - 2d6 dice rolls modified by Nen type bonus and stats determine the winner
+- **Opponent Pools** - Fight all challengers (registered Hunters + NPCs), NPCs only, or registered Hunters only
+- **NPC Roster** - 10 HxH characters (Gon, Killua, Hisoka, Chrollo, and more) with canon-approximate stats and portraits
+- **W/L/D Leaderboard** - Live ranking by win rate with total fights shown; updates after every fight
+- **Latest Fight Card** - Homepage shows the most recent fight with Nen badges, dice rolls, and outcome
+- **Name Validation** - Hunter names are checked for length, allowed characters, and l33t-substituted profanity
+
+### General
+
+- **Dark / Light Theme** - Toggle persisted via localStorage
+- **Mobile Layout** - Responsive across all pages
 - **Custom 404 Page** - Thematic error page with Nen seal and return link
-- **Mobile Layout** - Quiz page adapts to a compact horizontal strip on small screens
-- **Nen Seal Favicon** - Custom SVG favicon using the Nen aura seal motif
+- **Nen Seal Favicon** - Custom SVG favicon
 - **Fully typed** - TypeScript throughout
 
 ## Tech Stack
 
 - [Nuxt 4](https://nuxt.com) (SPA mode, `ssr: false`)
 - [Vue 3](https://vuejs.org) with Composition API
+- [Supabase](https://supabase.com) - Postgres database for characters, fight log, and leaderboard
 - [Tailwind CSS](https://tailwindcss.com) via `@nuxtjs/tailwindcss`
 - [Chart.js](https://www.chartjs.org) + [vue-chartjs](https://vue-chartjs.org) for the radar chart
 - [html2canvas](https://html2canvas.hertzen.com) for share card generation
@@ -51,6 +68,68 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 ```
 
+## Environment Variables
+
+Copy `.env.example` to `.env` and fill in your Supabase credentials:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Description |
+| --- | --- |
+| `NUXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL |
+| `NUXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon/public key |
+
+### Supabase Setup
+
+Run the following SQL in your Supabase SQL editor to create the required tables and grant access:
+
+```sql
+-- Characters table
+CREATE TABLE public.characters (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  nen_type TEXT NOT NULL,
+  name TEXT,
+  strength_speed INTEGER DEFAULT 0,
+  aura INTEGER DEFAULT 0,
+  defense INTEGER DEFAULT 0,
+  intelligence INTEGER DEFAULT 0,
+  stats_locked BOOLEAN DEFAULT false,
+  wins INTEGER DEFAULT 0,
+  losses INTEGER DEFAULT 0,
+  draws INTEGER DEFAULT 0
+);
+
+-- Fight log table
+CREATE TABLE public.fight_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  challenger_id UUID REFERENCES public.characters(id),
+  opponent_id UUID,
+  opponent_is_npc BOOLEAN DEFAULT false,
+  challenger_roll INTEGER,
+  opponent_roll INTEGER,
+  winner TEXT
+);
+
+-- Grant anon access (required for SPA with no auth)
+GRANT SELECT, INSERT, UPDATE ON public.characters TO anon;
+GRANT SELECT, INSERT ON public.fight_log TO anon;
+
+-- RLS policies
+ALTER TABLE public.characters ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.fight_log ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "anon read characters" ON public.characters FOR SELECT TO anon USING (true);
+CREATE POLICY "anon insert characters" ON public.characters FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "anon update characters" ON public.characters FOR UPDATE TO anon USING (true);
+
+CREATE POLICY "anon read fight_log" ON public.fight_log FOR SELECT TO anon USING (true);
+CREATE POLICY "anon insert fight_log" ON public.fight_log FOR INSERT TO anon WITH CHECK (true);
+```
+
 ## Setup
 
 ```bash
@@ -72,7 +151,15 @@ pnpm test         # run once
 pnpm test:watch   # watch mode
 ```
 
-146 unit tests covering Nen type data integrity (including compatibility symmetry), question structure, URL sharing logic, and quiz state machine (shuffle, scoring, reset).
+188 unit tests covering:
+
+- **Nen type data** - all 6 types present, required fields, compatibility symmetry, opposition symmetry
+- **Question data** - structure, answer scores, uniqueness
+- **URL sharing** - `?type=` param parsing and validation
+- **Quiz state machine** - shuffle, scoring accumulation, completion, reset
+- **NPC roster** - required fields, unique ids, valid Nen types, positive integer stats
+- **Profanity filter** - clean names pass, blocked words rejected, l33t substitutions detected, length and character rules enforced
+- **Arena fight logic** - `roll2d6` range, `calcPower` Nen bonuses, `splitRoll` dice validity for all totals 2-12
 
 ## Build
 
@@ -86,24 +173,44 @@ pnpm preview
 ```
 app/
   composables/
+    useArena.ts     # Arena: register, load character, fight, leaderboard, latest fight
     useNenQuiz.ts   # Quiz state: shuffled questions, scoring, reset
     useTheme.ts     # Dark/light theme toggle with localStorage persistence
+  components/
+    ArenaBackground.vue    # Aura orbs + scanline overlay
+    ArenaFightResult.vue   # Fight outcome: verdict, portraits, dice, record
+    ArenaHeader.vue        # Back link + page label header for arena pages
+    ArenaPoolCard.vue      # Selectable opponent pool card with icon slot
+    ArenaStatChips.vue     # Stat bars + W/L/D record display
+    SectionArena.vue       # Homepage arena section: steps, leaderboard, latest fight
   data/
-    questions.ts    # 20 scenario questions with per-answer Nen type scores
     nenTypes.ts     # 6 Nen type definitions with traits, characters, colors, compatibility
+    npcs.ts         # 10 HxH NPC fighters with stats and portrait paths
+    questions.ts    # 20 scenario questions with per-answer Nen type scores
+  lib/
+    profanity.ts    # Hunter name validation with l33t normalization
+    supabase.ts     # Supabase client singleton and Character type
   pages/
-    index.vue       # Landing page
-    quiz.vue        # Quiz page (responsive: horizontal strip on mobile)
-    result.vue      # Result page with radar chart, affinity chart, character profiles, share card
+    index.vue               # Landing page
+    quiz.vue                # Quiz page
+    result.vue              # Result page: radar chart, affinity chart, Hunter Licence registration
+    arena/
+      index.vue             # Arena entry: Hunter Licence lookup
+      setup.vue             # Attribute allocation
+      fight.vue             # Opponent selection, fight animation, result
   error.vue         # Custom 404 page
 tests/
-  questions.test.ts
+  arenaFight.test.ts   # roll2d6, calcPower, splitRoll, NEN_BONUS
+  nenTypeUrl.test.ts
   nenTypes.test.ts
+  npcs.test.ts
+  profanity.test.ts
+  questions.test.ts
   useNenQuiz.test.ts
 public/
   favicon.svg       # Nen seal SVG favicon
   sitemap.xml
-  characters/       # Character portrait images
+  characters/       # Character portrait images (.webp)
 ```
 
 ## Credits

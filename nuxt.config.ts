@@ -8,6 +8,12 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss'],
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    public: {
+      supabaseUrl: '',
+      supabaseKey: '',
+    },
+  },
   ssr: false,
   app: {
     head: {

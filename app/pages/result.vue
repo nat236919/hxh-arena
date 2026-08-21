@@ -66,13 +66,43 @@
           </div>
         </div>
 
-        <div class="action-row stage-3">
+        <div v-if="!licence" class="action-row stage-3">
           <button class="action-btn action-btn--primary" :style="{ background: nenType?.color }" @click="retake">
             Retake the Test
           </button>
           <NuxtLink to="/" class="action-btn action-btn--ghost" :style="{ borderColor: `${nenType?.color}88` }">
             Return to Arena
           </NuxtLink>
+        </div>
+
+        <div class="licence-section stage-3">
+          <template v-if="!licence">
+            <div class="name-field">
+              <label class="name-label" for="hunter-name">Hunter Name</label>
+              <input id="hunter-name" v-model="hunterName" class="name-input" type="text" placeholder="e.g. Killua Z."
+                maxlength="24" autocomplete="off" spellcheck="false" @input="nameError = ''" />
+              <p v-if="nameError" class="name-error">{{ nameError }}</p>
+            </div>
+            <button class="licence-btn" :disabled="registering || !hunterName.trim()" @click="getHunterLicence">
+              <span v-if="registering" class="licence-spinner" />
+              <span v-else>Get Hunter Licence</span>
+            </button>
+          </template>
+          <template v-else>
+            <div class="licence-card">
+              <span class="licence-card-label">{{ hunterName.trim() }} · Hunter Licence</span>
+              <div class="licence-card-body">
+                <span class="licence-uuid">{{ licence }}</span>
+                <button class="copy-btn" :class="{ 'copy-btn--copied': copied }" @click="copyLicence">
+                  {{ copied ? 'Copied' : 'Copy' }}
+                </button>
+              </div>
+              <p class="licence-hint">Save this. You'll need it to enter the Arena.</p>
+              <NuxtLink to="/arena" class="enter-arena-link" :style="{ color: nenType?.color }">
+                Enter Arena &#8594;
+              </NuxtLink>
+            </div>
+          </template>
         </div>
 
         <p class="credits-text stage-3">
@@ -103,6 +133,8 @@ import {
 import html2canvas from 'html2canvas'
 import { nenTypes, nenCompatibility } from '~/data/nenTypes'
 import type { CharacterProfile } from '~/data/nenTypes'
+import { useArena } from '~/composables/useArena'
+import { validateHunterName } from '~/lib/profanity'
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip)
 
@@ -110,11 +142,17 @@ const router = useRouter()
 const route = useRoute()
 const { result, scores, reset } = useNenQuiz()
 const { isDark } = useTheme()
+const { registerCharacter } = useArena()
 
 const revealed = ref(false)
 const sharing = ref<'download' | 'copy' | false>(false)
 const activeProfile = ref<CharacterProfile | null>(null)
 const shareCardRef = ref<{ cardEl: HTMLElement | null } | null>(null)
+const licence = ref<string | null>(null)
+const registering = ref(false)
+const copied = ref(false)
+const hunterName = ref('')
+const nameError = ref('')
 
 const nenType = computed(() => result.value ?? null)
 
@@ -186,6 +224,11 @@ onMounted(() => {
     if (result.value && !route.query.type) {
       router.replace(`/result?type=${result.value.id}`)
     }
+    // restore licence guard if already registered this session
+    const existingLicence = sessionStorage.getItem('hunter_licence')
+    if (sessionStorage.getItem('licence_issued') === '1' && existingLicence) {
+      licence.value = existingLicence
+    }
     setTimeout(() => { revealed.value = true }, 100)
   })
 })
@@ -197,6 +240,31 @@ function openProfile(profile: CharacterProfile) {
 function retake() {
   reset()
   router.push('/quiz')
+}
+
+async function getHunterLicence() {
+  if (!nenType.value || registering.value) return
+  const validationError = validateHunterName(hunterName.value)
+  if (validationError) {
+    nameError.value = validationError
+    return
+  }
+  registering.value = true
+  try {
+    const id = await registerCharacter(nenType.value.id, hunterName.value)
+    licence.value = id
+    sessionStorage.setItem('hunter_licence', id)
+    sessionStorage.setItem('licence_issued', '1')
+  } finally {
+    registering.value = false
+  }
+}
+
+async function copyLicence() {
+  if (!licence.value) return
+  await navigator.clipboard.writeText(licence.value)
+  copied.value = true
+  setTimeout(() => { copied.value = false }, 2000)
 }
 
 async function shareCard(mode: 'download' | 'copy') {
@@ -243,6 +311,184 @@ function burstStyle(n: number) {
 </script>
 
 <style scoped>
+.licence-section {
+  margin-top: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.name-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.name-label {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.4);
+}
+
+.name-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--hxh-text-primary);
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.name-input::placeholder {
+  color: rgba(220, 220, 220, 0.2);
+}
+
+.name-input:focus {
+  border-color: rgba(184, 36, 75, 0.5);
+}
+
+.name-error {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: rgba(232, 66, 10, 0.9);
+  margin: 0;
+}
+
+.licence-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 12px;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.6);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.licence-btn:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(220, 220, 220, 0.9);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.licence-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.licence-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.licence-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.licence-card-label {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.35);
+}
+
+.licence-card-body {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.licence-uuid {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: rgba(220, 220, 220, 0.8);
+  letter-spacing: 0.04em;
+  word-break: break-all;
+  flex: 1;
+}
+
+.copy-btn {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+  padding: 5px 12px;
+  color: rgba(220, 220, 220, 0.6);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(220, 220, 220, 0.9);
+}
+
+.copy-btn--copied {
+  color: #50c878;
+  border-color: rgba(80, 200, 120, 0.3);
+  background: rgba(80, 200, 120, 0.08);
+}
+
+.licence-hint {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: rgba(220, 220, 220, 0.3);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.enter-arena-link {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  align-self: flex-start;
+}
+
+.enter-arena-link:hover {
+  opacity: 0.75;
+}
+
 .result-root {
   position: relative;
   min-height: 100vh;
