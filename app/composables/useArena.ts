@@ -172,6 +172,7 @@ export function useArena() {
         const total = r.wins + r.losses + r.draws
         return { ...r, winRate: total > 0 ? r.wins / total : 0 }
       })
+      .filter(r => (r.wins + r.losses + r.draws) >= 10)
       .sort((a, b) => b.winRate - a.winRate || b.wins - a.wins)
       .slice(0, limit)
   }

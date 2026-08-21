@@ -67,7 +67,7 @@
                   entry.losses + entry.draws }})</span></span>
               </div>
             </template>
-            <p v-else class="lb-empty">No fighters registered yet. Be the first.</p>
+            <p v-else class="lb-empty">No fighters with 10+ fights yet. Start climbing.</p>
           </div>
         </div>
 
