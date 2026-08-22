@@ -26,6 +26,10 @@ export interface FightLog {
   challenger_roll: number
   opponent_roll: number
   winner: 'challenger' | 'opponent' | 'draw'
+  challenger_name: string | null
+  challenger_nen_type: string | null
+  opponent_name: string | null
+  opponent_nen_type: string | null
   created_at: string
 }
 

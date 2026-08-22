@@ -196,6 +196,10 @@ export function useArena() {
       challenger_roll: challengerRoll,
       opponent_roll: opponentRoll,
       winner,
+      challenger_name: challenger.name ?? `Hunter #${challenger.id.slice(0, 8).toUpperCase()}`,
+      challenger_nen_type: challenger.nen_type,
+      opponent_name: opponent.name,
+      opponent_nen_type: opponent.nen_type,
     })
 
     return { winner, challengerRoll, opponentRoll, challengerPower, opponentPower, opponent, challengerMatchup, opponentMatchup }
@@ -230,53 +234,18 @@ export function useArena() {
   } | null> {
     const { data: log } = await db
       .from('fight_log')
-      .select('challenger_id, opponent_id, opponent_is_npc, challenger_roll, opponent_roll, winner')
+      .select('challenger_name, challenger_nen_type, challenger_roll, opponent_name, opponent_nen_type, opponent_roll, winner')
       .order('created_at', { ascending: false })
       .limit(1)
       .single()
     if (!log) return null
 
-    const challengerPromise = db
-      .from('characters')
-      .select('name, nen_type')
-      .eq('id', log.challenger_id)
-      .single()
-
-    let opponentName = 'Unknown'
-    let opponentNen: NenTypeId = 'enhancer'
-
-    if (log.opponent_is_npc) {
-      const npc = npcs.find(n => n.id === log.opponent_id) ?? null
-      if (npc) { opponentName = npc.name; opponentNen = npc.nen_type }
-      const { data: challenger } = await challengerPromise
-      return {
-        challengerName: challenger?.name ?? `Hunter #${log.challenger_id.slice(0, 8).toUpperCase()}`,
-        challengerNen: challenger?.nen_type as NenTypeId ?? 'enhancer',
-        challengerRoll: log.challenger_roll,
-        opponentName,
-        opponentNen,
-        opponentRoll: log.opponent_roll,
-        winner: log.winner,
-      }
-    }
-
-    const opponentPromise = log.opponent_id
-      ? db.from('characters').select('name, nen_type').eq('id', log.opponent_id).single()
-      : Promise.resolve({ data: null })
-
-    const [{ data: challenger }, { data: opp }] = await Promise.all([challengerPromise, opponentPromise])
-
-    if (opp) {
-      opponentName = opp.name ?? `Hunter #${log.opponent_id.slice(0, 8).toUpperCase()}`
-      opponentNen = opp.nen_type as NenTypeId
-    }
-
     return {
-      challengerName: challenger?.name ?? `Hunter #${log.challenger_id.slice(0, 8).toUpperCase()}`,
-      challengerNen: challenger?.nen_type as NenTypeId ?? 'enhancer',
+      challengerName: log.challenger_name ?? 'Unknown',
+      challengerNen: (log.challenger_nen_type as NenTypeId) ?? 'enhancer',
       challengerRoll: log.challenger_roll,
-      opponentName,
-      opponentNen,
+      opponentName: log.opponent_name ?? 'Unknown',
+      opponentNen: (log.opponent_nen_type as NenTypeId) ?? 'enhancer',
       opponentRoll: log.opponent_roll,
       winner: log.winner,
     }

@@ -114,7 +114,11 @@ CREATE TABLE public.fight_log (
   opponent_is_npc BOOLEAN DEFAULT false,
   challenger_roll INTEGER,
   opponent_roll INTEGER,
-  winner TEXT
+  winner TEXT,
+  challenger_name TEXT,
+  challenger_nen_type TEXT,
+  opponent_name TEXT,
+  opponent_nen_type TEXT
 );
 
 -- Grant anon access (required for SPA with no auth)
@@ -166,6 +170,10 @@ CREATE POLICY "anon insert fight_log" ON public.fight_log FOR INSERT TO anon WIT
 | `challenger_roll` | `INTEGER` | - | 2d6 total for the challenger |
 | `opponent_roll` | `INTEGER` | - | 2d6 total for the opponent |
 | `winner` | `TEXT` | - | `'challenger'`, `'opponent'`, or `'draw'` |
+| `challenger_name` | `TEXT` | `NULL` | Challenger's display name at fight time |
+| `challenger_nen_type` | `TEXT` | `NULL` | Challenger's Nen type at fight time |
+| `opponent_name` | `TEXT` | `NULL` | Opponent's display name at fight time |
+| `opponent_nen_type` | `TEXT` | `NULL` | Opponent's Nen type at fight time |
 
 ### Useful queries
 
