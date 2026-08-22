@@ -17,8 +17,10 @@ A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz 
 ### Heavens Arena
 
 - **Hunter Licence** - Register a named character after completing Water Divination; UUID persisted in sessionStorage
-- **Attribute Allocation** - Distribute 40 points across Strength/Speed, Aura, Defense, and Intelligence
+- **Attribute Allocation** - Distribute 20 points across Strength/Speed, Aura, Defense, and Intelligence (minimum 1 each)
 - **1v1 Combat** - 2d6 dice rolls modified by Nen type bonus and stats determine the winner
+- **Nen Matchups** - Compatible types on the Nen wheel get a 5% power boost (Nen Affinity); opposed types get a 5% penalty (Nen Clash)
+- **Arena Rules Modal** - "?" button on the fight page explains the power formula, Nen bonuses, matchup effects, victory conditions, and leaderboard requirements
 - **Opponent Pools** - Fight all challengers (registered Hunters + NPCs), NPCs only, or registered Hunters only
 - **NPC Roster** - 10 HxH characters (Gon, Killua, Hisoka, Chrollo, and more) with canon-approximate stats and portraits
 - **W/L/D Leaderboard** - Live ranking by win rate; requires 10 fights to appear, updates after every fight
@@ -228,7 +230,7 @@ pnpm test         # run once
 pnpm test:watch   # watch mode
 ```
 
-188 unit tests covering:
+197 unit tests covering:
 
 - **Nen type data** - all 6 types present, required fields, compatibility symmetry, opposition symmetry
 - **Question data** - structure, answer scores, uniqueness
@@ -236,7 +238,7 @@ pnpm test:watch   # watch mode
 - **Quiz state machine** - shuffle, scoring accumulation, completion, reset
 - **NPC roster** - required fields, unique ids, valid Nen types, positive integer stats
 - **Profanity filter** - clean names pass, blocked words rejected, l33t substitutions detected, length and character rules enforced
-- **Arena fight logic** - `roll2d6` range, `calcPower` Nen bonuses, `splitRoll` dice validity for all totals 2-12
+- **Arena fight logic** - `roll2d6` range, `calcPower` Nen bonuses, `splitRoll` dice validity for all totals 2-12, `getMatchupMultiplier` affinity/clash/neutral for all 36 type pairings, `calcPower` with matchup modifier
 
 ## Build
 
@@ -258,6 +260,7 @@ app/
     ArenaFightResult.vue   # Fight outcome: verdict, portraits, dice, record
     ArenaHeader.vue        # Back link + page label header for arena pages
     ArenaPoolCard.vue      # Selectable opponent pool card with icon slot
+    ArenaRulesModal.vue    # Fight rules modal: power formula, Nen bonuses, matchups
     ArenaStatChips.vue     # Stat bars + W/L/D record display
     SectionArena.vue       # Homepage arena section: steps, leaderboard, latest fight
   data/
@@ -277,7 +280,7 @@ app/
       fight.vue             # Opponent selection, fight animation, result
   error.vue         # Custom 404 page
 tests/
-  arenaFight.test.ts   # roll2d6, calcPower, splitRoll, NEN_BONUS
+  arenaFight.test.ts   # roll2d6, calcPower, splitRoll, NEN_BONUS, getMatchupMultiplier
   nenTypeUrl.test.ts
   nenTypes.test.ts
   npcs.test.ts
