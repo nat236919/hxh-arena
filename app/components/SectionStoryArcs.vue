@@ -2,7 +2,7 @@
   <section id="story" class="page-section section-story">
     <div class="section-inner">
       <div class="section-heading-row">
-        <span class="section-number">02</span>
+        <span class="section-number">03</span>
         <div class="section-title-block">
           <h2 class="section-title">Story Arcs</h2>
           <p class="section-subtitle">物語の流れ · The Journey of Gon Freecss</p>

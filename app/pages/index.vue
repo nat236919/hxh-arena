@@ -14,8 +14,8 @@
     <TheNav :sections="sections" :active-section="activeSection" @scroll-to="scrollTo" />
 
     <SectionDivination :questions-per-run="QUESTIONS_PER_RUN" @start-quiz="startQuiz" @scroll-to="scrollTo" />
-    <SectionStoryArcs />
     <SectionArena />
+    <SectionStoryArcs />
 
     <footer class="site-footer">
       <div class="footer-row">
@@ -44,8 +44,8 @@ const { result } = useNenQuiz()
 
 const sections = [
   { id: 'divination', label: 'Water Divination' },
-  { id: 'story', label: 'Story Arcs' },
   { id: 'arena', label: 'Enter Arena' },
+  { id: 'story', label: 'Story Arcs' },
 ]
 
 const activeSection = ref('divination')

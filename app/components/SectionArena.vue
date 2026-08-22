@@ -2,7 +2,7 @@
   <section id="arena" class="page-section section-arena">
     <div class="section-inner section-inner--centered">
       <div class="section-heading-row section-heading-row--center">
-        <span class="section-number">03</span>
+        <span class="section-number">02</span>
         <div class="section-title-block">
           <h2 class="section-title">Enter Arena</h2>
           <p class="section-subtitle">闘技場 · Combat & Ranking</p>

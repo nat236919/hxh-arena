@@ -247,7 +247,7 @@ pnpm preview
 
 ## Project Structure
 
-```
+```text
 app/
   composables/
     useArena.ts     # Arena: register, load character, fight, leaderboard, latest fight
