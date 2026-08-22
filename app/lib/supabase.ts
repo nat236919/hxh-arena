@@ -14,8 +14,8 @@ export interface Character {
   wins: number
   losses: number
   draws: number
-  created_at: string
-  secret_token: string
+  created_at?: string
+  secret_token?: string
 }
 
 export interface FightLog {

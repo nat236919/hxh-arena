@@ -109,7 +109,7 @@ import type { FightResult, FightOpponent } from '~/composables/useArena'
 useHead({ title: 'Fight - HxH Arena' })
 
 const router = useRouter()
-const { loadCharacter, loadOpponentPool, conductFight } = useArena()
+const { loadCharacter, cacheCharacter, loadOpponentPool, conductFight } = useArena()
 
 const loading = ref(true)
 const phase = ref<'select' | 'fighting' | 'result'>('select')
@@ -176,10 +176,10 @@ async function selectPool(type: 'all' | 'npc' | 'registered') {
   const result = await conductFight(character.value, opponent, challengerToken.value)
   fightResult.value = result
 
-  // sync local character record so subsequent fights and "Fight Again" show correct W/L/D
   if (result.winner === 'challenger') character.value = { ...character.value, wins: character.value.wins + 1 }
   else if (result.winner === 'opponent') character.value = { ...character.value, losses: character.value.losses + 1 }
   else character.value = { ...character.value, draws: character.value.draws + 1 }
+  cacheCharacter(character.value)
 
   // split a 2d6 total into two valid dice (each 1–6)
   function splitRoll(total: number): [number, number] {

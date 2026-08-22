@@ -23,7 +23,7 @@ A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz 
 - **Arena Rules Modal** - "?" button on the fight page explains the power formula, Nen bonuses, matchup effects, victory conditions, and leaderboard requirements
 - **Opponent Pools** - Fight all challengers (registered Hunters + NPCs), NPCs only, or registered Hunters only
 - **NPC Roster** - 10 HxH characters (Gon, Killua, Hisoka, Chrollo, and more) with canon-approximate stats and portraits
-- **W/L/D Leaderboard** - Live ranking by win rate; requires 10 fights to appear, updates after every fight
+- **W/L/D Leaderboard** - Top 10 ranking by win rate; requires 10 fights to appear, updates after every fight
 - **Latest Fight Card** - Homepage shows the most recent fight with Nen badges, dice rolls, and outcome
 - **Name Validation** - Hunter names are checked for length, allowed characters, and l33t-substituted profanity
 

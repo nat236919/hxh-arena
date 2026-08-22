@@ -143,7 +143,7 @@ const lbLoading = ref(true)
 const latestFight = ref<Awaited<ReturnType<typeof loadLatestFight>>>(null)
 
 onMounted(async () => {
-  const [lb, lf] = await Promise.all([loadLeaderboard(5), loadLatestFight()])
+  const [lb, lf] = await Promise.all([loadLeaderboard(10), loadLatestFight()])
   leaderboard.value = lb
   latestFight.value = lf
   lbLoading.value = false

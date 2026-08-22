@@ -89,18 +89,33 @@ export function useArena() {
     return { id: data.id, token }
   }
 
+  function getCachedCharacter(id: string): Character | null {
+    try {
+      const raw = sessionStorage.getItem('hunter_character')
+      if (!raw) return null
+      const parsed = JSON.parse(raw) as Character
+      return parsed.id === id ? parsed : null
+    } catch {
+      return null
+    }
+  }
+
+  function cacheCharacter(character: Character): void {
+    sessionStorage.setItem('hunter_character', JSON.stringify(character))
+  }
+
   async function loadCharacter(id: string): Promise<Character | null> {
+    const cached = getCachedCharacter(id)
+    if (cached) return cached
     const { data, error } = await db
       .from('characters')
-      .select('*')
+      .select('id, nen_type, name, strength_speed, aura, defense, intelligence, stats_locked, wins, losses, draws')
       .eq('id', id)
       .single()
     if (error) return null
-    // restore token to sessionStorage so returning users can still update their record
-    if (data.secret_token) {
-      sessionStorage.setItem('hunter_token', data.secret_token)
-    }
-    return data as Character
+    const character = data as Character
+    cacheCharacter(character)
+    return character
   }
 
   async function lockStats(id: string, token: string, stats: { strength_speed: number; aura: number; defense: number; intelligence: number }): Promise<void> {
@@ -200,6 +215,8 @@ export function useArena() {
       .from('characters')
       .select('id, name, nen_type, wins, losses, draws')
       .eq('stats_locked', true)
+      .order('wins', { ascending: false })
+      .limit(100)
     const rows = (data ?? []) as { id: string; name: string | null; nen_type: NenTypeId; wins: number; losses: number; draws: number }[]
     return rows
       .map(r => {
@@ -228,7 +245,7 @@ export function useArena() {
       .single()
     if (!log) return null
 
-    const { data: challenger } = await db
+    const challengerPromise = db
       .from('characters')
       .select('name, nen_type')
       .eq('id', log.challenger_id)
@@ -240,16 +257,27 @@ export function useArena() {
     if (log.opponent_is_npc) {
       const npc = npcs.find(n => n.id === log.opponent_id) ?? null
       if (npc) { opponentName = npc.name; opponentNen = npc.nen_type }
-    } else if (log.opponent_id) {
-      const { data: opp } = await db
-        .from('characters')
-        .select('name, nen_type')
-        .eq('id', log.opponent_id)
-        .single()
-      if (opp) {
-        opponentName = opp.name ?? `Hunter #${log.opponent_id.slice(0, 8).toUpperCase()}`
-        opponentNen = opp.nen_type as NenTypeId
+      const { data: challenger } = await challengerPromise
+      return {
+        challengerName: challenger?.name ?? `Hunter #${log.challenger_id.slice(0, 8).toUpperCase()}`,
+        challengerNen: challenger?.nen_type as NenTypeId ?? 'enhancer',
+        challengerRoll: log.challenger_roll,
+        opponentName,
+        opponentNen,
+        opponentRoll: log.opponent_roll,
+        winner: log.winner,
       }
+    }
+
+    const opponentPromise = log.opponent_id
+      ? db.from('characters').select('name, nen_type').eq('id', log.opponent_id).single()
+      : Promise.resolve({ data: null })
+
+    const [{ data: challenger }, { data: opp }] = await Promise.all([challengerPromise, opponentPromise])
+
+    if (opp) {
+      opponentName = opp.name ?? `Hunter #${log.opponent_id.slice(0, 8).toUpperCase()}`
+      opponentNen = opp.nen_type as NenTypeId
     }
 
     return {
@@ -263,5 +291,5 @@ export function useArena() {
     }
   }
 
-  return { registerCharacter, loadCharacter, lockStats, loadOpponentPool, pickRandomOpponent, conductFight, loadLeaderboard, loadLatestFight }
+  return { registerCharacter, loadCharacter, cacheCharacter, lockStats, loadOpponentPool, pickRandomOpponent, conductFight, loadLeaderboard, loadLatestFight }
 }
