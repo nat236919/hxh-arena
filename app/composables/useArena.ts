@@ -78,22 +78,32 @@ export function useArena() {
   const supabase = useSupabase()
   const db = supabase as unknown as { from: (table: string) => AnyTable }
 
-  async function registerCharacter(nenType: NenTypeId, name: string): Promise<{ id: string; token: string }> {
-    const token = crypto.randomUUID()
+  async function registerCharacter(nenType: NenTypeId, name: string, pin: string): Promise<{ id: string }> {
     const { data, error } = await db
       .from('characters')
-      .insert({ nen_type: nenType, name: name.trim(), secret_token: token })
+      .insert({ nen_type: nenType, name: name.trim(), secret_token: pin })
       .select('id')
       .single()
     if (error) throw error
-    return { id: data.id, token }
+    return { id: data.id }
   }
 
   async function loadCharacter(id: string): Promise<Character | null> {
     const { data, error } = await db
       .from('characters')
-      .select('id, nen_type, name, strength_speed, aura, defense, intelligence, stats_locked, wins, losses, draws, secret_token')
+      .select('id, nen_type, name, strength_speed, aura, defense, intelligence, stats_locked, wins, losses, draws')
       .eq('id', id)
+      .single()
+    if (error) return null
+    return data as Character
+  }
+
+  async function verifyCharacter(id: string, pin: string): Promise<Character | null> {
+    const { data, error } = await db
+      .from('characters')
+      .select('id, nen_type, name, strength_speed, aura, defense, intelligence, stats_locked, wins, losses, draws')
+      .eq('id', id)
+      .eq('secret_token', pin)
       .single()
     if (error) return null
     return data as Character
@@ -272,5 +282,5 @@ export function useArena() {
     }
   }
 
-  return { registerCharacter, loadCharacter, lockStats, loadOpponentPool, pickRandomOpponent, conductFight, loadLeaderboard, loadLatestFight }
+  return { registerCharacter, loadCharacter, verifyCharacter, lockStats, loadOpponentPool, pickRandomOpponent, conductFight, loadLeaderboard, loadLatestFight }
 }

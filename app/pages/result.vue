@@ -83,7 +83,15 @@
                 maxlength="24" autocomplete="off" spellcheck="false" @input="nameError = ''" />
               <p v-if="nameError" class="name-error">{{ nameError }}</p>
             </div>
-            <button class="licence-btn" :disabled="registering || !hunterName.trim()" @click="getHunterLicence">
+            <div class="name-field">
+              <label class="name-label" for="hunter-pin">6-Digit PIN</label>
+              <input id="hunter-pin" v-model="hunterPin" class="name-input pin-input" type="text" inputmode="numeric"
+                placeholder="000000" maxlength="6" pattern="[0-9]{6}" autocomplete="off" spellcheck="false"
+                @input="pinError = ''" />
+              <p v-if="pinError" class="name-error">{{ pinError }}</p>
+            </div>
+            <button class="licence-btn" :disabled="registering || !hunterName.trim() || hunterPin.length !== 6"
+              @click="getHunterLicence">
               <span v-if="registering" class="licence-spinner" />
               <span v-else>Get Hunter Licence</span>
             </button>
@@ -97,7 +105,7 @@
                   {{ copied ? 'Copied' : 'Copy' }}
                 </button>
               </div>
-              <p class="licence-hint">Save this. You'll need it to enter the Arena.</p>
+              <p class="licence-hint">Save your licence number and PIN. You'll need both to enter the Arena.</p>
               <NuxtLink to="/arena" class="enter-arena-link" :style="{ color: nenType?.color }">
                 Enter Arena &#8594;
               </NuxtLink>
@@ -153,6 +161,8 @@ const registering = ref(false)
 const copied = ref(false)
 const hunterName = ref('')
 const nameError = ref('')
+const hunterPin = ref('')
+const pinError = ref('')
 
 const nenType = computed(() => result.value ?? null)
 
@@ -249,12 +259,15 @@ async function getHunterLicence() {
     nameError.value = validationError
     return
   }
+  if (!/^\d{6}$/.test(hunterPin.value)) {
+    pinError.value = 'PIN must be exactly 6 digits.'
+    return
+  }
   registering.value = true
   try {
-    const { id, token } = await registerCharacter(nenType.value.id, hunterName.value)
+    const { id } = await registerCharacter(nenType.value.id, hunterName.value, hunterPin.value)
     licence.value = id
     sessionStorage.setItem('hunter_licence', id)
-    sessionStorage.setItem('hunter_token', token)
     sessionStorage.setItem('licence_issued', '1')
   } finally {
     registering.value = false
@@ -346,6 +359,13 @@ function burstStyle(n: number) {
   transition: border-color 0.2s;
   width: 100%;
   box-sizing: border-box;
+}
+
+.pin-input {
+  max-width: 140px;
+  text-align: center;
+  letter-spacing: 0.3em;
+  font-size: 1.1rem;
 }
 
 .name-input::placeholder {

@@ -16,7 +16,7 @@ A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz 
 
 ### Heavens Arena
 
-- **Hunter Licence** - Register a named character after completing Water Divination; UUID persisted in sessionStorage
+- **Hunter Licence** - Register a named character with a 6-digit PIN after completing Water Divination; enter both licence UUID and PIN to access the arena
 - **Attribute Allocation** - Distribute 20 points across Strength/Speed, Aura, Defense, and Intelligence (minimum 1 each)
 - **1v1 Combat** - 2d6 dice rolls modified by Nen type bonus and stats determine the winner
 - **Nen Matchups** - Compatible types on the Nen wheel get a 5% power boost (Nen Affinity); opposed types get a 5% penalty (Nen Clash)
@@ -102,7 +102,7 @@ CREATE TABLE public.characters (
   wins INTEGER DEFAULT 0,
   losses INTEGER DEFAULT 0,
   draws INTEGER DEFAULT 0,
-  secret_token UUID DEFAULT gen_random_uuid()
+  secret_token TEXT NOT NULL
 );
 
 -- Fight log table
@@ -134,19 +134,6 @@ CREATE POLICY "anon read fight_log" ON public.fight_log FOR SELECT TO anon USING
 CREATE POLICY "anon insert fight_log" ON public.fight_log FOR INSERT TO anon WITH CHECK (true);
 ```
 
-If you are adding `secret_token` to an existing table rather than creating fresh:
-
-```sql
-ALTER TABLE public.characters ADD COLUMN secret_token UUID DEFAULT gen_random_uuid();
-
--- Backfill any rows that have NULL
-UPDATE public.characters SET secret_token = gen_random_uuid() WHERE secret_token IS NULL;
-
--- Tighten the existing UPDATE policy
-ALTER POLICY "Allow anon update own" ON public.characters
-  USING (true) WITH CHECK (secret_token IS NOT NULL);
-```
-
 ## Database Schema
 
 ### `public.characters`
@@ -165,7 +152,7 @@ ALTER POLICY "Allow anon update own" ON public.characters
 | `wins` | `INTEGER` | `0` | Fight record |
 | `losses` | `INTEGER` | `0` | Fight record |
 | `draws` | `INTEGER` | `0` | Fight record |
-| `secret_token` | `UUID` | `gen_random_uuid()` | Ownership token; required to match on every UPDATE |
+| `secret_token` | `TEXT` | - | 6-digit PIN set by user at registration; used as ownership proof on every UPDATE (never returned in SELECT queries) |
 
 ### `public.fight_log`
 
@@ -203,10 +190,6 @@ JOIN public.characters c ON c.id = fl.challenger_id
 ORDER BY fl.created_at DESC
 LIMIT 10;
 
--- Backfill secret_token for rows created before the column was added
-UPDATE public.characters
-SET secret_token = gen_random_uuid()
-WHERE secret_token IS NULL;
 ```
 
 ## Setup
@@ -252,7 +235,7 @@ pnpm preview
 ```text
 app/
   composables/
-    useArena.ts     # Arena: register, load character, fight, leaderboard, latest fight
+    useArena.ts     # Arena: register, verify PIN, load character, fight, leaderboard, latest fight
     useNenQuiz.ts   # Quiz state: shuffled questions, scoring, reset
     useTheme.ts     # Dark/light theme toggle with localStorage persistence
   components/

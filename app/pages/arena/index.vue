@@ -17,8 +17,12 @@
         <input id="licence" v-model="licenceInput" class="licence-input" type="text"
           placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" spellcheck="false" autocomplete="off"
           @keydown.enter="enter" />
+        <label class="input-label" for="pin">PIN</label>
+        <input id="pin" v-model="pinInput" class="licence-input pin-input" type="text" inputmode="numeric"
+          placeholder="6-digit PIN" maxlength="6" pattern="[0-9]{6}" autocomplete="off" spellcheck="false"
+          @keydown.enter="enter" />
         <p v-if="error" class="input-error">{{ error }}</p>
-        <button class="enter-btn" :disabled="loading || !licenceInput.trim()" @click="enter">
+        <button class="enter-btn" :disabled="loading || !licenceInput.trim() || pinInput.length !== 6" @click="enter">
           <span v-if="loading" class="btn-spinner" />
           <span v-else>Enter Arena</span>
         </button>
@@ -38,25 +42,27 @@ import { useArena } from '~/composables/useArena'
 useHead({ title: 'Enter Arena - HxH Arena' })
 
 const router = useRouter()
-const { loadCharacter } = useArena()
+const { verifyCharacter } = useArena()
 
 const licenceInput = ref('')
+const pinInput = ref('')
 const loading = ref(false)
 const error = ref('')
 
 async function enter() {
   const id = licenceInput.value.trim()
-  if (!id) return
+  const pin = pinInput.value.trim()
+  if (!id || pin.length !== 6) return
   loading.value = true
   error.value = ''
   try {
-    const character = await loadCharacter(id)
+    const character = await verifyCharacter(id, pin)
     if (!character) {
-      error.value = 'Hunter Licence not found. Check the number and try again.'
+      error.value = 'Invalid licence or PIN. Check your details and try again.'
       return
     }
     sessionStorage.setItem('hunter_licence', id)
-    if (character.secret_token) sessionStorage.setItem('hunter_token', character.secret_token)
+    sessionStorage.setItem('hunter_token', pin)
     if (!character.stats_locked) {
       router.push('/arena/setup')
     } else {
@@ -148,6 +154,13 @@ async function enter() {
   outline: none;
   transition: border-color 0.2s;
   letter-spacing: 0.04em;
+}
+
+.pin-input {
+  max-width: 180px;
+  text-align: center;
+  letter-spacing: 0.3em;
+  font-size: 1.1rem;
 }
 
 .licence-input::placeholder {
