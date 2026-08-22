@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest'
+import { nenCompatibility } from '~/data/nenTypes'
+import type { NenTypeId } from '~/data/nenTypes'
 
 // Pure fight logic extracted for testing (mirrors useArena.ts exactly)
 
@@ -15,14 +17,25 @@ function roll2d6(): number {
   return Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1)
 }
 
+function getMatchupMultiplier(attackerType: NenTypeId, defenderType: NenTypeId): number {
+  if (attackerType === defenderType) return 1.0
+  const compat = nenCompatibility[attackerType]
+  if (compat.compatible.includes(defenderType)) return 1.05
+  if (compat.opposed === defenderType) return 0.95
+  return 1.0
+}
+
 function calcPower(
   char: { nen_type: string; strength_speed: number; aura: number; defense: number; intelligence: number },
-  roll: number
+  roll: number,
+  opponentNenType?: NenTypeId
 ): number {
   const bonus = char.nen_type === 'specialist'
     ? 0.8 + Math.random() * 0.8
     : NEN_BONUS[char.nen_type]!
-  return (char.strength_speed * bonus) + char.aura + (char.defense * 0.8) + (char.intelligence * 0.9) + roll
+  const basePower = (char.strength_speed * bonus) + char.aura + (char.defense * 0.8) + (char.intelligence * 0.9) + roll
+  const matchup = opponentNenType ? getMatchupMultiplier(char.nen_type as NenTypeId, opponentNenType) : 1.0
+  return basePower * matchup
 }
 
 function splitRoll(total: number): [number, number] {
@@ -154,5 +167,84 @@ describe('NEN_BONUS table', () => {
   it('enhancer has the highest bonus', () => {
     const max = Math.max(...Object.values(NEN_BONUS))
     expect(NEN_BONUS.enhancer).toBe(max)
+  })
+})
+
+describe('getMatchupMultiplier', () => {
+  const allTypes: NenTypeId[] = ['enhancer', 'transmuter', 'conjurer', 'specialist', 'manipulator', 'emitter']
+
+  it('same type returns 1.0 (neutral)', () => {
+    for (const t of allTypes) {
+      expect(getMatchupMultiplier(t, t)).toBe(1.0)
+    }
+  })
+
+  it('compatible opponent returns 1.05 (affinity)', () => {
+    expect(getMatchupMultiplier('enhancer', 'transmuter')).toBe(1.05)
+    expect(getMatchupMultiplier('enhancer', 'emitter')).toBe(1.05)
+    expect(getMatchupMultiplier('transmuter', 'enhancer')).toBe(1.05)
+    expect(getMatchupMultiplier('transmuter', 'conjurer')).toBe(1.05)
+    expect(getMatchupMultiplier('conjurer', 'transmuter')).toBe(1.05)
+    expect(getMatchupMultiplier('conjurer', 'specialist')).toBe(1.05)
+    expect(getMatchupMultiplier('specialist', 'conjurer')).toBe(1.05)
+    expect(getMatchupMultiplier('specialist', 'manipulator')).toBe(1.05)
+    expect(getMatchupMultiplier('manipulator', 'specialist')).toBe(1.05)
+    expect(getMatchupMultiplier('manipulator', 'emitter')).toBe(1.05)
+    expect(getMatchupMultiplier('emitter', 'manipulator')).toBe(1.05)
+    expect(getMatchupMultiplier('emitter', 'enhancer')).toBe(1.05)
+  })
+
+  it('opposed opponent returns 0.95 (clash)', () => {
+    expect(getMatchupMultiplier('enhancer', 'specialist')).toBe(0.95)
+    expect(getMatchupMultiplier('specialist', 'enhancer')).toBe(0.95)
+    expect(getMatchupMultiplier('transmuter', 'manipulator')).toBe(0.95)
+    expect(getMatchupMultiplier('manipulator', 'transmuter')).toBe(0.95)
+    expect(getMatchupMultiplier('conjurer', 'emitter')).toBe(0.95)
+    expect(getMatchupMultiplier('emitter', 'conjurer')).toBe(0.95)
+  })
+
+  it('non-adjacent, non-opposed types return 1.0 (neutral)', () => {
+    expect(getMatchupMultiplier('enhancer', 'conjurer')).toBe(1.0)
+    expect(getMatchupMultiplier('enhancer', 'manipulator')).toBe(1.0)
+    expect(getMatchupMultiplier('transmuter', 'emitter')).toBe(1.0)
+    expect(getMatchupMultiplier('transmuter', 'specialist')).toBe(1.0)
+  })
+
+  it('all 36 pairings return a valid multiplier (0.95, 1.0, or 1.05)', () => {
+    for (const a of allTypes) {
+      for (const d of allTypes) {
+        const m = getMatchupMultiplier(a, d)
+        expect([0.95, 1.0, 1.05]).toContain(m)
+      }
+    }
+  })
+})
+
+describe('calcPower with matchup', () => {
+  const baseChar = { strength_speed: 10, aura: 5, defense: 5, intelligence: 5 }
+  const roll = 7
+
+  it('affinity matchup increases power by 5%', () => {
+    const neutral = calcPower({ ...baseChar, nen_type: 'enhancer' }, roll)
+    const withAffinity = calcPower({ ...baseChar, nen_type: 'enhancer' }, roll, 'transmuter')
+    expect(withAffinity).toBeCloseTo(neutral * 1.05)
+  })
+
+  it('clash matchup decreases power by 5%', () => {
+    const neutral = calcPower({ ...baseChar, nen_type: 'enhancer' }, roll)
+    const withClash = calcPower({ ...baseChar, nen_type: 'enhancer' }, roll, 'specialist')
+    expect(withClash).toBeCloseTo(neutral * 0.95)
+  })
+
+  it('same type matchup has no effect', () => {
+    const neutral = calcPower({ ...baseChar, nen_type: 'enhancer' }, roll)
+    const sametype = calcPower({ ...baseChar, nen_type: 'enhancer' }, roll, 'enhancer')
+    expect(sametype).toBeCloseTo(neutral)
+  })
+
+  it('no opponent type has no effect', () => {
+    const without = calcPower({ ...baseChar, nen_type: 'enhancer' }, roll)
+    const withUndefined = calcPower({ ...baseChar, nen_type: 'enhancer' }, roll, undefined)
+    expect(withUndefined).toBeCloseTo(without)
   })
 })

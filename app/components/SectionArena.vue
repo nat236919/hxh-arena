@@ -24,7 +24,8 @@
         <div class="step">
           <span class="step-num">02</span>
           <span class="step-label">Get Hunter Licence</span>
-          <span class="step-desc">Claim your UUID at the end of Water Divination and allocate your attributes.</span>
+          <span class="step-desc">Claim your Hunter Licence at the end of Water Divination and allocate your
+            attributes.</span>
         </div>
         <div class="step-arrow" aria-hidden="true">&#8594;</div>
         <div class="step">

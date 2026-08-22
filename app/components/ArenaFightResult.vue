@@ -16,6 +16,10 @@
         <span class="combatant-type" :style="{ color: challengerColor }">
           {{ challenger.nen_type }}
         </span>
+        <span v-if="result.challengerMatchup !== 'neutral'" class="matchup-tag"
+          :class="`matchup-tag--${result.challengerMatchup}`">
+          {{ result.challengerMatchup === 'affinity' ? 'NEN AFFINITY' : 'NEN CLASH' }}
+        </span>
         <div class="roll-display">
           <span class="die">{{ diceA }}</span>
           <span class="die">{{ diceB }}</span>
@@ -39,6 +43,10 @@
         </div>
         <span class="combatant-type" :style="{ color: opponentColor }">
           {{ result.opponent.nen_type }}
+        </span>
+        <span v-if="result.opponentMatchup !== 'neutral'" class="matchup-tag"
+          :class="`matchup-tag--${result.opponentMatchup}`">
+          {{ result.opponentMatchup === 'affinity' ? 'NEN AFFINITY' : 'NEN CLASH' }}
         </span>
         <div class="roll-display">
           <span class="die">{{ diceC }}</span>
@@ -220,6 +228,27 @@ const updatedDraws = computed(() => props.challenger.draws)
   font-size: 0.9rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+.matchup-tag {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.matchup-tag--affinity {
+  color: #50c878;
+  background: rgba(80, 200, 120, 0.1);
+  border: 1px solid rgba(80, 200, 120, 0.25);
+}
+
+.matchup-tag--clash {
+  color: #e8a000;
+  background: rgba(232, 160, 0, 0.1);
+  border: 1px solid rgba(232, 160, 0, 0.25);
 }
 
 .roll-display {

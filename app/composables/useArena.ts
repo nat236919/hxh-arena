@@ -2,6 +2,7 @@ import { useSupabase } from '~/lib/supabase'
 import type { Character, NenTypeId } from '~/lib/supabase'
 import { npcs } from '~/data/npcs'
 import type { NPC } from '~/data/npcs'
+import { nenCompatibility } from '~/data/nenTypes'
 
 export type { Character }
 
@@ -20,6 +21,8 @@ export interface FightOpponent {
   draws?: number
 }
 
+export type MatchupLabel = 'affinity' | 'clash' | 'neutral'
+
 export interface FightResult {
   winner: 'challenger' | 'opponent' | 'draw'
   challengerRoll: number
@@ -27,6 +30,8 @@ export interface FightResult {
   challengerPower: number
   opponentPower: number
   opponent: FightOpponent
+  challengerMatchup: MatchupLabel
+  opponentMatchup: MatchupLabel
 }
 
 const NEN_BONUS: Record<NenTypeId, number> = {
@@ -42,11 +47,28 @@ function roll2d6(): number {
   return Math.floor(Math.random() * 6 + 1) + Math.floor(Math.random() * 6 + 1)
 }
 
-function calcPower(char: Pick<Character | NPC, 'nen_type' | 'strength_speed' | 'aura' | 'defense' | 'intelligence'>, roll: number): number {
+function getMatchupMultiplier(attackerType: NenTypeId, defenderType: NenTypeId): number {
+  if (attackerType === defenderType) return 1.0
+  const compat = nenCompatibility[attackerType]
+  if (compat.compatible.includes(defenderType)) return 1.05
+  if (compat.opposed === defenderType) return 0.95
+  return 1.0
+}
+
+function getMatchupLabel(attackerType: NenTypeId, defenderType: NenTypeId): MatchupLabel {
+  const m = getMatchupMultiplier(attackerType, defenderType)
+  if (m > 1) return 'affinity'
+  if (m < 1) return 'clash'
+  return 'neutral'
+}
+
+function calcPower(char: Pick<Character | NPC, 'nen_type' | 'strength_speed' | 'aura' | 'defense' | 'intelligence'>, roll: number, opponentNenType?: NenTypeId): number {
   const bonus = char.nen_type === 'specialist'
     ? 0.8 + Math.random() * 0.8
     : NEN_BONUS[char.nen_type]
-  return (char.strength_speed * bonus) + char.aura + (char.defense * 0.8) + (char.intelligence * 0.9) + roll
+  const basePower = (char.strength_speed * bonus) + char.aura + (char.defense * 0.8) + (char.intelligence * 0.9) + roll
+  const matchup = opponentNenType ? getMatchupMultiplier(char.nen_type as NenTypeId, opponentNenType) : 1.0
+  return basePower * matchup
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -126,8 +148,10 @@ export function useArena() {
   async function conductFight(challenger: Character, opponent: FightOpponent, challengerToken: string): Promise<FightResult> {
     const challengerRoll = roll2d6()
     const opponentRoll = roll2d6()
-    const challengerPower = calcPower(challenger, challengerRoll)
-    const opponentPower = calcPower(opponent, opponentRoll)
+    const challengerPower = calcPower(challenger, challengerRoll, opponent.nen_type)
+    const opponentPower = calcPower(opponent, opponentRoll, challenger.nen_type as NenTypeId)
+    const challengerMatchup = getMatchupLabel(challenger.nen_type as NenTypeId, opponent.nen_type)
+    const opponentMatchup = getMatchupLabel(opponent.nen_type, challenger.nen_type as NenTypeId)
 
     let winner: 'challenger' | 'opponent' | 'draw'
     const diff = Math.abs(challengerPower - opponentPower)
@@ -168,7 +192,7 @@ export function useArena() {
       winner,
     })
 
-    return { winner, challengerRoll, opponentRoll, challengerPower, opponentPower, opponent }
+    return { winner, challengerRoll, opponentRoll, challengerPower, opponentPower, opponent, challengerMatchup, opponentMatchup }
   }
 
   async function loadLeaderboard(limit = 10): Promise<{ id: string; name: string | null; nen_type: NenTypeId; wins: number; losses: number; draws: number; winRate: number }[]> {
