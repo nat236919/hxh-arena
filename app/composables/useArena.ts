@@ -49,12 +49,16 @@ function calcPower(char: Pick<Character | NPC, 'nen_type' | 'strength_speed' | '
   return (char.strength_speed * bonus) + char.aura + (char.defense * 0.8) + (char.intelligence * 0.9) + roll
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyTable = any
+
 export function useArena() {
   const supabase = useSupabase()
+  const db = supabase as unknown as { from: (table: string) => AnyTable }
 
   async function registerCharacter(nenType: NenTypeId, name: string): Promise<{ id: string; token: string }> {
     const token = crypto.randomUUID()
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from('characters')
       .insert({ nen_type: nenType, name: name.trim(), secret_token: token })
       .select('id')
@@ -64,7 +68,7 @@ export function useArena() {
   }
 
   async function loadCharacter(id: string): Promise<Character | null> {
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from('characters')
       .select('*')
       .eq('id', id)
@@ -78,7 +82,7 @@ export function useArena() {
   }
 
   async function lockStats(id: string, token: string, stats: { strength_speed: number; aura: number; defense: number; intelligence: number }): Promise<void> {
-    const { error } = await supabase
+    const { error } = await db
       .from('characters')
       .update({ ...stats, stats_locked: true })
       .eq('id', id)
@@ -87,7 +91,7 @@ export function useArena() {
   }
 
   async function loadOpponentPool(excludeId: string): Promise<FightOpponent[]> {
-    const { data } = await supabase
+    const { data } = await db
       .from('characters')
       .select('id, name, nen_type, strength_speed, aura, defense, intelligence, wins, losses, draws')
       .neq('id', excludeId)
@@ -116,7 +120,7 @@ export function useArena() {
   }
 
   function pickRandomOpponent(pool: FightOpponent[]): FightOpponent {
-    return pool[Math.floor(Math.random() * pool.length)]
+    return pool[Math.floor(Math.random() * pool.length)]!
   }
 
   async function conductFight(challenger: Character, opponent: FightOpponent, challengerToken: string): Promise<FightResult> {
@@ -142,7 +146,7 @@ export function useArena() {
         ? { losses: challenger.losses + 1 }
         : { draws: challenger.draws + 1 }
 
-    await supabase.from('characters').update(challengerUpdate).eq('id', challenger.id).eq('secret_token', challengerToken)
+    await db.from('characters').update(challengerUpdate).eq('id', challenger.id).eq('secret_token', challengerToken)
 
     // update W/L/D for registered opponent
     if (!opponent.is_npc) {
@@ -151,11 +155,11 @@ export function useArena() {
         : winner === 'challenger'
           ? { losses: (opponent.losses ?? 0) + 1 }
           : { draws: (opponent.draws ?? 0) + 1 }
-      await supabase.from('characters').update(opponentUpdate).eq('id', opponent.id)
+      await db.from('characters').update(opponentUpdate).eq('id', opponent.id)
     }
 
     // log the fight
-    await supabase.from('fight_log').insert({
+    await db.from('fight_log').insert({
       challenger_id: challenger.id,
       opponent_id: opponent.is_npc ? null : opponent.id,
       opponent_is_npc: opponent.is_npc,
@@ -168,7 +172,7 @@ export function useArena() {
   }
 
   async function loadLeaderboard(limit = 10): Promise<{ id: string; name: string | null; nen_type: NenTypeId; wins: number; losses: number; draws: number; winRate: number }[]> {
-    const { data } = await supabase
+    const { data } = await db
       .from('characters')
       .select('id, name, nen_type, wins, losses, draws')
       .eq('stats_locked', true)
@@ -192,7 +196,7 @@ export function useArena() {
     opponentRoll: number
     winner: 'challenger' | 'opponent' | 'draw'
   } | null> {
-    const { data: log } = await supabase
+    const { data: log } = await db
       .from('fight_log')
       .select('challenger_id, opponent_id, opponent_is_npc, challenger_roll, opponent_roll, winner')
       .order('created_at', { ascending: false })
@@ -200,7 +204,7 @@ export function useArena() {
       .single()
     if (!log) return null
 
-    const { data: challenger } = await supabase
+    const { data: challenger } = await db
       .from('characters')
       .select('name, nen_type')
       .eq('id', log.challenger_id)
@@ -213,7 +217,7 @@ export function useArena() {
       const npc = npcs.find(n => n.id === log.opponent_id) ?? null
       if (npc) { opponentName = npc.name; opponentNen = npc.nen_type }
     } else if (log.opponent_id) {
-      const { data: opp } = await supabase
+      const { data: opp } = await db
         .from('characters')
         .select('name, nen_type')
         .eq('id', log.opponent_id)

@@ -160,7 +160,7 @@ async function selectPool(type: 'all' | 'npc' | 'registered') {
   if (!character.value) return
   const subset = type === 'npc' ? npcPool.value : type === 'registered' ? registeredPool.value : pool.value
   if (subset.length === 0) return
-  const opponent = subset[Math.floor(Math.random() * subset.length)]
+  const opponent = subset[Math.floor(Math.random() * subset.length)]!
   phase.value = 'fighting'
   startScramble()
 
