@@ -409,8 +409,8 @@ function burstStyle(n: number) {
 }
 
 .licence-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--hxh-bg-surface);
+  border: 1px solid var(--hxh-border-subtle);
   border-radius: 6px;
   padding: 16px 18px;
   display: flex;
@@ -423,7 +423,7 @@ function burstStyle(n: number) {
   font-size: 0.65rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(220, 220, 220, 0.35);
+  color: var(--hxh-text-muted);
 }
 
 .licence-card-body {
@@ -436,7 +436,7 @@ function burstStyle(n: number) {
 .licence-uuid {
   font-family: var(--font-body);
   font-size: 0.8rem;
-  color: rgba(220, 220, 220, 0.8);
+  color: var(--hxh-text-secondary);
   letter-spacing: 0.04em;
   word-break: break-all;
   flex: 1;
@@ -447,19 +447,18 @@ function burstStyle(n: number) {
   font-size: 0.65rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--hxh-bg-card);
+  border: 1px solid var(--hxh-border-subtle);
   border-radius: 3px;
   padding: 5px 12px;
-  color: rgba(220, 220, 220, 0.6);
+  color: var(--hxh-text-muted);
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   white-space: nowrap;
 }
 
 .copy-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(220, 220, 220, 0.9);
+  color: var(--hxh-text-primary);
 }
 
 .copy-btn--copied {
@@ -471,7 +470,7 @@ function burstStyle(n: number) {
 .licence-hint {
   font-family: var(--font-body);
   font-size: 0.75rem;
-  color: rgba(220, 220, 220, 0.3);
+  color: var(--hxh-text-muted);
   margin: 0;
   line-height: 1.5;
 }
@@ -479,6 +478,7 @@ function burstStyle(n: number) {
 .enter-arena-link {
   font-family: var(--font-heading);
   font-size: 0.78rem;
+  font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   text-decoration: none;
