@@ -14,7 +14,10 @@
       <template v-else-if="phase === 'select' && character">
         <div class="phase-hero">
           <p class="phase-tag">SELECT OPPONENT</p>
-          <h1 class="phase-title">Choose Your Pool</h1>
+          <div class="phase-title-row">
+            <h1 class="phase-title">Choose Your Pool</h1>
+            <button class="rules-btn" title="How fights work" @click="showRules = true">?</button>
+          </div>
           <p class="phase-lead">A random opponent will be drawn from the pool you select.</p>
         </div>
 
@@ -94,6 +97,8 @@
           :dice-d="dieD" @fight-again="fightAgain" />
       </template>
     </main>
+
+    <ArenaRulesModal :open="showRules" @close="showRules = false" />
   </div>
 </template>
 
@@ -108,6 +113,7 @@ const { loadCharacter, loadOpponentPool, conductFight } = useArena()
 
 const loading = ref(true)
 const phase = ref<'select' | 'fighting' | 'result'>('select')
+const showRules = ref(false)
 const character = ref<Awaited<ReturnType<typeof loadCharacter>>>(null)
 const pool = ref<FightOpponent[]>([])
 const fightResult = ref<FightResult | null>(null)
@@ -255,12 +261,43 @@ function fightAgain() {
   margin-bottom: 10px;
 }
 
+.phase-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
 .phase-title {
   font-family: var(--font-display);
   font-size: clamp(2rem, 6vw, 3.5rem);
   letter-spacing: 0.06em;
   margin-bottom: 10px;
   line-height: 1;
+}
+
+.rules-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(184, 36, 75, 0.4);
+  background: rgba(184, 36, 75, 0.08);
+  color: rgba(184, 36, 75, 0.8);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+  margin-bottom: 10px;
+}
+
+.rules-btn:hover {
+  background: rgba(184, 36, 75, 0.15);
+  border-color: rgba(184, 36, 75, 0.6);
 }
 
 .phase-lead {
