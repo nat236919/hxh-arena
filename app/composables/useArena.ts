@@ -89,33 +89,14 @@ export function useArena() {
     return { id: data.id, token }
   }
 
-  function getCachedCharacter(id: string): Character | null {
-    try {
-      const raw = sessionStorage.getItem('hunter_character')
-      if (!raw) return null
-      const parsed = JSON.parse(raw) as Character
-      return parsed.id === id ? parsed : null
-    } catch {
-      return null
-    }
-  }
-
-  function cacheCharacter(character: Character): void {
-    sessionStorage.setItem('hunter_character', JSON.stringify(character))
-  }
-
   async function loadCharacter(id: string): Promise<Character | null> {
-    const cached = getCachedCharacter(id)
-    if (cached) return cached
     const { data, error } = await db
       .from('characters')
-      .select('id, nen_type, name, strength_speed, aura, defense, intelligence, stats_locked, wins, losses, draws')
+      .select('id, nen_type, name, strength_speed, aura, defense, intelligence, stats_locked, wins, losses, draws, secret_token')
       .eq('id', id)
       .single()
     if (error) return null
-    const character = data as Character
-    cacheCharacter(character)
-    return character
+    return data as Character
   }
 
   async function lockStats(id: string, token: string, stats: { strength_speed: number; aura: number; defense: number; intelligence: number }): Promise<void> {
@@ -291,5 +272,5 @@ export function useArena() {
     }
   }
 
-  return { registerCharacter, loadCharacter, cacheCharacter, lockStats, loadOpponentPool, pickRandomOpponent, conductFight, loadLeaderboard, loadLatestFight }
+  return { registerCharacter, loadCharacter, lockStats, loadOpponentPool, pickRandomOpponent, conductFight, loadLeaderboard, loadLatestFight }
 }

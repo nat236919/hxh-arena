@@ -71,7 +71,7 @@ import type { NenTypeId } from '~/lib/supabase'
 useHead({ title: 'Setup - HxH Arena' })
 
 const router = useRouter()
-const { loadCharacter, cacheCharacter, lockStats } = useArena()
+const { loadCharacter, lockStats } = useArena()
 
 const TOTAL_POINTS = 20
 const MIN_PER_STAT = 1
@@ -133,7 +133,6 @@ async function confirm() {
       intelligence: values.intelligence,
     }
     await lockStats(character.value.id, token, lockedStats)
-    cacheCharacter({ ...character.value, ...lockedStats, stats_locked: true })
     router.push('/arena/fight')
   } catch {
     saving.value = false

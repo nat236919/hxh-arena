@@ -56,6 +56,7 @@ async function enter() {
       return
     }
     sessionStorage.setItem('hunter_licence', id)
+    if (character.secret_token) sessionStorage.setItem('hunter_token', character.secret_token)
     if (!character.stats_locked) {
       router.push('/arena/setup')
     } else {
