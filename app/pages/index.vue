@@ -57,21 +57,21 @@ onMounted(() => {
     return
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          activeSection.value = entry.target.id
-        }
+  function updateActiveSection() {
+    const trigger = window.scrollY + window.innerHeight * 0.3
+    let current = sections[0]?.id ?? 'divination'
+    for (const section of sections) {
+      const el = document.getElementById(section.id)
+      if (el && el.getBoundingClientRect().top + window.scrollY <= trigger) {
+        current = section.id
       }
-    },
-    { threshold: 0.4 }
-  )
-
-  for (const section of sections) {
-    const el = document.getElementById(section.id)
-    if (el) observer.observe(el)
+    }
+    activeSection.value = current
   }
+
+  updateActiveSection()
+  window.addEventListener('scroll', updateActiveSection, { passive: true })
+  onUnmounted(() => window.removeEventListener('scroll', updateActiveSection))
 })
 
 function scrollTo(id: string) {
