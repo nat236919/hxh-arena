@@ -112,7 +112,7 @@
 
       <p class="footer-note">Focus your aura. The water will reveal your true nature.</p>
 
-      <button class="scroll-hint" @click="emit('scroll-to', 'story')" aria-label="Scroll to Story Arcs">
+      <button class="scroll-hint" @click="emit('scroll-to', 'arena')" aria-label="Scroll to Arena">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
           stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9" />

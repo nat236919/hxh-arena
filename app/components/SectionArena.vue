@@ -126,6 +126,13 @@
           </div>
         </div>
       </div>
+
+      <button class="scroll-hint" @click="scrollToStory" aria-label="Scroll to Story Arcs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
     </div>
   </section>
 </template>
@@ -159,6 +166,10 @@ function nenAbbr(type: NenTypeId) {
 
 function scrollToDivination() {
   document.getElementById('divination')?.scrollIntoView({ behavior: 'smooth' })
+}
+
+function scrollToStory() {
+  document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })
 }
 </script>
 
@@ -628,6 +639,42 @@ function scrollToDivination() {
 
 .card-cta:hover {
   color: #d42a56;
+}
+
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(184, 36, 75, 0.4);
+  width: 32px;
+  height: 32px;
+  margin-top: 24px;
+  transition: color 0.2s;
+  animation: scroll-bob 2s ease-in-out infinite;
+}
+
+.scroll-hint:hover {
+  color: rgba(184, 36, 75, 0.8);
+}
+
+.scroll-hint svg {
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes scroll-bob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(5px);
+  }
 }
 
 @media (max-width: 640px) {

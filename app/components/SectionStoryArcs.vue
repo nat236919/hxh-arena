@@ -9,6 +9,13 @@
         </div>
       </div>
 
+      <button class="scroll-hint scroll-hint--up" @click="scrollToTop" aria-label="Scroll to top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round">
+          <polyline points="18 15 12 9 6 15" />
+        </svg>
+      </button>
+
       <div class="arcs-grid">
         <div v-for="arc in storyArcs" :key="arc.id" class="arc-card"
           :style="{ '--arc-color': arc.color, borderColor: `${arc.color}30` }">
@@ -32,6 +39,10 @@
 
 <script setup lang="ts">
 import { storyArcs } from '~/data/storyArcs'
+
+function scrollToTop() {
+  document.getElementById('divination')?.scrollIntoView({ behavior: 'smooth' })
+}
 </script>
 
 <style scoped>
@@ -182,6 +193,42 @@ import { storyArcs } from '~/data/storyArcs'
 
   .arcs-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+.scroll-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(184, 36, 75, 0.4);
+  width: 32px;
+  height: 32px;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+  animation: scroll-bob 2s ease-in-out infinite;
+}
+
+.scroll-hint:hover {
+  color: rgba(184, 36, 75, 0.8);
+}
+
+.scroll-hint svg {
+  width: 24px;
+  height: 24px;
+}
+
+@keyframes scroll-bob {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
   }
 }
 </style>
