@@ -3,6 +3,7 @@ import type { Character, NenTypeId } from '~/lib/supabase'
 import { npcs } from '~/data/npcs'
 import type { NPC } from '~/data/npcs'
 import { nenCompatibility } from '~/data/nenTypes'
+import { getAbility } from '~/data/abilities'
 
 export type { Character }
 
@@ -15,6 +16,7 @@ export interface FightOpponent {
   defense: number
   intelligence: number
   is_npc: boolean
+  ability_pool?: string[]
   portrait?: string
   wins?: number
   losses?: number
@@ -32,6 +34,10 @@ export interface FightResult {
   opponent: FightOpponent
   challengerMatchup: MatchupLabel
   opponentMatchup: MatchupLabel
+  challengerAbilityId: string | null
+  opponentAbilityId: string | null
+  challengerAbilityTriggered: boolean
+  opponentAbilityTriggered: boolean
 }
 
 const NEN_BONUS: Record<NenTypeId, number> = {
@@ -151,11 +157,27 @@ export function useArena() {
     return pool[Math.floor(Math.random() * pool.length)]!
   }
 
-  async function conductFight(challenger: Character, opponent: FightOpponent, challengerToken: string): Promise<FightResult> {
+  async function conductFight(challenger: Character, opponent: FightOpponent, challengerToken: string, challengerAbilityId: string | null, opponentAbilityId: string | null): Promise<FightResult> {
     const challengerRoll = roll2d6()
     const opponentRoll = roll2d6()
-    const challengerPower = calcPower(challenger, challengerRoll, opponent.nen_type)
-    const opponentPower = calcPower(opponent, opponentRoll, challenger.nen_type as NenTypeId)
+    const baseChallenger = calcPower(challenger, challengerRoll, opponent.nen_type)
+    const baseOpponent = calcPower(opponent, opponentRoll, challenger.nen_type as NenTypeId)
+
+    const challengerAbility = challengerAbilityId ? getAbility(challengerAbilityId) : null
+    const opponentAbility = opponentAbilityId ? getAbility(opponentAbilityId) : null
+
+    const challengerCtx = { challengerRoll, opponentRoll, challengerPower: baseChallenger, opponentPower: baseOpponent }
+    const opponentCtx = { challengerRoll: opponentRoll, opponentRoll: challengerRoll, challengerPower: baseOpponent, opponentPower: baseChallenger }
+
+    const cMult = challengerAbility ? challengerAbility.modifier(challengerCtx) : 1.0
+    const oMult = opponentAbility ? opponentAbility.modifier(opponentCtx) : 1.0
+
+    const challengerPower = baseChallenger * cMult
+    const opponentPower = baseOpponent * oMult
+
+    const challengerAbilityTriggered = cMult !== 1.0
+    const opponentAbilityTriggered = oMult !== 1.0
+
     const challengerMatchup = getMatchupLabel(challenger.nen_type as NenTypeId, opponent.nen_type)
     const opponentMatchup = getMatchupLabel(opponent.nen_type, challenger.nen_type as NenTypeId)
 
@@ -202,7 +224,7 @@ export function useArena() {
       opponent_nen_type: opponent.nen_type,
     })
 
-    return { winner, challengerRoll, opponentRoll, challengerPower, opponentPower, opponent, challengerMatchup, opponentMatchup }
+    return { winner, challengerRoll, opponentRoll, challengerPower, opponentPower, opponent, challengerMatchup, opponentMatchup, challengerAbilityId, opponentAbilityId, challengerAbilityTriggered, opponentAbilityTriggered }
   }
 
   async function loadLeaderboard(limit = 10): Promise<{ id: string; name: string | null; nen_type: NenTypeId; wins: number; losses: number; draws: number; winRate: number }[]> {

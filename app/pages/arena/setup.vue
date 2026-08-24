@@ -126,13 +126,12 @@ async function confirm() {
   if (!token) { router.replace('/arena'); return }
   saving.value = true
   try {
-    const lockedStats = {
+    await lockStats(character.value.id, token, {
       strength_speed: values.strength_speed,
       aura: values.aura,
       defense: values.defense,
       intelligence: values.intelligence,
-    }
-    await lockStats(character.value.id, token, lockedStats)
+    })
     router.push('/arena/fight')
   } catch {
     saving.value = false

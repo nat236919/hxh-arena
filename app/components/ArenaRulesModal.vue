@@ -43,6 +43,14 @@
           </div>
 
           <div class="rule-section">
+            <h3 class="rule-heading">Special Abilities</h3>
+            <p class="rule-text">Before each fight, roll 1d6 to determine how many abilities you can choose from. A
+              random selection is drawn from your Nen type's ability pool — you pick one. Your opponent selects one from
+              their own pool at the same time. Each ability applies a power multiplier at fight time, with conditions
+              based on your roll, your opponent's roll, or the power gap between you.</p>
+          </div>
+
+          <div class="rule-section">
             <h3 class="rule-heading">Victory</h3>
             <p class="rule-text">Higher power wins. If the difference is less than 0.5, it is a draw.</p>
           </div>
@@ -147,7 +155,7 @@ const nenBonuses = [
 
 .modal-header {
   padding: 18px 20px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--hxh-border-subtle);
 }
 
 .modal-title {
@@ -196,8 +204,8 @@ const nenBonuses = [
   color: var(--hxh-text-secondary);
   line-height: 1.6;
   margin: 0;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--hxh-bg-surface, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--hxh-border-subtle);
   border-radius: 4px;
   padding: 10px 12px;
 }

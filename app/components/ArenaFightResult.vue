@@ -4,6 +4,28 @@
       <span class="verdict-label">{{ verdictLabel }}</span>
     </div>
 
+    <div class="abilities-row">
+      <div v-if="challengerAbility" class="ability-banner"
+        :class="result.challengerAbilityTriggered ? 'ability-banner--active' : 'ability-banner--passive'"
+        :style="result.challengerAbilityTriggered ? { borderColor: `${challengerColor}55`, background: `${challengerColor}0D` } : {}">
+        <span class="ability-banner-side">YOU</span>
+        <span class="ability-banner-label">{{ result.challengerAbilityTriggered ? 'ACTIVATED' : 'ABILITY' }}</span>
+        <span class="ability-banner-name"
+          :style="result.challengerAbilityTriggered ? { color: challengerColor } : {}">{{ challengerAbility.name
+          }}</span>
+        <span class="ability-banner-desc">{{ challengerAbility.description }}</span>
+      </div>
+      <div v-if="opponentAbility" class="ability-banner"
+        :class="result.opponentAbilityTriggered ? 'ability-banner--active' : 'ability-banner--passive'"
+        :style="result.opponentAbilityTriggered ? { borderColor: `${opponentColor}55`, background: `${opponentColor}0D` } : {}">
+        <span class="ability-banner-side">OPPONENT</span>
+        <span class="ability-banner-label">{{ result.opponentAbilityTriggered ? 'ACTIVATED' : 'ABILITY' }}</span>
+        <span class="ability-banner-name" :style="result.opponentAbilityTriggered ? { color: opponentColor } : {}">{{
+          opponentAbility.name }}</span>
+        <span class="ability-banner-desc">{{ opponentAbility.description }}</span>
+      </div>
+    </div>
+
     <div class="combatants">
       <div class="combatant">
         <div class="portrait portrait--you" :style="{ '--pc': challengerColor }">
@@ -71,6 +93,7 @@
 
 <script setup lang="ts">
 import { nenTypes } from '~/data/nenTypes'
+import { getAbility } from '~/data/abilities'
 import type { FightResult } from '~/composables/useArena'
 import type { Character } from '~/composables/useArena'
 import type { NenTypeId } from '~/lib/supabase'
@@ -103,6 +126,14 @@ const opponentColor = computed(() =>
 const updatedWins = computed(() => props.challenger.wins)
 const updatedLosses = computed(() => props.challenger.losses)
 const updatedDraws = computed(() => props.challenger.draws)
+
+const challengerAbility = computed(() =>
+  props.result.challengerAbilityId ? getAbility(props.result.challengerAbilityId) : undefined
+)
+
+const opponentAbility = computed(() =>
+  props.result.opponentAbilityId ? getAbility(props.result.opponentAbilityId) : undefined
+)
 </script>
 
 <style scoped>
@@ -112,6 +143,69 @@ const updatedDraws = computed(() => props.challenger.draws)
   flex-direction: column;
   align-items: center;
   gap: 32px;
+}
+
+.abilities-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ability-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 12px 14px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  text-align: center;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.ability-banner-side {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.25);
+  margin-bottom: 2px;
+}
+
+.ability-banner-label {
+  font-family: var(--font-heading);
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.35);
+}
+
+.ability-banner--active .ability-banner-label {
+  color: rgba(220, 220, 220, 0.6);
+}
+
+.ability-banner-name {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.6);
+  transition: color 0.3s;
+}
+
+.ability-banner-desc {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: rgba(220, 220, 220, 0.32);
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .abilities-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .verdict {

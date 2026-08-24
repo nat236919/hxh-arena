@@ -66,6 +66,47 @@
         <ArenaStatChips :character="character" label="Your Stats" />
       </template>
 
+      <!-- Ability picker -->
+      <template v-else-if="phase === 'ability' && character && pendingOpponent">
+        <div class="phase-hero">
+          <p class="phase-tag">YOUR OPPONENT</p>
+          <div class="opponent-reveal">
+            <img v-if="pendingOpponent.portrait" :src="pendingOpponent.portrait" :alt="pendingOpponent.name"
+              class="opponent-portrait" />
+            <div class="opponent-info">
+              <span class="opponent-name">{{ pendingOpponent.name }}</span>
+              <span class="opponent-type" :style="{ color: opponentColor }">{{ pendingOpponent.nen_type }}</span>
+            </div>
+          </div>
+          <h1 class="phase-title">Choose Your Ability</h1>
+          <div class="ability-roll-row">
+            <span class="ability-die" :class="{ 'ability-die--rolling': abilityRolling }">{{ abilityRollDisplay
+            }}</span>
+            <p class="phase-lead" :class="{ 'phase-lead--hidden': abilityRolling }">
+              {{ challengerAbilityPool.length }} {{ challengerAbilityPool.length === 1 ? 'ability' : 'abilities' }}
+              available.
+            </p>
+          </div>
+        </div>
+
+        <div class="ability-cards" :class="{ 'ability-cards--hidden': abilityRolling }">
+          <button v-for="ab in challengerAbilityPool" :key="ab.id" class="ability-card"
+            :class="{ 'ability-card--selected': selectedAbilityId === ab.id }" @click="selectedAbilityId = ab.id">
+            <div class="ability-card-header">
+              <span class="ability-card-name">{{ ab.name }}</span>
+              <span v-if="selectedAbilityId === ab.id" class="ability-card-check">&#10003;</span>
+            </div>
+            <span class="ability-card-effect">{{ ab.effect }}</span>
+            <span class="ability-card-desc">{{ ab.description }}</span>
+            <span class="ability-card-flavor">{{ ab.flavorText }}</span>
+          </button>
+        </div>
+
+        <button class="fight-btn" :disabled="!selectedAbilityId || abilityRolling" @click="startFight">
+          Fight
+        </button>
+      </template>
+
       <!-- Fighting animation -->
       <template v-else-if="phase === 'fighting'">
         <div class="state-center fighting-state">
@@ -105,6 +146,9 @@
 <script setup lang="ts">
 import { useArena } from '~/composables/useArena'
 import type { FightResult, FightOpponent } from '~/composables/useArena'
+import { abilitiesByNenType } from '~/data/abilities'
+import { nenTypes } from '~/data/nenTypes'
+import type { NenTypeId } from '~/lib/supabase'
 
 useHead({ title: 'Fight - HxH Arena' })
 
@@ -112,11 +156,34 @@ const router = useRouter()
 const { loadCharacter, loadOpponentPool, conductFight } = useArena()
 
 const loading = ref(true)
-const phase = ref<'select' | 'fighting' | 'result'>('select')
+const phase = ref<'select' | 'ability' | 'fighting' | 'result'>('select')
 const showRules = ref(false)
 const character = ref<Awaited<ReturnType<typeof loadCharacter>>>(null)
 const pool = ref<FightOpponent[]>([])
 const fightResult = ref<FightResult | null>(null)
+const pendingOpponent = ref<FightOpponent | null>(null)
+const selectedAbilityId = ref<string | null>(null)
+const abilityRoll = ref(1)
+const abilityRolling = ref(false)
+const abilityRollDisplay = ref(1)
+let abilityScrambleTimer: ReturnType<typeof setInterval> | null = null
+
+const challengerColor = computed(() =>
+  character.value ? nenTypes[character.value.nen_type as NenTypeId]?.color ?? '#E8A000' : '#E8A000'
+)
+const opponentColor = computed(() =>
+  pendingOpponent.value ? nenTypes[pendingOpponent.value.nen_type as NenTypeId]?.color ?? '#E8A000' : '#E8A000'
+)
+const challengerAbilityPool = ref<typeof import('~/data/abilities').abilities>([])
+
+function buildAbilityPool(nenType: NenTypeId, count: number) {
+  const full = [...(abilitiesByNenType[nenType] ?? [])]
+  for (let i = full.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [full[i], full[j]] = [full[j]!, full[i]!]
+  }
+  challengerAbilityPool.value = full.slice(0, count)
+}
 
 const dieA = ref(1)
 const dieB = ref(1)
@@ -162,25 +229,54 @@ onMounted(async () => {
   loading.value = false
 })
 
-async function selectPool(type: 'all' | 'npc' | 'registered') {
+function selectPool(type: 'all' | 'npc' | 'registered') {
   if (!character.value) return
   const subset = type === 'npc' ? npcPool.value : type === 'registered' ? registeredPool.value : pool.value
   if (subset.length === 0) return
-  const opponent = subset[Math.floor(Math.random() * subset.length)]!
+  pendingOpponent.value = subset[Math.floor(Math.random() * subset.length)]!
+  selectedAbilityId.value = null
+  const finalRoll = Math.ceil(Math.random() * 6)
+  abilityRoll.value = finalRoll
+  abilityRolling.value = true
+  abilityRollDisplay.value = 1
+  phase.value = 'ability'
+
+  abilityScrambleTimer = setInterval(() => {
+    abilityRollDisplay.value = Math.ceil(Math.random() * 6)
+  }, 80)
+
+  setTimeout(() => {
+    if (abilityScrambleTimer) { clearInterval(abilityScrambleTimer); abilityScrambleTimer = null }
+    abilityRollDisplay.value = finalRoll
+    buildAbilityPool(character.value!.nen_type as NenTypeId, finalRoll)
+    abilityRolling.value = false
+  }, 900)
+}
+
+async function startFight() {
+  if (!character.value || !pendingOpponent.value || !selectedAbilityId.value) return
+
+  const opponentAbilityId = (() => {
+    const opp = pendingOpponent.value!
+    const pool = opp.is_npc && opp.ability_pool?.length
+      ? opp.ability_pool
+      : (abilitiesByNenType[opp.nen_type as NenTypeId] ?? []).map(a => a.id)
+    return pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)]! : null
+  })()
+
   phase.value = 'fighting'
   startScramble()
 
   await new Promise(r => setTimeout(r, 1800))
 
   stopScramble()
-  const result = await conductFight(character.value, opponent, challengerToken.value)
+  const result = await conductFight(character.value, pendingOpponent.value, challengerToken.value, selectedAbilityId.value, opponentAbilityId)
   fightResult.value = result
 
   if (result.winner === 'challenger') character.value = { ...character.value, wins: character.value.wins + 1 }
   else if (result.winner === 'opponent') character.value = { ...character.value, losses: character.value.losses + 1 }
   else character.value = { ...character.value, draws: character.value.draws + 1 }
 
-  // split a 2d6 total into two valid dice (each 1–6)
   function splitRoll(total: number): [number, number] {
     const lo = Math.max(1, total - 6)
     const hi = Math.min(6, total - 1)
@@ -195,6 +291,11 @@ async function selectPool(type: 'all' | 'npc' | 'registered') {
 
 function fightAgain() {
   fightResult.value = null
+  pendingOpponent.value = null
+  selectedAbilityId.value = null
+  abilityRoll.value = 1
+  abilityRollDisplay.value = 1
+  challengerAbilityPool.value = []
   phase.value = 'select'
 }
 </script>
@@ -302,7 +403,7 @@ function fightAgain() {
 .phase-lead {
   font-family: var(--font-body);
   font-size: 0.9rem;
-  color: rgba(220, 220, 220, 0.5);
+  color: var(--hxh-text-secondary, rgba(220, 220, 220, 0.5));
   line-height: 1.65;
 }
 
@@ -312,6 +413,206 @@ function fightAgain() {
   flex-direction: column;
   gap: 12px;
   margin-bottom: 32px;
+}
+
+.opponent-reveal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  justify-content: center;
+}
+
+.opponent-portrait {
+  width: 48px;
+  height: 56px;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 4px;
+  border: 1px solid var(--hxh-border-mid, rgba(255, 255, 255, 0.1));
+}
+
+.opponent-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.opponent-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: var(--hxh-text-primary);
+}
+
+.opponent-type {
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.ability-roll-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+
+.ability-die {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--hxh-bg-surface, rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--hxh-border-mid, rgba(255, 255, 255, 0.15));
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--hxh-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.ability-die--rolling {
+  animation: die-shake 0.08s linear infinite;
+  border-color: rgba(184, 36, 75, 0.6);
+  background: rgba(184, 36, 75, 0.1);
+  color: rgba(220, 220, 220, 0.9);
+}
+
+.phase-lead--hidden {
+  opacity: 0;
+}
+
+.ability-cards {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+  transition: opacity 0.25s;
+}
+
+.ability-cards--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ability-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  background: var(--hxh-bg-card, rgba(255, 255, 255, 0.04));
+  border: 2px solid var(--hxh-border-mid, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.ability-card:hover:not(.ability-card--selected) {
+  border-color: var(--hxh-border-subtle, rgba(255, 255, 255, 0.22));
+  background: var(--hxh-bg-surface, rgba(255, 255, 255, 0.07));
+}
+
+.ability-card--selected {
+  border-color: #b8244b;
+  background: rgba(184, 36, 75, 0.18);
+  box-shadow: 0 0 0 1px rgba(184, 36, 75, 0.45), inset 0 0 20px rgba(184, 36, 75, 0.08);
+}
+
+.ability-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ability-card-name {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hxh-text-primary);
+  opacity: 0.9;
+}
+
+.ability-card--selected .ability-card-name {
+  color: #c4203f;
+  opacity: 1;
+}
+
+.ability-card-check {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #c4203f;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.ability-card-effect {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: #b8244b;
+  background: rgba(184, 36, 75, 0.12);
+  border: 1px solid rgba(184, 36, 75, 0.35);
+  border-radius: 3px;
+  padding: 2px 7px;
+  align-self: flex-start;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.ability-card--selected .ability-card-effect {
+  color: #a01e3e;
+  background: rgba(184, 36, 75, 0.22);
+  border-color: rgba(184, 36, 75, 0.6);
+}
+
+.ability-card-desc {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--hxh-text-secondary, rgba(180, 180, 180, 0.8));
+  line-height: 1.5;
+}
+
+.ability-card-flavor {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--hxh-text-muted, rgba(160, 160, 160, 0.5));
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.fight-btn {
+  width: 100%;
+  background: #b8244b;
+  border: none;
+  border-radius: 4px;
+  padding: 15px;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+  margin-bottom: 8px;
+}
+
+.fight-btn:hover:not(:disabled) {
+  background: #d42a56;
+}
+
+.fight-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .fighting-state {
@@ -365,7 +666,7 @@ function fightAgain() {
   font-size: 0.6rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(220, 220, 220, 0.35);
+  color: var(--hxh-text-muted, rgba(220, 220, 220, 0.35));
 }
 
 .dice-pair {
@@ -377,8 +678,8 @@ function fightAgain() {
   width: 36px;
   height: 36px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--hxh-bg-surface, rgba(255, 255, 255, 0.06));
+  border: 1px solid var(--hxh-border-mid, rgba(255, 255, 255, 0.12));
   font-family: var(--font-display);
   font-size: 1.2rem;
   color: var(--hxh-text-primary);
@@ -389,9 +690,9 @@ function fightAgain() {
 
 .die--rolling {
   animation: die-shake 0.08s linear infinite;
-  border-color: rgba(184, 36, 75, 0.5);
-  background: rgba(184, 36, 75, 0.08);
-  color: rgba(220, 220, 220, 0.9);
+  border-color: rgba(184, 36, 75, 0.6);
+  background: rgba(184, 36, 75, 0.1);
+  color: var(--hxh-text-primary);
 }
 
 @keyframes die-shake {
@@ -412,7 +713,7 @@ function fightAgain() {
   font-family: var(--font-display);
   font-size: 1rem;
   letter-spacing: 0.1em;
-  color: rgba(220, 220, 220, 0.15);
+  color: var(--hxh-text-muted, rgba(220, 220, 220, 0.35));
   margin-top: 20px;
 }
 </style>

@@ -22,7 +22,8 @@ A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz 
 - **Nen Matchups** - Compatible types on the Nen wheel get a 5% power boost (Nen Affinity); opposed types get a 5% penalty (Nen Clash)
 - **Arena Rules Modal** - "?" button on the fight page explains the power formula, Nen bonuses, matchup effects, victory conditions, and leaderboard requirements
 - **Opponent Pools** - Fight all challengers (registered Hunters + NPCs), NPCs only, or registered Hunters only
-- **NPC Roster** - 10 HxH characters (Gon, Killua, Hisoka, Chrollo, and more) with canon-approximate stats and portraits
+- **Special Abilities** - Roll 1d6 before each fight to determine how many abilities you can pick from. Each Nen type has a pool of 5-6 canonical HxH abilities with distinct mechanical effects (power multipliers conditioned on dice rolls, stat gaps, or opponent rolls). NPCs draw randomly from their own curated ability pool; registered Hunters draw from their Nen type's full pool.
+- **NPC Roster** - 10 HxH characters (Gon, Killua, Hisoka, Chrollo, and more) with canon-approximate stats, portraits, and curated ability pools
 - **W/L/D Leaderboard** - Top 10 ranking by win rate; requires 10 fights to appear, updates after every fight
 - **Latest Fight Card** - Homepage shows the most recent fight with Nen badges, dice rolls, and outcome
 - **Name Validation** - Hunter names are checked for length, allowed characters, and l33t-substituted profanity
@@ -221,7 +222,7 @@ pnpm test         # run once
 pnpm test:watch   # watch mode
 ```
 
-197 unit tests covering:
+241 unit tests covering:
 
 - **Nen type data** - all 6 types present, required fields, compatibility symmetry, opposition symmetry
 - **Question data** - structure, answer scores, uniqueness
@@ -255,8 +256,9 @@ app/
     ArenaStatChips.vue     # Stat bars + W/L/D record display
     SectionArena.vue       # Homepage arena section: steps, leaderboard, latest fight
   data/
+    abilities.ts    # 36 special abilities (6 per Nen type) with effect descriptions and power modifier functions
     nenTypes.ts     # 6 Nen type definitions with traits, characters, colors, compatibility
-    npcs.ts         # 10 HxH NPC fighters with stats and portrait paths
+    npcs.ts         # 10 HxH NPC fighters with stats, portrait paths, and curated ability pools
     questions.ts    # 20 scenario questions with per-answer Nen type scores
   lib/
     profanity.ts    # Hunter name validation with l33t normalization

@@ -8,6 +8,7 @@ export interface NPC {
   aura: number
   defense: number
   intelligence: number
+  ability_pool: string[]
   portrait?: string
 }
 
@@ -20,6 +21,7 @@ export const npcs: NPC[] = [
     aura: 5,
     defense: 4,
     intelligence: 3,
+    ability_pool: ['jajanken_rock', 'ko', 'adult_gon', 'power_surge', 'clean_up'],
     portrait: '/characters/gon.webp',
   },
   {
@@ -30,6 +32,7 @@ export const npcs: NPC[] = [
     aura: 5,
     defense: 4,
     intelligence: 4,
+    ability_pool: ['godspeed', 'whirlwind', 'thunderbolt'],
     portrait: '/characters/killua.webp',
   },
   {
@@ -40,6 +43,7 @@ export const npcs: NPC[] = [
     aura: 6,
     defense: 4,
     intelligence: 6,
+    ability_pool: ['chain_jail', 'dowsing_chain', 'holy_chain', 'judgment_chain', 'scarlet_eyes'],
     portrait: '/characters/kurapika.webp',
   },
   {
@@ -50,6 +54,7 @@ export const npcs: NPC[] = [
     aura: 7,
     defense: 4,
     intelligence: 4,
+    ability_pool: ['remote_punch'],
     portrait: '/characters/leorio.webp',
   },
   {
@@ -60,6 +65,7 @@ export const npcs: NPC[] = [
     aura: 6,
     defense: 3,
     intelligence: 3,
+    ability_pool: ['bungee_gum', 'texture_surprise'],
     portrait: '/characters/hisoka.webp',
   },
   {
@@ -70,6 +76,7 @@ export const npcs: NPC[] = [
     aura: 5,
     defense: 4,
     intelligence: 6,
+    ability_pool: ['needle_people'],
     portrait: '/characters/illumi.webp',
   },
   {
@@ -80,6 +87,7 @@ export const npcs: NPC[] = [
     aura: 6,
     defense: 4,
     intelligence: 5,
+    ability_pool: ['skill_hunter', 'sun_and_moon', 'black_voice', 'lovely_ghostwriter', 'gallery_fake', 'autopilot', 'order_stamp', 'indoor_fish'],
     portrait: '/characters/chrollo.webp',
   },
   {
@@ -90,6 +98,7 @@ export const npcs: NPC[] = [
     aura: 5,
     defense: 4,
     intelligence: 1,
+    ability_pool: ['big_bang_impact', 'ko', 'shu', 'power_surge'],
     portrait: '/characters/uvogin.webp',
   },
   {
@@ -100,6 +109,7 @@ export const npcs: NPC[] = [
     aura: 6,
     defense: 4,
     intelligence: 6,
+    ability_pool: ['deep_purple', 'smoky_jail'],
     portrait: '/characters/morel.webp',
   },
   {
@@ -110,6 +120,7 @@ export const npcs: NPC[] = [
     aura: 8,
     defense: 3,
     intelligence: 3,
+    ability_pool: ['double_machine_gun', 'ricochet'],
     portrait: '/characters/franklin.webp',
   },
 ]
