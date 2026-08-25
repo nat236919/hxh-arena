@@ -49,3 +49,38 @@ describe('result URL sharing', () => {
     }
   })
 })
+
+// Mirrors the quizSkipped computed in result.vue.
+function deriveQuizSkipped(quizResultId: string | null, typeParam: string | undefined, totalScore: number): boolean {
+  if (!quizResultId) return true
+  if (typeParam !== quizResultId) return true
+  return totalScore === 0
+}
+
+describe('quizSkipped flag', () => {
+  it('is false when quiz result matches URL param and scores are non-zero', () => {
+    for (const id of VALID_TYPES) {
+      expect(deriveQuizSkipped(id, id, 42)).toBe(false)
+    }
+  })
+
+  it('is true when no quiz result is stored (direct URL share)', () => {
+    for (const id of VALID_TYPES) {
+      expect(deriveQuizSkipped(null, id, 0)).toBe(true)
+    }
+  })
+
+  it('is true when URL param was changed to a different type', () => {
+    expect(deriveQuizSkipped('transmuter', 'specialist', 42)).toBe(true)
+    expect(deriveQuizSkipped('enhancer', 'conjurer', 42)).toBe(true)
+  })
+
+  it('is true when user changes back to their real type but scores are zero', () => {
+    // URL matches stored result but quiz was never actually answered
+    expect(deriveQuizSkipped('transmuter', 'transmuter', 0)).toBe(true)
+  })
+
+  it('is true when param is undefined and no quiz result stored', () => {
+    expect(deriveQuizSkipped(null, undefined, 0)).toBe(true)
+  })
+})

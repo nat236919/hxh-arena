@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <div v-if="!licence" class="action-row stage-3">
+        <div v-if="!licence && !quizSkipped" class="action-row stage-3">
           <button class="action-btn action-btn--primary" :style="{ background: nenType?.color }" @click="retake">
             Retake the Test
           </button>
@@ -76,7 +76,19 @@
         </div>
 
         <div class="licence-section stage-3">
-          <template v-if="!licence">
+          <template v-if="quizSkipped">
+            <div class="quiz-required-notice">
+              <span class="quiz-required-icon">&#9737;</span>
+              <p class="quiz-required-text">
+                Complete Water Divination to earn a Hunter Licence.
+                Shared results are view-only.
+              </p>
+              <button class="action-btn action-btn--primary" :style="{ background: nenType?.color }" @click="retake">
+                Take the Test
+              </button>
+            </div>
+          </template>
+          <template v-else-if="!licence">
             <div class="name-field">
               <label class="name-label" for="hunter-name">Hunter Name</label>
               <input id="hunter-name" v-model="hunterName" class="name-input" type="text" placeholder="e.g. Killua Z."
@@ -163,6 +175,19 @@ const hunterName = ref('')
 const nameError = ref('')
 const hunterPin = ref('')
 const pinError = ref('')
+// True when the licence form should be hidden: no quiz was taken, or the URL type was tampered with.
+const quizSkipped = computed(() => {
+  if (!nenType.value) return false
+  const typeParam = route.query.type as string | undefined
+  const quizResultId = sessionStorage.getItem('quiz_result_type')
+  // No recorded quiz result means direct URL share
+  if (!quizResultId) return true
+  // URL param was changed away from the genuine result
+  if (typeParam !== quizResultId) return true
+  // Scores must be non-zero — quiz was actually answered
+  const totalScore = Object.values(scores.value).reduce((sum, s) => sum + s, 0)
+  return totalScore === 0
+})
 
 const nenType = computed(() => result.value ?? null)
 
@@ -230,6 +255,9 @@ onMounted(() => {
         router.replace('/')
         return
       }
+    } else {
+      // Quiz was completed — record the genuine result so route changes can be detected
+      sessionStorage.setItem('quiz_result_type', result.value.id)
     }
     if (result.value && !route.query.type) {
       router.replace(`/result?type=${result.value.id}`)
@@ -249,6 +277,7 @@ function openProfile(profile: CharacterProfile) {
 
 function retake() {
   reset()
+  sessionStorage.removeItem('quiz_result_type')
   router.push('/quiz')
 }
 
@@ -331,6 +360,29 @@ function burstStyle(n: number) {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.quiz-required-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--hxh-border-subtle);
+  border-radius: 4px;
+  background: var(--hxh-bg-surface);
+}
+
+.quiz-required-icon {
+  font-size: 1.1rem;
+  opacity: 0.5;
+}
+
+.quiz-required-text {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--hxh-text-muted);
+  line-height: 1.6;
+  margin: 0;
 }
 
 .name-field {
