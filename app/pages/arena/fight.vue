@@ -2,7 +2,7 @@
   <div class="page-root">
     <ArenaBackground />
 
-    <ArenaHeader back-to="/arena" back-label="Change Licence" label="ARENA FIGHT" />
+    <ArenaHeader back-to="/arena" back-label="Change Licence" label="ARENA FIGHT" profile-to="/arena/profile" />
 
     <main class="fight-main">
       <!-- Loading -->
@@ -81,7 +81,7 @@
           <h1 class="phase-title">Choose Your Ability</h1>
           <div class="ability-roll-row">
             <span class="ability-die" :class="{ 'ability-die--rolling': abilityRolling }">{{ abilityRollDisplay
-            }}</span>
+              }}</span>
             <p class="phase-lead" :class="{ 'phase-lead--hidden': abilityRolling }">
               {{ challengerAbilityPool.length }} {{ challengerAbilityPool.length === 1 ? 'ability' : 'abilities' }}
               available.

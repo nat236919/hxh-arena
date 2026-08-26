@@ -16,7 +16,7 @@ A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz 
 
 ### Heavens Arena
 
-- **Hunter Licence** - Register a named character with a 6-digit PIN after completing Water Divination; enter both licence UUID and PIN to access the arena
+- **Hunter Licence** - Register a named character with a 6-digit PIN after completing Water Divination; enter both licence UUID and PIN via the Hunter Licence card UI to access the arena
 - **Attribute Allocation** - Distribute 20 points across Strength/Speed, Aura, Defense, and Intelligence (minimum 1 each)
 - **1v1 Combat** - 2d6 dice rolls modified by Nen type bonus and stats determine the winner
 - **Nen Matchups** - Compatible types on the Nen wheel get a 5% power boost (Nen Affinity); opposed types get a 5% penalty (Nen Clash)
@@ -24,9 +24,11 @@ A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz 
 - **Opponent Pools** - Fight all challengers (registered Hunters + NPCs), NPCs only, or registered Hunters only
 - **Special Abilities** - Roll 1d6 before each fight to determine how many abilities you can pick from. Each Nen type has a pool of 5-6 canonical HxH abilities with distinct mechanical effects (power multipliers conditioned on dice rolls, stat gaps, or opponent rolls). NPCs draw randomly from their own curated ability pool; registered Hunters draw from their Nen type's full pool.
 - **NPC Roster** - 10 HxH characters (Gon, Killua, Hisoka, Chrollo, and more) with canon-approximate stats, portraits, and curated ability pools
+- **Hunter Profile** - `/arena/profile` shows stats, W/L/D record, win rate bar, and paginated fight history (10 per page) fetched from the fight log
 - **W/L/D Leaderboard** - Top 10 ranking by win rate; requires 10 fights to appear, updates after every fight
 - **Latest Fight Card** - Homepage shows the most recent fight with Nen badges, dice rolls, and outcome
 - **Name Validation** - Hunter names are checked for length, allowed characters, and l33t-substituted profanity
+- **Shared Result Guard** - `/result?type=` URLs are view-only; licence registration requires a completed quiz with non-zero scores
 
 ### General
 
@@ -222,7 +224,7 @@ pnpm test         # run once
 pnpm test:watch   # watch mode
 ```
 
-241 unit tests covering:
+257 unit tests covering:
 
 - **Nen type data** - all 6 types present, required fields, compatibility symmetry, opposition symmetry
 - **Question data** - structure, answer scores, uniqueness
@@ -231,6 +233,8 @@ pnpm test:watch   # watch mode
 - **NPC roster** - required fields, unique ids, valid Nen types, positive integer stats
 - **Profanity filter** - clean names pass, blocked words rejected, l33t substitutions detected, length and character rules enforced
 - **Arena fight logic** - `roll2d6` range, `calcPower` Nen bonuses, `splitRoll` dice validity for all totals 2-12, `getMatchupMultiplier` affinity/clash/neutral for all 36 type pairings, `calcPower` with matchup modifier
+- **Fight history pagination** - page range offsets, total page count, win rate calculation from W/L/D record
+- **Shared result guard** - `quizSkipped` flag: direct URL share, type param tampering, zero-score bypass
 
 ## Build
 
@@ -244,7 +248,7 @@ pnpm preview
 ```text
 app/
   composables/
-    useArena.ts     # Arena: register, verify PIN, load character, fight, leaderboard, latest fight
+    useArena.ts     # Arena: register, verify PIN, load character, fight, leaderboard, latest fight, fight history
     useNenQuiz.ts   # Quiz state: shuffled questions, scoring, reset
     useTheme.ts     # Dark/light theme toggle with localStorage persistence
   components/
@@ -268,13 +272,16 @@ app/
     quiz.vue                # Quiz page
     result.vue              # Result page: radar chart, affinity chart, Hunter Licence registration
     arena/
-      index.vue             # Arena entry: Hunter Licence lookup
+      index.vue             # Arena entry: Hunter Licence card UI (UUID + PIN)
+      profile.vue           # Hunter profile: stats, win rate, paginated fight history
       setup.vue             # Attribute allocation
       fight.vue             # Opponent selection, fight animation, result
   error.vue         # Custom 404 page
 tests/
-  arenaFight.test.ts   # roll2d6, calcPower, splitRoll, NEN_BONUS, getMatchupMultiplier
-  nenTypeUrl.test.ts
+  abilities.test.ts          # data integrity, modifier correctness, NPC pool validity
+  arenaFight.test.ts         # roll2d6, calcPower, splitRoll, NEN_BONUS, getMatchupMultiplier
+  arenaFightHistory.test.ts  # pagination offsets, win rate calculation
+  nenTypeUrl.test.ts         # URL type resolution, quizSkipped flag
   nenTypes.test.ts
   npcs.test.ts
   profanity.test.ts

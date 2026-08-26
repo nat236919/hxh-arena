@@ -10,6 +10,8 @@
         <circle cx="24" cy="24" r="2.5" fill="rgba(232,66,10,0.8)" />
       </svg>
     </div>
+    <NuxtLink v-if="profileTo" :to="profileTo" class="profile-link">{{ profileLabel ?? 'Profile' }}</NuxtLink>
+    <div v-else class="header-spacer" />
   </header>
 </template>
 
@@ -18,6 +20,8 @@ defineProps<{
   backTo: string
   backLabel: string
   label?: string
+  profileTo?: string
+  profileLabel?: string
 }>()
 </script>
 
@@ -64,5 +68,28 @@ defineProps<{
   height: 32px;
   opacity: 0.7;
   filter: drop-shadow(0 0 6px rgba(184, 36, 75, 0.35));
+}
+
+.header-spacer {
+  width: 80px;
+}
+
+.profile-link {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(220, 220, 220, 0.5);
+  text-decoration: none;
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.profile-link:hover {
+  color: rgba(184, 36, 75, 0.9);
+  border-color: rgba(184, 36, 75, 0.3);
+  background: rgba(184, 36, 75, 0.07);
 }
 </style>

@@ -273,5 +273,41 @@ export function useArena() {
     }
   }
 
-  return { registerCharacter, loadCharacter, verifyCharacter, lockStats, loadOpponentPool, pickRandomOpponent, conductFight, loadLeaderboard, loadLatestFight }
+  async function loadFightHistory(challengerId: string, page = 0, pageSize = 10): Promise<{
+    rows: {
+      id: string
+      createdAt: string
+      opponentName: string
+      opponentNenType: NenTypeId
+      opponentIsNpc: boolean
+      challengerRoll: number
+      opponentRoll: number
+      winner: 'challenger' | 'opponent' | 'draw'
+    }[]
+    total: number
+  }> {
+    const from = page * pageSize
+    const to = from + pageSize - 1
+    const { data, count } = await db
+      .from('fight_log')
+      .select('id, created_at, opponent_name, opponent_nen_type, opponent_is_npc, challenger_roll, opponent_roll, winner', { count: 'exact' })
+      .eq('challenger_id', challengerId)
+      .order('created_at', { ascending: false })
+      .range(from, to)
+    return {
+      rows: (data ?? []).map((r: any) => ({
+        id: r.id,
+        createdAt: r.created_at,
+        opponentName: r.opponent_name ?? 'Unknown',
+        opponentNenType: (r.opponent_nen_type as NenTypeId) ?? 'enhancer',
+        opponentIsNpc: r.opponent_is_npc,
+        challengerRoll: r.challenger_roll,
+        opponentRoll: r.opponent_roll,
+        winner: r.winner,
+      })),
+      total: count ?? 0,
+    }
+  }
+
+  return { registerCharacter, loadCharacter, verifyCharacter, lockStats, loadOpponentPool, pickRandomOpponent, conductFight, loadLeaderboard, loadLatestFight, loadFightHistory }
 }
