@@ -1,5 +1,10 @@
 # HxH Arena
 
+[![Tests](https://github.com/nat236919/hxh-arena/actions/workflows/test.yml/badge.svg)](https://github.com/nat236919/hxh-arena/actions/workflows/test.yml)
+[![Release](https://github.com/nat236919/hxh-arena/actions/workflows/release.yml/badge.svg)](https://github.com/nat236919/hxh-arena/actions/workflows/release.yml)
+[![Latest Release](https://img.shields.io/github/v/release/nat236919/hxh-arena)](https://github.com/nat236919/hxh-arena/releases)
+[![Live](https://img.shields.io/badge/live-hxh--arena.nuttaphat.com-b8244b)](https://hxh-arena.nuttaphat.com)
+
 A Hunter x Hunter fan web app built with Nuxt 4. Take the Water Divination quiz to discover your Nen type, claim a Hunter Licence, then step into Heavens Arena to fight registered Hunters and iconic HxH characters.
 
 ## Features
