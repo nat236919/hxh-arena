@@ -1,43 +1,24 @@
 import { createClient } from '@supabase/supabase-js'
+import type { Database, Tables } from '~/lib/database.types'
 
 export type NenTypeId = 'enhancer' | 'transmuter' | 'emitter' | 'conjurer' | 'manipulator' | 'specialist'
 
-export interface Character {
-  id: string
-  name: string | null
+export type Character = Omit<Tables<'characters'>, 'secret_token' | 'created_at'> & {
   nen_type: NenTypeId
-  strength_speed: number
-  aura: number
-  defense: number
-  intelligence: number
-  stats_locked: boolean
-  wins: number
-  losses: number
-  draws: number
   created_at?: string
-  secret_token?: string
 }
 
-export interface FightLog {
-  id: string
-  challenger_id: string
-  opponent_id: string | null
-  opponent_is_npc: boolean
-  challenger_roll: number
-  opponent_roll: number
+export type FightLog = Tables<'fight_log'> & {
   winner: 'challenger' | 'opponent' | 'draw'
-  challenger_name: string | null
-  challenger_nen_type: string | null
-  opponent_name: string | null
-  opponent_nen_type: string | null
-  created_at: string
+  challenger_nen_type: NenTypeId | null
+  opponent_nen_type: NenTypeId | null
 }
 
-let _client: ReturnType<typeof createClient> | null = null
+let _client: ReturnType<typeof createClient<Database>> | null = null
 
 export function useSupabase() {
   if (_client) return _client
   const config = useRuntimeConfig()
-  _client = createClient(config.public.supabaseUrl, config.public.supabaseKey)
+  _client = createClient<Database>(config.public.supabaseUrl, config.public.supabaseKey)
   return _client
 }

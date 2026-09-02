@@ -77,12 +77,8 @@ function calcPower(char: Pick<Character | NPC, 'nen_type' | 'strength_speed' | '
   return basePower * matchup
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyTable = any
-
 export function useArena() {
-  const supabase = useSupabase()
-  const db = supabase as unknown as { from: (table: string) => AnyTable }
+  const db = useSupabase()
 
   async function registerCharacter(nenType: NenTypeId, name: string, pin: string): Promise<{ id: string }> {
     const { data, error } = await db
@@ -131,10 +127,10 @@ export function useArena() {
       .neq('id', excludeId)
       .eq('stats_locked', true)
 
-    const registered: FightOpponent[] = (data ?? []).map((c: any) => ({
+    const registered: FightOpponent[] = (data ?? []).map(c => ({
       id: c.id,
       name: c.name ?? `Hunter #${c.id.slice(0, 8).toUpperCase()}`,
-      nen_type: c.nen_type,
+      nen_type: c.nen_type as NenTypeId,
       strength_speed: c.strength_speed,
       aura: c.aura,
       defense: c.defense,
@@ -234,11 +230,10 @@ export function useArena() {
       .eq('stats_locked', true)
       .order('wins', { ascending: false })
       .limit(100)
-    const rows = (data ?? []) as { id: string; name: string | null; nen_type: NenTypeId; wins: number; losses: number; draws: number }[]
-    return rows
+    return (data ?? [])
       .map(r => {
         const total = r.wins + r.losses + r.draws
-        return { ...r, winRate: total > 0 ? r.wins / total : 0 }
+        return { ...r, nen_type: r.nen_type as NenTypeId, winRate: total > 0 ? r.wins / total : 0 }
       })
       .filter(r => (r.wins + r.losses + r.draws) >= 10)
       .sort((a, b) => b.winRate - a.winRate || b.wins - a.wins)
@@ -269,7 +264,7 @@ export function useArena() {
       opponentName: log.opponent_name ?? 'Unknown',
       opponentNen: (log.opponent_nen_type as NenTypeId) ?? 'enhancer',
       opponentRoll: log.opponent_roll,
-      winner: log.winner,
+      winner: (log.winner as 'challenger' | 'opponent' | 'draw') ?? 'draw',
     }
   }
 
@@ -295,7 +290,7 @@ export function useArena() {
       .order('created_at', { ascending: false })
       .range(from, to)
     return {
-      rows: (data ?? []).map((r: any) => ({
+      rows: (data ?? []).map(r => ({
         id: r.id,
         createdAt: r.created_at,
         opponentName: r.opponent_name ?? 'Unknown',
@@ -303,7 +298,7 @@ export function useArena() {
         opponentIsNpc: r.opponent_is_npc,
         challengerRoll: r.challenger_roll,
         opponentRoll: r.opponent_roll,
-        winner: r.winner,
+        winner: r.winner as 'challenger' | 'opponent' | 'draw',
       })),
       total: count ?? 0,
     }
